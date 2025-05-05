@@ -40,16 +40,16 @@ const features = [
 // Screenshots
 const screenshots = [
   {
-    url: "https://images.pexels.com/photos/8943256/pexels-photo-8943256.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    alt: "Telemetry Dashboard with Speed and RPM Gauges"
+    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
+    alt: "Main Telemetry Dashboard during Race"
   },
   {
-    url: "https://images.pexels.com/photos/8944055/pexels-photo-8944055.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/lap-times-modal-ss.png?raw=true",
     alt: "Lap Time Analysis Screen"
   },
   {
-    url: "https://images.pexels.com/photos/12156049/pexels-photo-12156049.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    alt: "Track Map with Telemetry Data"
+    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-stint-modal-ss.png?raw=true",
+    alt: "Tyre Wear Analysis Screen"
   }
 ];
 ---
@@ -60,10 +60,10 @@ const screenshots = [
     <div class="container mx-auto px-4">
       <div class="max-w-4xl mx-auto text-center mb-12">
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-primary-500 via-white to-accent-500 bg-clip-text text-transparent">
-          Advanced Telemetry for Sim Racing Enthusiasts
+          Advanced Self-Engineering tool for F1 Sim Racing
         </h1>
         <p class="text-xl text-secondary-300 font-body mb-8">
-          Take your sim racing to the next level with real-time data, performance analytics, and custom dashboards designed to help you find those crucial tenths of a second.
+          Take your sim racing to the next level with real-time data, performance analytics, and prediction and comparisons against other drivers.
         </p>
         <div class="flex flex-wrap justify-center gap-4">
           <Button href="#download" variant="primary" size="lg">
@@ -79,13 +79,10 @@ const screenshots = [
       <div class="relative mx-auto max-w-5xl">
         <div class="bg-gradient-to-tr from-primary-500/20 to-accent-500/20 rounded-xl p-2 shadow-xl">
           <img
-            src="https://images.pexels.com/photos/29276537/pexels-photo-29276537/free-photo-of-ferrari-formula-1-car-racing-on-wet-track.jpeg"
+            src="https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true"
             alt="Pits n' Giggles Telemetry Dashboard"
             class="rounded-lg w-full h-auto shadow-md"
           />
-          <div class="absolute -top-4 -right-4 bg-accent-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-            Coming soon for VR
-          </div>
         </div>
       </div>
     </div>
@@ -98,7 +95,7 @@ const screenshots = [
         <h2 class="text-3xl md:text-4xl font-bold mb-4">Advanced Features</h2>
         <div class="w-20 h-1 bg-primary-500 mx-auto mb-6"></div>
         <p class="text-secondary-300 font-body">
-          Pits n' Giggles provides powerful tools to analyze your driving, improve lap times, and enhance your racing experience.
+          Pits n' Giggles provides powerful tools to analyze your car status and see where you stand relative to your competitors!
         </p>
       </div>
 
@@ -153,14 +150,14 @@ const screenshots = [
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
           <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-accent-500 rounded-full flex items-center justify-center font-bold text-xl mr-4">M</div>
+            <div class="w-12 h-12 bg-accent-500 rounded-full flex items-center justify-center font-bold text-xl mr-4">K</div>
             <div>
-              <h4 class="text-white font-semibold">Michael T.</h4>
-              <p class="text-secondary-400 text-sm">iRacing Enthusiast</p>
+              <h4 class="text-white font-semibold">Katpadi Kumar</h4>
+              <p class="text-secondary-400 text-sm">Monza T1 Enjoyer</p>
             </div>
           </div>
           <p class="text-secondary-300 font-body">
-            "The lap analysis feature helped me find 0.5 seconds on my favorite track. The interface is intuitive and the real-time data is incredibly accurate."
+            "I like car."
           </p>
         </div>
 
@@ -193,88 +190,4 @@ const screenshots = [
     </div>
   </section>
 
-  <!-- Download Section -->
-  <section id="download" class="py-20 bg-gradient-to-r from-primary-900 to-accent-900">
-    <div class="container mx-auto px-4">
-      <div class="max-w-3xl mx-auto text-center">
-        <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Improve Your Lap Times?</h2>
-        <p class="text-xl text-secondary-200 font-body mb-8">
-          Download Pits n' Giggles now and start analyzing your driving like a professional.
-        </p>
-
-        <div class="bg-secondary-950/30 backdrop-blur-sm border border-secondary-800 rounded-lg p-8 max-w-2xl mx-auto">
-          <h3 class="text-2xl font-semibold mb-6">Download Options</h3>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-4 flex flex-col items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2">
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                <line x1="8" y1="21" x2="16" y2="21"></line>
-                <line x1="12" y1="17" x2="12" y2="21"></line>
-              </svg>
-              <h4 class="text-lg font-semibold mb-1">Windows</h4>
-              <p class="text-secondary-400 text-sm mb-3">v1.2.0 - 64-bit</p>
-              <Button href="#" variant="accent" size="sm" download>Download (85MB)</Button>
-            </div>
-
-            <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-4 flex flex-col items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2">
-                <path d="M12 3a9 9 0 1 0 9 9"></path>
-                <path d="M12 3v9l9 9"></path>
-              </svg>
-              <h4 class="text-lg font-semibold mb-1">macOS</h4>
-              <p class="text-secondary-400 text-sm mb-3">v1.2.0 - Intel/M1</p>
-              <Button href="#" variant="accent" size="sm" download>Download (92MB)</Button>
-            </div>
-          </div>
-
-          <div class="mt-6 text-center">
-            <p class="text-secondary-300 text-sm mb-2">
-              By downloading, you agree to our <a href="/terms" class="text-accent-400 hover:underline">Terms of Service</a> and <a href="/privacy" class="text-accent-400 hover:underline">Privacy Policy</a>.
-            </p>
-            <a href="https://github.com/username/pits-n-giggles/releases" target="_blank" rel="noopener noreferrer" class="text-accent-500 hover:text-accent-400 text-sm inline-flex items-center gap-1">
-              View all releases on GitHub
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="7" y1="17" x2="17" y2="7"></line>
-                <polyline points="7 7 17 7 17 17"></polyline>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Newsletter Section -->
-  <section class="py-20">
-    <div class="container mx-auto px-4">
-      <div class="max-w-3xl mx-auto bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-8">
-        <div class="text-center mb-8">
-          <h2 class="text-2xl md:text-3xl font-bold mb-4">Stay Updated</h2>
-          <p class="text-secondary-300 font-body">
-            Subscribe to our newsletter to get the latest updates, racing tips, and exclusive content.
-          </p>
-        </div>
-
-        <form class="flex flex-col md:flex-row gap-4">
-          <input
-            type="email"
-            placeholder="Your email address"
-            class="flex-grow py-3 px-4 bg-secondary-800 border border-secondary-700 rounded-md focus:outline-none focus:ring-2 focus:ring-accent-500 text-white"
-            required
-          />
-          <button
-            type="submit"
-            class="bg-accent-500 hover:bg-accent-600 text-white font-semibold py-3 px-6 rounded-md transition-colors duration-200"
-          >
-            Subscribe
-          </button>
-        </form>
-
-        <p class="text-secondary-400 text-sm mt-4 text-center">
-          We respect your privacy. Unsubscribe at any time.
-        </p>
-      </div>
-    </div>
-  </section>
 </Layout>
