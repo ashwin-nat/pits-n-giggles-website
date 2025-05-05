@@ -5,15 +5,19 @@ interface Props {
   size?: 'sm' | 'md' | 'lg';
   class?: string;
   download?: boolean;
+  id?: string;
 }
 
-const { 
-  href, 
-  variant = 'primary', 
-  size = 'md', 
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
   class: className = '',
-  download = false
+  download = false,
+  id,
+  ...rest
 } = Astro.props;
+
 
 const baseClasses = "inline-flex items-center justify-center font-semibold transition-all duration-200 rounded-md";
 
@@ -33,6 +37,13 @@ const sizeClasses = {
 const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
 ---
 
-<a href={href} class={classes} download={download}>
+
+<a
+  href={href}
+  id={id}
+  {...rest}
+  class={classes}
+  download={download}
+>
   <slot />
 </a>

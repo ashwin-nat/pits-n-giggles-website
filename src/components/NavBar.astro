@@ -29,6 +29,7 @@ const navLinks = [
       {navLinks.map(link => (
         <a
           href={link.href}
+          id={link.text === 'Download' ? 'download-link' : undefined}
           class={`relative transition-all duration-200 ${link.highlight ?
             'bg-primary-500 hover:bg-primary-600 text-white py-2 px-4 rounded-md font-semibold' :
             'text-white hover:text-accent-400 before:absolute before:w-0 before:h-0.5 before:bg-accent-500 before:bottom-[-4px] before:left-0 hover:before:w-full before:transition-all'}`}
@@ -49,6 +50,7 @@ const navLinks = [
       {navLinks.map(link => (
         <a
           href={link.href}
+          id={link.text === 'Download' ? 'download-link' : undefined}
           class={`text-xl ${link.highlight ?
             'bg-primary-500 hover:bg-primary-600 text-white py-2 px-6 rounded-md font-semibold' :
             'text-white'}`}
@@ -102,5 +104,21 @@ const navLinks = [
       mobileMenu?.classList.add('hidden');
       document.body.style.overflow = '';
     });
+  });
+
+  // Fetch the latest release URL for the download link
+  window.addEventListener("DOMContentLoaded", async () => {
+    try {
+      const res = await fetch("https://api.github.com/repos/ashwin-nat/pits-n-giggles/releases/latest");
+      const data = await res.json();
+      const asset = data.assets?.find((asset: { browser_download_url: string }) => asset.browser_download_url.includes("pits_n_giggles"));
+      const downloadLink = document.getElementById("download-link") as HTMLAnchorElement;
+
+      if (asset?.browser_download_url && downloadLink) {
+        downloadLink.href = asset.browser_download_url;
+      }
+    } catch (e) {
+      console.error("Failed to load latest release:", e);
+    }
   });
 </script>

@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import FeatureCard from '../components/FeatureCard.astro';
+import DownloadLink from '../components/DownloadLink.astro';
 
 // Feature data (use existing or adjust as needed)
 const features = [
@@ -47,7 +48,7 @@ const screenshots = [
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Advanced Self-Engineering tool for F1 Sim Racing</h1>
         <p class="text-xl text-secondary-300 mb-8">Take your sim racing to the next level with real-time data and performance analytics.</p>
         <div class="flex flex-wrap justify-center gap-4">
-          <Button href="#download" variant="primary" size="lg">Download Now</Button>
+          <DownloadLink variant="primary" size="lg" >Download Now</DownloadLink>
           <Button href="#features" variant="outline" size="lg">Explore Features</Button>
         </div>
       </div>
