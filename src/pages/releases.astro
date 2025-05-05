@@ -1,108 +1,68 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import ReleaseCard from '../components/ReleaseCard.astro';
+import { marked } from 'marked';
 
-// Get GitHub releases
-// In a real app, this would be a server-side fetch. 
-// For demo purposes, we're using sample data.
-const GITHUB_API = "https://api.github.com/repos/username/pits-n-giggles/releases";
+// Define types for GitHub Release data
+interface GitHubAsset {
+  name: string;
+  browser_download_url: string;
+  download_count: number;
+}
 
-// Sample releases data (would be fetched from GitHub API)
-const releases = [
-  {
-    name: "Version 1.2.0",
-    tag_name: "v1.2.0",
-    published_at: "2025-03-15T10:00:00Z",
-    html_url: "https://github.com/username/pits-n-giggles/releases/tag/v1.2.0",
-    body: "## What's New\n\n- Added support for F1 2024 game\n- New track map visualization with telemetry data\n- Improved fuel calculations for endurance races\n\n## Bug Fixes\n\n- Fixed issue with data logging during long sessions\n- Corrected tire wear calculations\n- Fixed memory leak in dashboard widgets",
-    assets: [
-      {
-        name: "PitsNGiggles-1.2.0-win64.exe",
-        browser_download_url: "#",
-        download_count: 1247
-      },
-      {
-        name: "PitsNGiggles-1.2.0-macos.dmg",
-        browser_download_url: "#",
-        download_count: 986
+interface GitHubRelease {
+  name: string;
+  tag_name: string;
+  published_at: string;
+  html_url: string;
+  body?: string;
+  assets?: GitHubAsset[];
+}
+
+// Fetch GitHub releases from the actual repository
+const GITHUB_API = "https://api.github.com/repos/ashwin-nat/pits-n-giggles/releases";
+const numberOfReleases = 5;
+
+// Function to fetch GitHub releases
+async function getGitHubReleases(): Promise<GitHubRelease[]> {
+  try {
+    const response = await fetch(GITHUB_API, {
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        // Add Authorization header with token if you need higher rate limits
+        // 'Authorization': `token ${import.meta.env.GITHUB_TOKEN}`
       }
-    ]
-  },
-  {
-    name: "Version 1.1.2",
-    tag_name: "v1.1.2",
-    published_at: "2025-02-10T14:30:00Z",
-    html_url: "https://github.com/username/pits-n-giggles/releases/tag/v1.1.2",
-    body: "## Bug Fixes\n\n- Fixed compatibility issues with latest iRacing update\n- Improved stability on Windows 11\n- Corrected lap time calculations for certain tracks",
-    assets: [
-      {
-        name: "PitsNGiggles-1.1.2-win64.exe",
-        browser_download_url: "#",
-        download_count: 2156
-      },
-      {
-        name: "PitsNGiggles-1.1.2-macos.dmg",
-        browser_download_url: "#",
-        download_count: 1842
-      }
-    ]
-  },
-  {
-    name: "Version 1.1.0",
-    tag_name: "v1.1.0",
-    published_at: "2025-01-15T09:00:00Z",
-    html_url: "https://github.com/username/pits-n-giggles/releases/tag/v1.1.0",
-    body: "## What's New\n\n- Added custom dashboard creator\n- New telemetry graphs for suspension and aerodynamics\n- Support for Assetto Corsa Competizione\n\n## Improvements\n\n- Enhanced UI performance\n- Reduced CPU usage during data collection\n- Added dark mode theme option",
-    assets: [
-      {
-        name: "PitsNGiggles-1.1.0-win64.exe",
-        browser_download_url: "#",
-        download_count: 3421
-      },
-      {
-        name: "PitsNGiggles-1.1.0-macos.dmg",
-        browser_download_url: "#",
-        download_count: 2789
-      }
-    ]
-  },
-  {
-    name: "Version 1.0.0",
-    tag_name: "v1.0.0",
-    published_at: "2024-12-01T10:00:00Z",
-    html_url: "https://github.com/username/pits-n-giggles/releases/tag/v1.0.0",
-    body: "## Initial Release\n\n- Real-time telemetry data visualization\n- Lap time analysis with sector breakdown\n- Support for iRacing and F1 2023\n- Basic race strategy calculator\n- Performance comparison tools",
-    assets: [
-      {
-        name: "PitsNGiggles-1.0.0-win64.exe",
-        browser_download_url: "#",
-        download_count: 5732
-      },
-      {
-        name: "PitsNGiggles-1.0.0-macos.dmg",
-        browser_download_url: "#",
-        download_count: 4921
-      }
-    ]
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch releases: ${response.status} ${response.statusText}`);
+    }
+
+    const allReleases = await response.json();
+    // Limit to latest 5 releases
+    return allReleases.slice(0, numberOfReleases);
+  } catch (error) {
+    console.error('Error fetching GitHub releases:', error);
+    return [];
   }
-];
+}
 
-// In a real implementation, you would fetch the releases from GitHub API
-// async function getGitHubReleases() {
-//   try {
-//     const response = await fetch(GITHUB_API);
-//     if (!response.ok) throw new Error('Failed to fetch releases');
-//     return await response.json();
-//   } catch (error) {
-//     console.error('Error fetching GitHub releases:', error);
-//     return [];
-//   }
-// }
-// const releases = await getGitHubReleases();
+// Get the releases data
+const releases: GitHubRelease[] = await getGitHubReleases();
+
+// Function to parse markdown content
+function parseMarkdown(content: string | undefined): string {
+  try {
+    if (!content) return '';
+    return marked.parse(content) as string;
+  } catch (error) {
+    console.error('Error parsing markdown:', error);
+    return content || '';
+  }
+}
 ---
 
-<Layout 
-  title="Releases" 
+<Layout
+  title="Releases | Pits n' Giggles"
   description="Latest releases and updates for Pits n' Giggles sim racing telemetry application."
 >
   <section class="pt-32 pb-12">
@@ -114,12 +74,12 @@ const releases = [
           Stay up to date with the latest versions and improvements to Pits n' Giggles. Each release brings new features, bug fixes, and performance enhancements.
         </p>
       </div>
-      
+
       <div class="mb-8 flex justify-between items-center">
-        <h2 class="text-2xl font-semibold">All Releases</h2>
-        <a 
-          href="https://github.com/username/pits-n-giggles/releases" 
-          target="_blank" 
+        <h2 class="text-2xl font-semibold">Latest Releases</h2>
+        <a
+          href="https://github.com/ashwin-nat/pits-n-giggles/releases"
+          target="_blank"
           rel="noopener noreferrer"
           class="text-accent-500 hover:text-accent-400 font-semibold inline-flex items-center gap-1"
         >
@@ -130,20 +90,145 @@ const releases = [
           </svg>
         </a>
       </div>
-      
-      <div class="space-y-8">
-        {releases.map(release => (
-          <ReleaseCard release={release} />
-        ))}
-      </div>
-      
+
+      {releases.length > 0 ? (
+        <div class="space-y-8">
+          {releases.map((release: GitHubRelease) => (
+            <div class="bg-secondary-800 rounded-lg p-6 shadow-lg border border-secondary-700">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <h3 class="text-xl font-bold text-primary-300">{release.name || release.tag_name}</h3>
+                  <p class="text-secondary-400 text-sm">
+                    Released on {new Date(release.published_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </p>
+                </div>
+                <a
+                  href={release.html_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-accent-500 hover:text-accent-400 text-sm font-medium"
+                >
+                  {release.tag_name}
+                </a>
+              </div>
+
+              {release.body && (
+                <div class="release-notes mb-6">
+                  <style is:global>
+                    /* Custom styling for GitHub markdown content */
+                    .release-notes h1, .release-notes h2, .release-notes h3 {
+                      margin-top: 1.5rem;
+                      margin-bottom: 0.75rem;
+                      font-weight: 600;
+                      color: #e2e8f0;
+                    }
+                    .release-notes h1 {
+                      font-size: 1.5rem;
+                    }
+                    .release-notes h2 {
+                      font-size: 1.25rem;
+                      padding-bottom: 0.3rem;
+                      border-bottom: 1px solid #4a5568;
+                    }
+                    .release-notes h3 {
+                      font-size: 1.125rem;
+                    }
+                    .release-notes ul, .release-notes ol {
+                      margin-top: 0.5rem;
+                      margin-bottom: 1rem;
+                      padding-left: 1.5rem;
+                    }
+                    .release-notes ul {
+                      list-style-type: disc;
+                    }
+                    .release-notes ol {
+                      list-style-type: decimal;
+                    }
+                    .release-notes li {
+                      margin-bottom: 0.375rem;
+                      color: #cbd5e0;
+                    }
+                    .release-notes p {
+                      margin-bottom: 1rem;
+                      color: #cbd5e0;
+                    }
+                    .release-notes a {
+                      color: #63b3ed;
+                      text-decoration: none;
+                    }
+                    .release-notes a:hover {
+                      text-decoration: underline;
+                    }
+                    .release-notes code {
+                      padding: 0.2em 0.4em;
+                      margin: 0;
+                      font-size: 85%;
+                      background-color: #2d3748;
+                      border-radius: 3px;
+                      color: #e2e8f0;
+                    }
+                    .release-notes pre {
+                      background-color: #2d3748;
+                      padding: 1rem;
+                      border-radius: 0.375rem;
+                      overflow-x: auto;
+                      margin: 1rem 0;
+                    }
+                    .release-notes pre code {
+                      background-color: transparent;
+                      padding: 0;
+                      border-radius: 0;
+                    }
+                  </style>
+                  <Fragment set:html={parseMarkdown(release.body)} />
+                </div>
+              )}
+
+              {release.assets && release.assets.length > 0 && (
+                <div>
+                  <h4 class="text-lg font-semibold mb-2 text-primary-200">Downloads</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {release.assets.map(asset => (
+                      <a
+                        href={asset.browser_download_url}
+                        class="flex items-center justify-between bg-secondary-700 hover:bg-secondary-600 transition-colors p-3 rounded-md"
+                      >
+                        <div class="flex items-center gap-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent-500">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                          </svg>
+                          <span class="text-sm truncate">{asset.name}</span>
+                        </div>
+                        <span class="text-xs text-secondary-400">{asset.download_count.toLocaleString()} downloads</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="bg-secondary-800 rounded-lg p-6 text-center">
+          <p class="text-secondary-300">
+            Unable to load releases. Please check back later or visit our GitHub page.
+          </p>
+        </div>
+      )}
+
       <div class="mt-12 text-center">
         <p class="text-secondary-400 font-body mb-4">
           Looking for older releases? Check our complete history on GitHub.
         </p>
-        <a 
-          href="https://github.com/username/pits-n-giggles/releases" 
-          target="_blank" 
+        <a
+          href="https://github.com/ashwin-nat/pits-n-giggles/releases"
+          target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center gap-2 text-accent-500 hover:text-accent-400 font-semibold"
         >
