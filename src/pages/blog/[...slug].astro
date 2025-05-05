@@ -1,0 +1,160 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import dayjs from 'dayjs';
+
+// Generate static paths for all blog posts
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog');
+  return blogEntries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+// Get the blog post data
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+// Format the date
+const formattedDate = dayjs(entry.data.pubDate).format('MMMM D, YYYY');
+---
+
+<Layout title={entry.data.title} description={entry.data.description}>
+  <article class="pt-32 pb-20">
+    <div class="container mx-auto px-4">
+      <!-- Post Header -->
+      <div class="max-w-3xl mx-auto mb-12">
+        <div class="flex gap-2 mb-4">
+          {entry.data.tags.map((tag: string) => (
+            <span class="inline-block bg-secondary-800 text-secondary-300 text-xs px-3 py-1 rounded">
+              {tag}
+            </span>
+          ))}
+        </div>
+        <h1 class="text-4xl font-bold mb-4">{entry.data.title}</h1>
+        <div class="flex items-center text-secondary-400 mb-6">
+          <span>{formattedDate}</span>
+          <span class="mx-2">•</span>
+          <span>By {entry.data.author}</span>
+        </div>
+        
+        <!-- Featured Image -->
+        <div class="rounded-lg overflow-hidden mb-8">
+          <img 
+            src={entry.data.image.url} 
+            alt={entry.data.image.alt} 
+            class="w-full h-auto"
+          />
+        </div>
+      </div>
+      
+      <!-- Post Content -->
+      <div class="max-w-3xl mx-auto prose prose-invert prose-lg font-body">
+        <Content />
+      </div>
+      
+      <!-- Author Bio -->
+      <div class="max-w-3xl mx-auto mt-12 pt-8 border-t border-secondary-800">
+        <div class="flex items-start gap-4">
+          <div class="w-16 h-16 bg-accent-600 rounded-full flex items-center justify-center font-bold text-2xl">
+            {entry.data.author.charAt(0)}
+          </div>
+          <div>
+            <h3 class="text-xl font-semibold mb-2">About {entry.data.author}</h3>
+            <p class="text-secondary-300 font-body">
+              Sim racing enthusiast and telemetry expert. Passionate about helping others improve their racing performance through data analysis and practical techniques.
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Post Navigation -->
+      <div class="max-w-3xl mx-auto mt-12 pt-8 border-t border-secondary-800">
+        <div class="flex flex-col sm:flex-row justify-between">
+          <a href="/blog" class="text-accent-500 hover:text-accent-400 font-semibold inline-flex items-center gap-1 mb-4 sm:mb-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5"></path>
+              <path d="M12 19l-7-7 7-7"></path>
+            </svg>
+            Back to Blog
+          </a>
+          
+          <div class="flex gap-4">
+            <a href="#" class="text-secondary-400 hover:text-white transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/>
+              </svg>
+            </a>
+            <a href="#" class="text-secondary-400 hover:text-white transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/>
+              </svg>
+            </a>
+            <a href="#" class="text-secondary-400 hover:text-white transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.633 7.997c.013.175.013.349.013.523 0 5.325-4.053 11.461-11.46 11.461-2.282 0-4.402-.661-6.186-1.809.324.037.636.05.973.05a8.07 8.07 0 0 0 5.001-1.721 4.036 4.036 0 0 1-3.767-2.793c.249.037.499.062.761.062.361 0 .724-.05 1.061-.137a4.027 4.027 0 0 1-3.23-3.953v-.05c.537.299 1.16.486 1.82.511a4.022 4.022 0 0 1-1.796-3.354c0-.748.199-1.434.548-2.032a11.457 11.457 0 0 0 8.306 4.215c-.062-.3-.1-.599-.1-.898a4.026 4.026 0 0 1 4.028-4.028c1.16 0 2.207.486 2.943 1.272a7.957 7.957 0 0 0 2.556-.973 4.02 4.02 0 0 1-1.771 2.22 8.073 8.073 0 0 0 2.319-.624 8.645 8.645 0 0 1-2.019 2.083z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .prose {
+    --tw-prose-body: theme('colors.secondary.300');
+    --tw-prose-headings: theme('colors.white');
+    --tw-prose-lead: theme('colors.secondary.300');
+    --tw-prose-links: theme('colors.accent.500');
+    --tw-prose-bold: theme('colors.white');
+    --tw-prose-counters: theme('colors.secondary.400');
+    --tw-prose-bullets: theme('colors.secondary.400');
+    --tw-prose-hr: theme('colors.secondary.800');
+    --tw-prose-quotes: theme('colors.secondary.200');
+    --tw-prose-quote-borders: theme('colors.primary.500');
+    --tw-prose-captions: theme('colors.secondary.400');
+    --tw-prose-code: theme('colors.white');
+    --tw-prose-pre-code: theme('colors.secondary.300');
+    --tw-prose-pre-bg: theme('colors.secondary.950');
+    --tw-prose-th-borders: theme('colors.secondary.800');
+    --tw-prose-td-borders: theme('colors.secondary.800');
+  }
+  
+  .prose a {
+    text-decoration: none;
+    border-bottom: 1px solid theme('colors.accent.500');
+    transition: border-color 0.2s, color 0.2s;
+  }
+  
+  .prose a:hover {
+    border-bottom-color: theme('colors.accent.400');
+    color: theme('colors.accent.400');
+  }
+  
+  .prose pre {
+    background-color: theme('colors.secondary.950');
+    border: 1px solid theme('colors.secondary.800');
+    border-radius: 0.375rem;
+  }
+  
+  .prose img {
+    border-radius: 0.375rem;
+  }
+  
+  .prose code {
+    background-color: theme('colors.secondary.800');
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+  
+  .prose blockquote {
+    border-left-color: theme('colors.primary.500');
+    background-color: theme('colors.secondary.900');
+    padding: 1rem;
+    border-radius: 0.375rem;
+  }
+</style>

@@ -1,0 +1,111 @@
+---
+import '@fontsource/montserrat/400.css';
+import '@fontsource/montserrat/600.css';
+import '@fontsource/montserrat/700.css';
+import '@fontsource/source-sans-pro/400.css';
+import '@fontsource/source-sans-pro/600.css';
+import NavBar from '../components/NavBar.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Pits n' Giggles - Advanced Sim Racing Telemetry App" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title} | Pits n' Giggles</title>
+  </head>
+  <body class="min-h-screen bg-gradient-to-b from-secondary-950 to-secondary-900 text-white font-sans">
+    <div class="relative z-10">
+      <NavBar />
+      <main>
+        <slot />
+      </main>
+      <Footer />
+    </div>
+    
+    <!-- Racing-inspired background animation -->
+    <div class="fixed inset-0 z-0 opacity-10 pointer-events-none">
+      <div class="absolute inset-x-0 top-1/4 h-px bg-gradient-to-r from-transparent via-primary-500 to-transparent animate-pulse-gentle"></div>
+      <div class="absolute inset-x-0 top-2/4 h-px bg-gradient-to-r from-transparent via-accent-500 to-transparent animate-pulse-gentle delay-700"></div>
+      <div class="absolute inset-x-0 top-3/4 h-px bg-gradient-to-r from-transparent via-primary-500 to-transparent animate-pulse-gentle delay-500"></div>
+      <div class="absolute inset-y-0 left-1/4 w-px bg-gradient-to-b from-transparent via-accent-500 to-transparent animate-pulse-gentle delay-300"></div>
+      <div class="absolute inset-y-0 left-2/4 w-px bg-gradient-to-b from-transparent via-primary-500 to-transparent animate-pulse-gentle delay-100"></div>
+      <div class="absolute inset-y-0 left-3/4 w-px bg-gradient-to-b from-transparent via-accent-500 to-transparent animate-pulse-gentle delay-200"></div>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  html {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    color-scheme: dark;
+  }
+  
+  body {
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  p {
+    font-family: 'Source Sans Pro', system-ui, sans-serif;
+    margin: 0;
+  }
+  
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-in forwards;
+  }
+  
+  /* Racing checkerboard pattern */
+  .racing-pattern::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: repeating-linear-gradient(
+      90deg,
+      #E10600,
+      #E10600 10px,
+      transparent 10px,
+      transparent 20px
+    );
+    z-index: 10;
+  }
+</style>

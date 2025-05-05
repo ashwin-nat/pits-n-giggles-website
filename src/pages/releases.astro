@@ -1,0 +1,158 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ReleaseCard from '../components/ReleaseCard.astro';
+
+// Get GitHub releases
+// In a real app, this would be a server-side fetch. 
+// For demo purposes, we're using sample data.
+const GITHUB_API = "https://api.github.com/repos/username/pits-n-giggles/releases";
+
+// Sample releases data (would be fetched from GitHub API)
+const releases = [
+  {
+    name: "Version 1.2.0",
+    tag_name: "v1.2.0",
+    published_at: "2025-03-15T10:00:00Z",
+    html_url: "https://github.com/username/pits-n-giggles/releases/tag/v1.2.0",
+    body: "## What's New\n\n- Added support for F1 2024 game\n- New track map visualization with telemetry data\n- Improved fuel calculations for endurance races\n\n## Bug Fixes\n\n- Fixed issue with data logging during long sessions\n- Corrected tire wear calculations\n- Fixed memory leak in dashboard widgets",
+    assets: [
+      {
+        name: "PitsNGiggles-1.2.0-win64.exe",
+        browser_download_url: "#",
+        download_count: 1247
+      },
+      {
+        name: "PitsNGiggles-1.2.0-macos.dmg",
+        browser_download_url: "#",
+        download_count: 986
+      }
+    ]
+  },
+  {
+    name: "Version 1.1.2",
+    tag_name: "v1.1.2",
+    published_at: "2025-02-10T14:30:00Z",
+    html_url: "https://github.com/username/pits-n-giggles/releases/tag/v1.1.2",
+    body: "## Bug Fixes\n\n- Fixed compatibility issues with latest iRacing update\n- Improved stability on Windows 11\n- Corrected lap time calculations for certain tracks",
+    assets: [
+      {
+        name: "PitsNGiggles-1.1.2-win64.exe",
+        browser_download_url: "#",
+        download_count: 2156
+      },
+      {
+        name: "PitsNGiggles-1.1.2-macos.dmg",
+        browser_download_url: "#",
+        download_count: 1842
+      }
+    ]
+  },
+  {
+    name: "Version 1.1.0",
+    tag_name: "v1.1.0",
+    published_at: "2025-01-15T09:00:00Z",
+    html_url: "https://github.com/username/pits-n-giggles/releases/tag/v1.1.0",
+    body: "## What's New\n\n- Added custom dashboard creator\n- New telemetry graphs for suspension and aerodynamics\n- Support for Assetto Corsa Competizione\n\n## Improvements\n\n- Enhanced UI performance\n- Reduced CPU usage during data collection\n- Added dark mode theme option",
+    assets: [
+      {
+        name: "PitsNGiggles-1.1.0-win64.exe",
+        browser_download_url: "#",
+        download_count: 3421
+      },
+      {
+        name: "PitsNGiggles-1.1.0-macos.dmg",
+        browser_download_url: "#",
+        download_count: 2789
+      }
+    ]
+  },
+  {
+    name: "Version 1.0.0",
+    tag_name: "v1.0.0",
+    published_at: "2024-12-01T10:00:00Z",
+    html_url: "https://github.com/username/pits-n-giggles/releases/tag/v1.0.0",
+    body: "## Initial Release\n\n- Real-time telemetry data visualization\n- Lap time analysis with sector breakdown\n- Support for iRacing and F1 2023\n- Basic race strategy calculator\n- Performance comparison tools",
+    assets: [
+      {
+        name: "PitsNGiggles-1.0.0-win64.exe",
+        browser_download_url: "#",
+        download_count: 5732
+      },
+      {
+        name: "PitsNGiggles-1.0.0-macos.dmg",
+        browser_download_url: "#",
+        download_count: 4921
+      }
+    ]
+  }
+];
+
+// In a real implementation, you would fetch the releases from GitHub API
+// async function getGitHubReleases() {
+//   try {
+//     const response = await fetch(GITHUB_API);
+//     if (!response.ok) throw new Error('Failed to fetch releases');
+//     return await response.json();
+//   } catch (error) {
+//     console.error('Error fetching GitHub releases:', error);
+//     return [];
+//   }
+// }
+// const releases = await getGitHubReleases();
+---
+
+<Layout 
+  title="Releases" 
+  description="Latest releases and updates for Pits n' Giggles sim racing telemetry application."
+>
+  <section class="pt-32 pb-12">
+    <div class="container mx-auto px-4">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h1 class="text-4xl font-bold mb-4">Releases</h1>
+        <div class="w-20 h-1 bg-primary-500 mx-auto mb-6"></div>
+        <p class="text-secondary-300 font-body">
+          Stay up to date with the latest versions and improvements to Pits n' Giggles. Each release brings new features, bug fixes, and performance enhancements.
+        </p>
+      </div>
+      
+      <div class="mb-8 flex justify-between items-center">
+        <h2 class="text-2xl font-semibold">All Releases</h2>
+        <a 
+          href="https://github.com/username/pits-n-giggles/releases" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="text-accent-500 hover:text-accent-400 font-semibold inline-flex items-center gap-1"
+        >
+          View on GitHub
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="7" y1="17" x2="17" y2="7"></line>
+            <polyline points="7 7 17 7 17 17"></polyline>
+          </svg>
+        </a>
+      </div>
+      
+      <div class="space-y-8">
+        {releases.map(release => (
+          <ReleaseCard release={release} />
+        ))}
+      </div>
+      
+      <div class="mt-12 text-center">
+        <p class="text-secondary-400 font-body mb-4">
+          Looking for older releases? Check our complete history on GitHub.
+        </p>
+        <a 
+          href="https://github.com/username/pits-n-giggles/releases" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 text-accent-500 hover:text-accent-400 font-semibold"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          View all releases on GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

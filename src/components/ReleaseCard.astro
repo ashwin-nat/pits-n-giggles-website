@@ -1,0 +1,80 @@
+---
+import dayjs from 'dayjs';
+
+interface Props {
+  release: {
+    name: string;
+    tag_name: string;
+    published_at: string;
+    html_url: string;
+    body: string;
+    assets: Array<{
+      name: string;
+      browser_download_url: string;
+      download_count: number;
+    }>;
+  };
+}
+
+const { release } = Astro.props;
+const formattedDate = dayjs(release.published_at).format('MMMM D, YYYY');
+
+// Process the Markdown content - simple conversion for display
+const description = release.body
+  .split('\n')
+  .filter(line => line.trim() !== '')
+  .slice(0, 3)
+  .join('\n');
+---
+
+<div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6 transition-all duration-300 hover:shadow-card hover:border-secondary-700">
+  <div class="flex items-start justify-between mb-3">
+    <div>
+      <h3 class="text-xl font-semibold text-white">{release.name}</h3>
+      <p class="text-accent-500 font-mono text-sm">{release.tag_name}</p>
+    </div>
+    <span class="text-secondary-400 text-sm">{formattedDate}</span>
+  </div>
+  
+  <div class="prose prose-invert prose-sm max-w-none my-4 font-body text-secondary-300">
+    <p class="line-clamp-3">{description}</p>
+  </div>
+  
+  <div class="mt-4 space-y-2">
+    {release.assets.map(asset => (
+      <div class="flex items-center justify-between">
+        <span class="text-sm text-secondary-300 font-mono">{asset.name}</span>
+        <div class="flex items-center gap-4">
+          <span class="text-xs text-secondary-400">{asset.download_count} downloads</span>
+          <a 
+            href={asset.browser_download_url} 
+            class="text-accent-500 hover:text-accent-400 font-semibold text-sm flex items-center gap-1"
+            download
+          >
+            Download
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+      </div>
+    ))}
+  </div>
+  
+  <div class="mt-4 pt-4 border-t border-secondary-800">
+    <a 
+      href={release.html_url} 
+      class="text-accent-500 hover:text-accent-400 font-semibold text-sm inline-flex items-center gap-1"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      View full release notes
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="7" y1="17" x2="17" y2="7"></line>
+        <polyline points="7 7 17 7 17 17"></polyline>
+      </svg>
+    </a>
+  </div>
+</div>
