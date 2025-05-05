@@ -3,11 +3,11 @@ import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import FeatureCard from '../components/FeatureCard.astro';
 
-// Feature data
+// Feature data (use existing or adjust as needed)
 const features = [
   {
     title: "Real-time Telemetry",
-    description: "Get instant feedback on your driving with millisecond precision telemetry data, including speed, rpm, gear, and forces.",
+    description: "Get instant feedback on your driving with millisecond precision telemetry data.",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`
   },
   {
@@ -16,33 +16,18 @@ const features = [
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>`
   },
   {
-    title: "Custom Dashboards",
-    description: "Create personalized telemetry dashboards with drag-and-drop widgets to focus on the metrics that matter to you.",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>`
-  },
-  {
-    title: "Multi-Game Support",
-    description: "Compatible with popular sim racing titles including iRacing, Assetto Corsa, F1 series, and more.",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`
-  },
-  {
     title: "Lap Analysis",
     description: "Break down your laps sector by sector to understand where you're losing or gaining time on the track.",
     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`
   },
   {
-    title: "Race Strategy Calculator",
-    description: "Plan your pit stops and fuel strategy with our advanced race strategy calculator.",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`
+    title: "Tyre and Fuel Management",
+    description: "Track your tyre wear and fuel consumption in real-time to make informed pit stop decisions based on predictions.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`
   },
 ];
 
-// Screenshots
 const screenshots = [
-  {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
-    alt: "Main Telemetry Dashboard during Race"
-  },
   {
     url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/lap-times-modal-ss.png?raw=true",
     alt: "Lap Time Analysis Screen"
@@ -59,30 +44,11 @@ const screenshots = [
   <section class="pt-32 pb-20 relative">
     <div class="container mx-auto px-4">
       <div class="max-w-4xl mx-auto text-center mb-12">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-primary-500 via-white to-accent-500 bg-clip-text text-transparent">
-          Advanced Self-Engineering tool for F1 Sim Racing
-        </h1>
-        <p class="text-xl text-secondary-300 font-body mb-8">
-          Take your sim racing to the next level with real-time data, performance analytics, and prediction and comparisons against other drivers.
-        </p>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Advanced Self-Engineering tool for F1 Sim Racing</h1>
+        <p class="text-xl text-secondary-300 mb-8">Take your sim racing to the next level with real-time data and performance analytics.</p>
         <div class="flex flex-wrap justify-center gap-4">
-          <Button href="#download" variant="primary" size="lg">
-            Download Now
-          </Button>
-          <Button href="#features" variant="outline" size="lg">
-            Explore Features
-          </Button>
-        </div>
-      </div>
-
-      <!-- Hero Image -->
-      <div class="relative mx-auto max-w-5xl">
-        <div class="bg-gradient-to-tr from-primary-500/20 to-accent-500/20 rounded-xl p-2 shadow-xl">
-          <img
-            src="https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true"
-            alt="Pits n' Giggles Telemetry Dashboard"
-            class="rounded-lg w-full h-auto shadow-md"
-          />
+          <Button href="#download" variant="primary" size="lg">Download Now</Button>
+          <Button href="#features" variant="outline" size="lg">Explore Features</Button>
         </div>
       </div>
     </div>
@@ -93,14 +59,12 @@ const screenshots = [
     <div class="container mx-auto px-4">
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h2 class="text-3xl md:text-4xl font-bold mb-4">Advanced Features</h2>
-        <div class="w-20 h-1 bg-primary-500 mx-auto mb-6"></div>
-        <p class="text-secondary-300 font-body">
-          Pits n' Giggles provides powerful tools to analyze your car status and see where you stand relative to your competitors!
+        <p class="text-secondary-300">
+          Pits n' Giggles provides powerful tools to analyze your car status and compare your performance against competitors!
         </p>
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {features.map(feature => (
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        {features.slice(0, 4).map(feature => (
           <FeatureCard
             title={feature.title}
             description={feature.description}
@@ -116,20 +80,12 @@ const screenshots = [
     <div class="container mx-auto px-4">
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h2 class="text-3xl md:text-4xl font-bold mb-4">See It In Action</h2>
-        <div class="w-20 h-1 bg-primary-500 mx-auto mb-6"></div>
-        <p class="text-secondary-300 font-body">
-          Explore the intuitive interface and powerful features that make Pits n' Giggles the preferred telemetry solution for sim racers.
-        </p>
+        <p class="text-secondary-300">Explore the intuitive interface of Pits n' Giggles that makes it ideal for self engineering</p>
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         {screenshots.map((screenshot, index) => (
           <div class={`rounded-lg overflow-hidden transition-all duration-500 hover:scale-105 shadow-xl ${index === 1 ? 'md:-mt-8' : ''}`}>
-            <img
-              src={screenshot.url}
-              alt={screenshot.alt}
-              class="w-full h-auto"
-            />
+            <img src={screenshot.url} alt={screenshot.alt} class="w-full h-auto"/>
           </div>
         ))}
       </div>
@@ -141,12 +97,8 @@ const screenshots = [
     <div class="container mx-auto px-4">
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h2 class="text-3xl md:text-4xl font-bold mb-4">What Racers Say</h2>
-        <div class="w-20 h-1 bg-primary-500 mx-auto mb-6"></div>
-        <p class="text-secondary-300 font-body">
-          Hear from sim racers who have improved their performance using Pits n' Giggles.
-        </p>
+        <p class="text-secondary-300">Hear from sim racers who improved their performance with Pits n' Giggles.</p>
       </div>
-
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
           <div class="flex items-center mb-4">
@@ -189,5 +141,4 @@ const screenshots = [
       </div>
     </div>
   </section>
-
 </Layout>
