@@ -31,6 +31,15 @@ Now, I can **record once**, and **debug forever** without ever restarting a race
 
 ## Custom Binary Format
 
+Initially, I had considered the standard pcap format where I capture packets, write to a standard pcap file and then replay from this file.
+The benefit of this approach would've been that the file is innately compatible with wireshark.
+
+PCAP format is a highly detailed and verbose format, that captures several nuances of packet traffic, and more importantly, wireshark supports it out of the box.
+However, the code started become too complex, way too complex for a dev tool. This would've required a siginifant chunk of time to develop and test.
+And since this is just a dev tool, it was not worth the effort.
+
+Hence, a new custom simpler file format was defined, the .f1pcap file.
+
 ### File Header (12 bytes)
 
 ![File header block diagram](/blog_assets/capturing-replaying-data/file_header.png)
@@ -94,6 +103,10 @@ Now:
 ## Wrap-up
 
 By decoupling live simulation from debugging, `telemetry_recorder` and `telemetry_replayer` have dramatically improved how I develop *Pits n' Giggles*. It's one of those internal tools that paid for itself almost instantly and continues to save me hours every week.
+
+I'm happy with the end result and with how much mileage I've got out of this tool. Would have I done anything differently given everything I've learned since then?
+I probably would've added a checksum field to the header, making the file more robust, and also making the header a nice satisfying 16 bytes.
+For a dev tool, I think this does the job as is.
 
 If you're building anything real-time or stream-based, building a similar telemetry pipeline will radically simplify your workflow.
 Trust me, you'll thank me later
