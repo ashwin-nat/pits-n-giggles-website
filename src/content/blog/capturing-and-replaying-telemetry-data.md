@@ -20,14 +20,14 @@ While developing ***Pits n' Giggles***, my F1 sim racing app, debugging became a
 - Alt-tabbing back to the IDE
 - Restarting the sim
 
-This repeated **context switching** between game and code created high **mental overhead**—slowing progress, introducing bugs, and wasting time.
+This repeated **context switching** between game and code created high **mental overhead** slowing progress, introducing bugs, and wasting time.
 
 To solve this, I built two developer tools:
 
 - `telemetry_recorder` – Captures live telemetry from the sim via UDP
 - `telemetry_replayer` – Replays captured telemetry offline over UDP or TCP
 
-Now, I can **record once**, and **debug forever**—without ever restarting a race.
+Now, I can **record once**, and **debug forever** without ever restarting a race.
 
 ## Custom Binary Format
 
@@ -93,7 +93,7 @@ Now:
 
 ## Wrap-up
 
-By decoupling live simulation from debugging, `telemetry_recorder` and `telemetry_replayer` have dramatically improved how I develop *Pits n' Giggles*. It's one of those internal tools that paid for itself almost instantly—and continues to save me hours every week.
+By decoupling live simulation from debugging, `telemetry_recorder` and `telemetry_replayer` have dramatically improved how I develop *Pits n' Giggles*. It's one of those internal tools that paid for itself almost instantly and continues to save me hours every week.
 
 If you're building anything real-time or stream-based, building a similar telemetry pipeline will radically simplify your workflow.
 Trust me, you'll thank me later
