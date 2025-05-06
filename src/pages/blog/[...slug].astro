@@ -54,21 +54,6 @@ const formattedDate = dayjs(entry.data.pubDate).format('MMMM D, YYYY');
         <Content />
       </div>
 
-      <!-- Author Bio -->
-      <div class="max-w-3xl mx-auto mt-12 pt-8 border-t border-secondary-800">
-        <div class="flex items-start gap-4">
-          <div class="w-16 h-16 bg-accent-600 rounded-full flex items-center justify-center font-bold text-2xl">
-            {entry.data.author.charAt(0)}
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold mb-2">About {entry.data.author}</h3>
-            <p class="text-secondary-300 font-body">
-              Sim racing enthusiast and telemetry expert. Passionate about helping others improve their racing performance through data analysis and practical techniques.
-            </p>
-          </div>
-        </div>
-      </div>
-
       <!-- Post Navigation -->
       <div class="max-w-3xl mx-auto mt-12 pt-8 border-t border-secondary-800">
         <div class="flex flex-col sm:flex-row justify-between">

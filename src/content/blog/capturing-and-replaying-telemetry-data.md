@@ -96,5 +96,6 @@ Now:
 By decoupling live simulation from debugging, `telemetry_recorder` and `telemetry_replayer` have dramatically improved how I develop *Pits n' Giggles*. It's one of those internal tools that paid for itself almost instantly—and continues to save me hours every week.
 
 If you're building anything real-time or stream-based, building a similar telemetry pipeline will radically simplify your workflow.
+Trust me, you'll thank me later
 
 Record once. Replay forever. Focus on what matters.
