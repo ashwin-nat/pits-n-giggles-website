@@ -22,3 +22,12 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# temp python scripts
+*.pyc
+*.py
+__pycache__/
+
+# poetry configs
+*.toml
+*.lock
