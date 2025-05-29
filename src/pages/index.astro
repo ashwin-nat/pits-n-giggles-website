@@ -4,6 +4,7 @@ import Button from '../components/Button.astro';
 import FeatureCard from '../components/FeatureCard.astro';
 import ImageViewer from '../components/ImageViewer.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
+import { Image } from 'astro:assets';
 import { testimonials } from '../data/testimonials';
 
 // Feature data
@@ -54,9 +55,11 @@ const heroImage = {
     <!-- Hero Image -->
     <div class="relative mx-auto max-w-5xl">
       <div class="bg-gradient-to-tr from-primary-500/20 to-accent-500/20 rounded-xl p-2 shadow-xl cursor-pointer" data-screenshot>
-        <img
+        <Image
           src={heroImage.url}
           alt={heroImage.alt}
+          width={1920}
+          height={1080}
           class="rounded-lg w-full h-auto shadow-md"
         />
       </div>
