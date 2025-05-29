@@ -35,6 +35,10 @@ const screenshots = [
     alt: "Main UI Dashboard"
   },
   {
+    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
+    alt: "Main UI Dashboard"
+  },
+  {
     url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/lap-times-modal-ss.png?raw=true",
     alt: "Lap Time Analysis Screen"
   },
@@ -55,6 +59,8 @@ const screenshots = [
         <div class="flex flex-wrap justify-center gap-4">
           <DownloadLink variant="primary" size="lg">Download Now</DownloadLink>
           <Button href="/features" variant="outline" size="lg">Explore Features</Button>
+          <DownloadLink variant="primary" size="lg">Download Now</DownloadLink>
+          <Button href="#features" variant="outline" size="lg">Explore Features</Button>
         </div>
       </div>
     </div>
@@ -101,7 +107,17 @@ const screenshots = [
         <p class="text-secondary-300">Explore the intuitive interface of Pits n' Giggles that makes it ideal for self engineering</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {screenshots.map((screenshot, index) => (
+          <div class={`rounded-lg overflow-hidden transition-all duration-500 hover:scale-105 shadow-xl cursor-pointer ${
+            index === 1 ? 'md:translate-y-12' : index === 2 ? 'md:-translate-y-12' : ''
+          }`}>
+            <img
+              src={screenshot.url}
+              alt={screenshot.alt}
+              class="w-full h-64 object-cover"
+              data-screenshot
+            />
           <div class={`rounded-lg overflow-hidden transition-all duration-500 hover:scale-105 shadow-xl cursor-pointer ${
             index === 1 ? 'md:translate-y-12' : index === 2 ? 'md:-translate-y-12' : ''
           }`}>
