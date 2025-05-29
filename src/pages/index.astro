@@ -1,35 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
-import FeatureCard from '../components/FeatureCard.astro';
 import ImageViewer from '../components/ImageViewer.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
 import { Image } from 'astro:assets';
 import { testimonials } from '../data/testimonials';
-
-// Feature data
-const features = [
-  {
-    title: "Real-time Telemetry",
-    description: "Get instant feedback on your driving with millisecond precision telemetry data.",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`
-  },
-  {
-    title: "Performance Analytics",
-    description: "Compare your performance against your previous laps and other drivers to identify areas for improvement.",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>`
-  },
-  {
-    title: "Lap Analysis",
-    description: "Break down your laps sector by sector to understand where you're losing or gaining time on the track.",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`
-  },
-  {
-    title: "Tyre and Fuel Management",
-    description: "Track your tyre wear and fuel consumption in real-time to make informed pit stop decisions based on predictions.",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`
-  },
-];
 
 const heroImage = {
   url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
@@ -66,41 +41,41 @@ const heroImage = {
     </div>
   </section>
 
-  <!-- Features Section -->
-  <section id="features" class="py-20">
+  <!-- App Description Section -->
+  <section class="py-20 bg-secondary-900/50">
     <div class="container mx-auto px-4">
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">Advanced Features</h2>
-        <p class="text-secondary-300">
-          Pits n' Giggles provides powerful tools to analyze your car status and compare your performance against competitors!
-        </p>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-        {features.slice(0, 4).map(feature => (
-          <FeatureCard
-            title={feature.title}
-            description={feature.description}
-            icon={feature.icon}
-          />
-        ))}
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold mb-8 text-center">What is Pits n' Giggles?</h2>
+        <div class="prose prose-invert prose-lg mx-auto">
+          <p class="text-secondary-300 mb-6">
+            Pits n' Giggles is a powerful telemetry tool designed specifically for F1 sim racing enthusiasts. It provides real-time data analysis and performance insights during your races, helping you make informed decisions and improve your racing strategy.
+          </p>
+          <p class="text-secondary-300 mb-6">
+            Whether you're a casual racer or a competitive driver, our tool offers valuable insights into your driving performance, including tire wear, fuel management, ERS deployment, and detailed lap time analysis. The intuitive interface ensures you can focus on racing while having all critical information at your fingertips.
+          </p>
+          <p class="text-secondary-300">
+            With features like real-time telemetry, advanced analytics, and OBS integration for streamers, Pits n' Giggles is your perfect companion for enhancing your F1 sim racing experience.
+          </p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Testimonials Section -->
-  <section class="py-20">
-    <div class="container mx-auto px-4">
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">What Racers Say</h2>
-        <p class="text-secondary-300">Hear from sim racers who improved their performance with Pits n' Giggles.</p>
+  {testimonials.length > 0 && (
+    <section class="py-20">
+      <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">What Racers Say</h2>
+          <p class="text-secondary-300">Hear from sim racers who improved their performance with Pits n' Giggles.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {testimonials.map(testimonial => (
+            <TestimonialCard {...testimonial} />
+          ))}
+        </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {testimonials.map(testimonial => (
-          <TestimonialCard {...testimonial} />
-        ))}
-      </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <ImageViewer images={[heroImage]} />
 </Layout>
