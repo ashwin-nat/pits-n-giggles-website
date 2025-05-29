@@ -1,0 +1,99 @@
+---
+interface Props {
+  images: {
+    url: string;
+    alt: string;
+  }[];
+  initialIndex?: number;
+}
+
+const { images, initialIndex = 0 } = Astro.props;
+---
+
+<div id="imageViewer" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm">
+  <div class="relative w-full h-full flex items-center justify-center p-4">
+    <!-- Close button -->
+    <button id="closeViewer" class="absolute top-4 right-4 text-white hover:text-accent-400 z-20">
+      <span class="sr-only">Close</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <!-- Navigation buttons -->
+    <button id="prevImage" class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-accent-400 z-20">
+      <span class="sr-only">Previous</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+
+    <button id="nextImage" class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-accent-400 z-20">
+      <span class="sr-only">Next</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+
+    <!-- Image container -->
+    <div class="relative max-w-7xl w-full h-full flex items-center justify-center">
+      <img id="currentImage" src="" alt="" class="max-w-full max-h-[90vh] object-contain" />
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ images, initialIndex }}>
+  let currentIndex = initialIndex;
+  const viewer = document.getElementById('imageViewer');
+  const imgElement = document.getElementById('currentImage');
+  const prevBtn = document.getElementById('prevImage');
+  const nextBtn = document.getElementById('nextImage');
+  const closeBtn = document.getElementById('closeViewer');
+
+  function updateImage() {
+    const image = images[currentIndex];
+    imgElement.src = image.url;
+    imgElement.alt = image.alt;
+  }
+
+  function showViewer() {
+    viewer.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    updateImage();
+  }
+
+  function hideViewer() {
+    viewer.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  prevBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    updateImage();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % images.length;
+    updateImage();
+  });
+
+  closeBtn.addEventListener('click', hideViewer);
+
+  // Add click handlers to all screenshots
+  document.querySelectorAll('[data-screenshot]').forEach((img, index) => {
+    img.addEventListener('click', () => {
+      currentIndex = index;
+      showViewer();
+    });
+  });
+
+  // Handle keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (!viewer.classList.contains('hidden')) {
+      if (e.key === 'Escape') hideViewer();
+      if (e.key === 'ArrowLeft') prevBtn.click();
+      if (e.key === 'ArrowRight') nextBtn.click();
+    }
+  });
+</script>

@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import FeatureCard from '../components/FeatureCard.astro';
 import DownloadLink from '../components/DownloadLink.astro';
+import ImageViewer from '../components/ImageViewer.astro';
 
 // Feature data (use existing or adjust as needed)
 const features = [
@@ -30,6 +31,10 @@ const features = [
 
 const screenshots = [
   {
+    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
+    alt: "Main UI Dashboard"
+  },
+  {
     url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/lap-times-modal-ss.png?raw=true",
     alt: "Lap Time Analysis Screen"
   },
@@ -46,10 +51,10 @@ const screenshots = [
     <div class="container mx-auto px-4">
       <div class="max-w-4xl mx-auto text-center mb-12">
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Advanced Self-Engineering tool for F1 Sim Racing</h1>
-        <p class="text-xl text-secondary-300 mb-8">Take your sim racing to the next level with real-time data and performance analytics.</p>
+        <p class="text-xl text-secondary-300 mb-8">Take your sim racing to the next level with real-time data and performance analytics at a glance without any user input</p>
         <div class="flex flex-wrap justify-center gap-4">
-          <DownloadLink variant="primary" size="lg" >Download Now</DownloadLink>
-          <Button href="#features" variant="outline" size="lg">Explore Features</Button>
+          <DownloadLink variant="primary" size="lg">Download Now</DownloadLink>
+          <Button href="/features" variant="outline" size="lg">Explore Features</Button>
         </div>
       </div>
     </div>
@@ -88,21 +93,30 @@ const screenshots = [
   </section>
 
   <!-- Screenshots Section -->
+  <!--
   <section class="py-20 bg-secondary-950">
     <div class="container mx-auto px-4">
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h2 class="text-3xl md:text-4xl font-bold mb-4">See It In Action</h2>
         <p class="text-secondary-300">Explore the intuitive interface of Pits n' Giggles that makes it ideal for self engineering</p>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {screenshots.map((screenshot, index) => (
-          <div class={`rounded-lg overflow-hidden transition-all duration-500 hover:scale-105 shadow-xl ${index === 1 ? 'md:-mt-8' : ''}`}>
-            <img src={screenshot.url} alt={screenshot.alt} class="w-full h-auto"/>
+          <div class={`rounded-lg overflow-hidden transition-all duration-500 hover:scale-105 shadow-xl cursor-pointer ${
+            index === 1 ? 'md:translate-y-12' : index === 2 ? 'md:-translate-y-12' : ''
+          }`}>
+            <img
+              src={screenshot.url}
+              alt={screenshot.alt}
+              class="w-full h-64 object-cover"
+              data-screenshot
+            />
           </div>
         ))}
       </div>
     </div>
   </section>
+   -->
 
   <!-- Testimonials Section -->
   <section class="py-20">
@@ -134,7 +148,7 @@ const screenshots = [
             </div>
           </div>
           <p class="text-secondary-300 font-body">
-            "Custom dashboards are a game changer. I can focus on exactly what I need during practice, qualifying, and races. The strategy calculator has saved me in endurance events!"
+            "Being able to compare my telemetry against rivals mid race is such an advantage!"
           </p>
         </div>
 
@@ -153,4 +167,6 @@ const screenshots = [
       </div>
     </div>
   </section>
+
+  <ImageViewer images={screenshots} />
 </Layout>

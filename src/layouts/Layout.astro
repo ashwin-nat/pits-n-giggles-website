@@ -13,7 +13,7 @@ interface Props {
   description?: string;
 }
 
-const { title, description = "Pits n' Giggles - Advanced Sim Racing Telemetry App" } = Astro.props;
+const { title, description = "Pits n' Giggles - F1 Sim Racing Telemetry for F1 23, F1 24 and F1 25" } = Astro.props;
 ---
 
 <!doctype html>
@@ -25,7 +25,19 @@ const { title, description = "Pits n' Giggles - Advanced Sim Racing Telemetry Ap
     <link rel="icon" type="image/png" href="/logo.png" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <title>{title} | Pits n' Giggles</title>
+    <!-- OpenGraph Meta Tags -->
+    <meta property="og:title" content="Pits n Giggles | F1 Telemetry Dashboard for Sim Racers" />
+    <meta property="og:description" content="Pits n' Giggles provides live telemetry data during F1 races, giving you valuable insights to make informed decisions on track. It is a single standalone executable that requires no install" />
+    <meta property="og:image" content="https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true" />
+    <meta property="og:url" content="https://www.pitsngiggles.com" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Pits n Giggles | F1 Telemetry Dashboard for Sim Racers" />
+    <meta name="twitter:description" content="Pits n' Giggles provides live telemetry data during F1 races, giving you valuable insights to make informed decisions on track. It is a single standalone executable that requires no install" />
+    <meta name="twitter:image" content="https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true" />
+    <title>{title} | Pits n' Giggles | F1 Sim Racing Telemetry</title>
   </head>
   <body class="min-h-screen bg-gradient-to-b from-secondary-950 to-secondary-900 text-white font-sans">
     <div class="relative z-10">
