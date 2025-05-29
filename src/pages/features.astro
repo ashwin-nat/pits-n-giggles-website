@@ -1,0 +1,109 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ImageViewer from '../components/ImageViewer.astro';
+
+const screenshots = [
+  {
+    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
+    alt: "Main UI Dashboard"
+  },
+  {
+    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/lap-times-modal-ss.png?raw=true",
+    alt: "Lap Time Analysis Screen"
+  },
+  {
+    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-stint-modal-ss.png?raw=true",
+    alt: "Tyre Wear Analysis Screen"
+  }
+];
+
+const features = [
+  {
+    title: "Real-time Telemetry",
+    description: "Get instant feedback on your driving with millisecond precision telemetry data. Monitor every aspect of your car's performance in real-time, from engine temperatures to tire wear.",
+    details: [
+      "Live data streaming with sub-millisecond latency",
+      "Customizable dashboard layouts",
+      "Multiple data visualization options",
+      "Historical data comparison"
+    ]
+  },
+  {
+    title: "Advanced Analytics",
+    description: "Dive deep into your racing performance with comprehensive analytics tools. Compare your driving style across different sessions and identify areas for improvement.",
+    details: [
+      "Detailed lap time analysis",
+      "Sector-by-sector comparison",
+      "Speed traces and racing lines",
+      "Custom performance metrics"
+    ]
+  },
+  {
+    title: "Race Strategy",
+    description: "Make informed decisions during races with our advanced strategy calculator. Plan your pit stops and manage your resources effectively.",
+    details: [
+      "Tire wear prediction",
+      "Fuel consumption analysis",
+      "Optimal pit stop timing",
+      "Weather impact assessment"
+    ]
+  }
+];
+---
+
+<Layout title="Features">
+  <div class="pt-32 pb-20">
+    <div class="container mx-auto px-4">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h1 class="text-4xl font-bold mb-4">Features</h1>
+        <p class="text-secondary-300">
+          Discover how Pits n' Giggles can transform your sim racing experience with powerful tools and insights.
+        </p>
+      </div>
+
+      <!-- Screenshots Gallery -->
+      <div class="mb-20">
+        <h2 class="text-2xl font-bold mb-8">Screenshots</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {screenshots.map((screenshot, index) => (
+            <div class="rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-105">
+              <img
+                src={screenshot.url}
+                alt={screenshot.alt}
+                data-screenshot
+                class="w-full h-auto"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Detailed Features -->
+      <div class="space-y-20">
+        {features.map((feature, index) => (
+          <div class={`flex flex-col lg:flex-row gap-12 items-center ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
+            <div class="flex-1 space-y-4">
+              <h2 class="text-3xl font-bold text-white">{feature.title}</h2>
+              <p class="text-lg text-secondary-300">{feature.description}</p>
+              <ul class="space-y-2">
+                {feature.details.map(detail => (
+                  <li class="flex items-center gap-2 text-secondary-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    {detail}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div class="flex-1 bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-8">
+              <div class="aspect-video bg-secondary-800 rounded-lg"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <ImageViewer images={screenshots} />
+</Layout>
