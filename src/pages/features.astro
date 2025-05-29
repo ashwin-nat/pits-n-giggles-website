@@ -11,7 +11,11 @@ const features = [
       "Multiple data visualization options",
       "Historical data comparison",
       "Live comparison of key data points against rivals during race"
-    ]
+    ],
+    image: {
+      url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
+      alt: "Real-time Telemetry Dashboard"
+    }
   },
   {
     title: "Advanced Analytics",
@@ -20,7 +24,11 @@ const features = [
       "Detailed lap time analysis",
       "Sector-by-sector comparison",
       "ERS, fuel, tyre wear per lap"
-    ]
+    ],
+    image: {
+      url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/lap-times-modal-ss.png?raw=true",
+      alt: "Advanced Analytics Dashboard"
+    }
   },
   {
     title: "Race Strategy",
@@ -30,7 +38,11 @@ const features = [
       "Fuel consumption analysis",
       "Optimal pit stop timing",
       "Weather impact assessment"
-    ]
+    ],
+    image: {
+      url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-stint-modal-ss.png?raw=true",
+      alt: "Race Strategy Interface"
+    }
   },
   {
     title: "OBS Integration",
@@ -39,7 +51,11 @@ const features = [
       "Recent Lap Times",
       "Weather forecast",
       "Pace comparison against car in front and car behind",
-    ]
+    ],
+    image: {
+      url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
+      alt: "OBS Integration Example"
+    }
   }
 ];
 ---
@@ -72,12 +88,18 @@ const features = [
                 ))}
               </ul>
             </div>
-            <div class="flex-1 bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-8">
-              <div class="aspect-video bg-secondary-800 rounded-lg"></div>
+            <div class="flex-1 bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-4 cursor-pointer transition-all duration-300 hover:border-secondary-700" data-screenshot>
+              <img 
+                src={feature.image.url} 
+                alt={feature.image.alt}
+                class="rounded-lg w-full h-auto"
+              />
             </div>
           </div>
         ))}
       </div>
     </div>
   </div>
+
+  <ImageViewer images={features.map(f => ({ ...f.image, description: f.description }))} />
 </Layout>
