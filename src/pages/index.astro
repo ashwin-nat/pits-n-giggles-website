@@ -5,12 +5,16 @@ import ImageViewer from '../components/ImageViewer.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
 import { Image } from 'astro:assets';
 import { testimonials } from '../data/testimonials';
+import { getEntry } from 'astro:content';
 
 const heroImage = {
   url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
   alt: "Pits n' Giggles Telemetry Dashboard",
   description: "The main dashboard showing real-time telemetry data during a race"
 };
+
+const aboutEntry = await getEntry('about', 'index');
+const { Content: AboutContent } = await aboutEntry.render();
 ---
 
 <Layout title="Home">
@@ -41,22 +45,11 @@ const heroImage = {
     </div>
   </section>
 
-  <!-- App Description Section -->
-  <section class="py-20 bg-secondary-900/50">
+  <!-- About Section -->
+  <section id="about" class="py-20 bg-secondary-900/50">
     <div class="container mx-auto px-4">
-      <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl md:text-4xl font-bold mb-8 text-center">What is Pits n' Giggles?</h2>
-        <div class="prose prose-invert prose-lg mx-auto">
-          <p class="text-secondary-300 mb-6">
-            Pits n' Giggles is a powerful telemetry tool designed specifically for F1 sim racing enthusiasts. It provides real-time data analysis and performance insights during your races, helping you make informed decisions and improve your racing strategy.
-          </p>
-          <p class="text-secondary-300 mb-6">
-            Whether you're a casual racer or a competitive driver, our tool offers valuable insights into your driving performance, including tire wear, fuel management, ERS deployment, and detailed lap time analysis. The intuitive interface ensures you can focus on racing while having all critical information at your fingertips.
-          </p>
-          <p class="text-secondary-300">
-            With features like real-time telemetry, advanced analytics, and OBS integration for streamers, Pits n' Giggles is your perfect companion for enhancing your F1 sim racing experience.
-          </p>
-        </div>
+      <div class="max-w-4xl mx-auto prose prose-invert prose-lg">
+        <AboutContent />
       </div>
     </div>
   </section>
@@ -79,3 +72,24 @@ const heroImage = {
 
   <ImageViewer images={[heroImage]} />
 </Layout>
+
+<style>
+  .prose {
+    --tw-prose-body: theme('colors.secondary.300');
+    --tw-prose-headings: theme('colors.white');
+    --tw-prose-lead: theme('colors.secondary.300');
+    --tw-prose-links: theme('colors.accent.500');
+    --tw-prose-bold: theme('colors.white');
+    --tw-prose-counters: theme('colors.secondary.400');
+    --tw-prose-bullets: theme('colors.secondary.400');
+    --tw-prose-hr: theme('colors.secondary.800');
+    --tw-prose-quotes: theme('colors.secondary.200');
+    --tw-prose-quote-borders: theme('colors.primary.500');
+    --tw-prose-captions: theme('colors.secondary.400');
+    --tw-prose-code: theme('colors.white');
+    --tw-prose-pre-code: theme('colors.secondary.300');
+    --tw-prose-pre-bg: theme('colors.secondary.950');
+    --tw-prose-th-borders: theme('colors.secondary.800');
+    --tw-prose-td-borders: theme('colors.secondary.800');
+  }
+</style>
