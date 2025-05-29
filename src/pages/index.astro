@@ -4,6 +4,7 @@ import Button from '../components/Button.astro';
 import FeatureCard from '../components/FeatureCard.astro';
 import ImageViewer from '../components/ImageViewer.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
+import { Image } from 'astro:assets';
 import { testimonials } from '../data/testimonials';
 
 // Feature data
@@ -30,24 +31,11 @@ const features = [
   },
 ];
 
-const screenshots = [
-  {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
-    alt: "Main UI Dashboard"
-  },
-  {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
-    alt: "Main UI Dashboard"
-  },
-  {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/lap-times-modal-ss.png?raw=true",
-    alt: "Lap Time Analysis Screen"
-  },
-  {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-stint-modal-ss.png?raw=true",
-    alt: "Tyre Wear Analysis Screen"
-  }
-];
+const heroImage = {
+  url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
+  alt: "Pits n' Giggles Telemetry Dashboard",
+  description: "The main dashboard showing real-time telemetry data during a race"
+};
 ---
 
 <Layout title="Home">
@@ -66,10 +54,12 @@ const screenshots = [
 
     <!-- Hero Image -->
     <div class="relative mx-auto max-w-5xl">
-      <div class="bg-gradient-to-tr from-primary-500/20 to-accent-500/20 rounded-xl p-2 shadow-xl">
-        <img
-          src="https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true"
-          alt="Pits n' Giggles Telemetry Dashboard"
+      <div class="bg-gradient-to-tr from-primary-500/20 to-accent-500/20 rounded-xl p-2 shadow-xl cursor-pointer" data-screenshot>
+        <Image
+          src={heroImage.url}
+          alt={heroImage.alt}
+          width={1920}
+          height={1080}
           class="rounded-lg w-full h-auto shadow-md"
         />
       </div>
@@ -112,5 +102,5 @@ const screenshots = [
     </div>
   </section>
 
-  <ImageViewer images={screenshots} />
+  <ImageViewer images={[heroImage]} />
 </Layout>

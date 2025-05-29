@@ -1,5 +1,6 @@
 ---
 const currentYear = new Date().getFullYear();
+import { Image } from 'astro:assets';
 
 const footerLinks = [
   {
@@ -17,7 +18,7 @@ const footerLinks = [
       { text: 'Documentation', href: 'https://github.com/ashwin-nat/pits-n-giggles/wiki' },
       { text: 'GitHub', href: 'https://github.com/' },
       { text: 'Report a Bug', href: 'https://github.com/issues' },
-      { text: 'Discord Community', href: '#' },
+      { text: 'Discord Community', href: 'https://discord.gg/pq3R49wR3d' },
     ]
   },
   {
@@ -37,7 +38,13 @@ const footerLinks = [
       <div class="col-span-1 md:col-span-1">
         <a href="/" class="flex items-center gap-2">
           <div class="relative w-10 h-10 flex items-center justify-center overflow-hidden">
-            <img src="/logo.png" alt="App Icon" class="w-8 h-8">
+            <Image
+              src="/logo.png"
+              alt="App Icon"
+              width={32}
+              height={32}
+              class="w-8 h-8"
+            />
           </div>
           <span class="font-extrabold text-white text-xl">Pits n' Giggles</span>
         </a>
@@ -66,7 +73,7 @@ const footerLinks = [
             {section.items.map(link => (
               <li>
                 <a
-                  href="https://discord.gg/pq3R49wR3d"
+                  href={link.href}
                   class="text-secondary-300 hover:text-white transition-colors font-body"
                 >
                   {link.text}

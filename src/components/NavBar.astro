@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+
 const navLinks = [
   { text: 'Home', href: '/' },
   { text: 'Features', href: '/features' },
@@ -8,11 +10,17 @@ const navLinks = [
 ];
 ---
 
-<header class="racing-pattern fixed w-full top-0 z-50 transition-all duration-300" id="navbar">
-  <div class="container mx-auto px-4 py-5 flex items-center justify-between">
+<header class="fixed w-full top-0 z-50 transition-all duration-300 bg-secondary-950/95 backdrop-blur-sm border-b border-secondary-800 py-1" id="navbar">
+  <div class="container mx-auto px-4 flex items-center justify-between">
     <a href="/" class="flex items-center gap-2">
       <div class="relative w-10 h-10 flex items-center justify-center overflow-hidden">
-        <img src="/logo.png" alt="App Icon" class="w-8 h-8">
+        <Image
+          src="/logo.png"
+          alt="App Icon"
+          width={32}
+          height={32}
+          class="w-8 h-8"
+        />
       </div>
       <span class="font-extrabold text-white text-xl">Pits n' Giggles</span>
     </a>
@@ -34,6 +42,17 @@ const navLinks = [
           {link.text}
         </a>
       ))}
+      <a 
+        href="/releases" 
+        class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-md transition-colors duration-200 font-semibold flex items-center gap-2"
+      >
+        Download
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+      </a>
     </nav>
 
     <!-- Mobile Navigation -->
@@ -52,30 +71,26 @@ const navLinks = [
           {link.text}
         </a>
       ))}
+      <a 
+        href="/releases" 
+        class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-md transition-colors duration-200 font-semibold flex items-center gap-2"
+      >
+        Download
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+      </a>
     </nav>
   </div>
 </header>
 
 <script>
-  // Add background color to navbar when scrolling
   const navbar = document.getElementById('navbar');
   const mobileMenuBtn = document.getElementById('mobile-menu-button');
   const mobileMenu = document.getElementById('mobile-menu');
   const closeMenuBtn = document.getElementById('close-menu');
-
-  // Navbar scroll behavior
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 10) {
-      navbar?.classList.add('bg-secondary-950/95', 'shadow-md');
-    } else {
-      navbar?.classList.remove('bg-secondary-950/95', 'shadow-md');
-    }
-  });
-
-  // Initial check for scroll position
-  if (window.scrollY > 10) {
-    navbar?.classList.add('bg-secondary-950/95', 'shadow-md');
-  }
 
   // Mobile menu toggle
   mobileMenuBtn?.addEventListener('click', () => {
