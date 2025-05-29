@@ -31,8 +31,8 @@ const features = [
     }
   },
   {
-    title: "Race Strategy",
-    description: "Make informed decisions during races with our advanced strategy calculator. Plan your pit stops and manage your resources effectively.",
+    title: "Engineer mode",
+    description: "For dedicated rage engineers, use the advanced engineer view to get extensive live data to compare your driver against the competition",
     details: [
       "Tire wear prediction",
       "Fuel consumption analysis",
@@ -40,7 +40,7 @@ const features = [
       "Weather impact assessment"
     ],
     image: {
-      url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-stint-modal-ss.png?raw=true",
+      url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/eng-view.png?raw=true",
       alt: "Race Strategy Interface"
     }
   },
@@ -51,10 +51,24 @@ const features = [
       "Recent Lap Times",
       "Weather forecast",
       "Pace comparison against car in front and car behind",
+      "(Add http://localhost:4768/player-stream-overlay as a browser source)"
     ],
     image: {
-      url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
+      url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/png-stream-overlay.png?raw=true",
       alt: "OBS Integration Example"
+    }
+  },
+  {
+    title: "Save data viewer",
+    description: "Pits n' Giggles saves all qualifying, race and sprint sessions data to a file organized by date and timestamp. Open this .json file in the app to view the data.",
+    details: [
+      "Simple to use, same dashboard as live mode",
+      "Easy to share save files",
+      "Standard JSON format, easy to parse for advanced users",
+    ],
+    image: {
+      url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/launcher.png?raw=true",
+      alt: "Save Data Viewer"
     }
   }
 ];
@@ -89,8 +103,8 @@ const features = [
               </ul>
             </div>
             <div class="flex-1 bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-4 cursor-pointer transition-all duration-300 hover:border-secondary-700" data-screenshot>
-              <img 
-                src={feature.image.url} 
+              <img
+                src={feature.image.url}
                 alt={feature.image.alt}
                 class="rounded-lg w-full h-auto"
               />
