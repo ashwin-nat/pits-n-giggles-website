@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+
 interface Props {
   name: string;
   title: string;
@@ -15,9 +17,11 @@ const initial = name.charAt(0).toUpperCase();
 <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
   <div class="flex items-center mb-4">
     {photoUrl ? (
-      <img 
-        src={photoUrl} 
-        alt={name} 
+      <Image 
+        src={photoUrl}
+        alt={name}
+        width={48}
+        height={48}
         class="w-12 h-12 rounded-full object-cover mr-4"
       />
     ) : (
