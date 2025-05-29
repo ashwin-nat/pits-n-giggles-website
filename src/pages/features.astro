@@ -2,21 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import ImageViewer from '../components/ImageViewer.astro';
 
-const screenshots = [
-  {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
-    alt: "Main UI Dashboard"
-  },
-  {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/lap-times-modal-ss.png?raw=true",
-    alt: "Lap Time Analysis Screen"
-  },
-  {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-stint-modal-ss.png?raw=true",
-    alt: "Tyre Wear Analysis Screen"
-  }
-];
-
 const features = [
   {
     title: "Real-time Telemetry",
@@ -69,23 +54,6 @@ const features = [
         </p>
       </div>
 
-      <!-- Screenshots Gallery -->
-      <div class="mb-20">
-        <h2 class="text-2xl font-bold mb-8">Screenshots</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {screenshots.map((screenshot, index) => (
-            <div class="rounded-lg overflow-hidden cursor-pointer transition-transform hover:scale-105">
-              <img
-                src={screenshot.url}
-                alt={screenshot.alt}
-                data-screenshot
-                class="w-full h-auto"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
       <!-- Detailed Features -->
       <div class="space-y-20">
         {features.map((feature, index) => (
@@ -112,6 +80,4 @@ const features = [
       </div>
     </div>
   </div>
-
-  <ImageViewer images={screenshots} />
 </Layout>

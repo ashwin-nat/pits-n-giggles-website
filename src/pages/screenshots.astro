@@ -1,0 +1,57 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ImageViewer from '../components/ImageViewer.astro';
+
+const screenshots = [
+  {
+    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
+    alt: "Main Dashboard",
+    description: "The main dashboard showing real-time telemetry data during a race"
+  },
+  {
+    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/lap-times-modal-ss.png?raw=true",
+    alt: "Lap Times Analysis",
+    description: "Detailed lap time analysis with sector comparisons"
+  },
+  {
+    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-stint-modal-ss.png?raw=true",
+    alt: "Tyre Management",
+    description: "Track your tyre wear and predict optimal pit stop windows"
+  }
+];
+---
+
+<Layout title="Screenshots">
+  <div class="pt-32 pb-20">
+    <div class="container mx-auto px-4">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h1 class="text-4xl font-bold mb-4">Screenshots</h1>
+        <p class="text-secondary-300">
+          Take a visual tour of Pits n' Giggles and see how it can enhance your sim racing experience.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {screenshots.map((screenshot, index) => (
+          <div class="group cursor-pointer" data-screenshot>
+            <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-secondary-700">
+              <div class="aspect-video relative overflow-hidden">
+                <img
+                  src={screenshot.url}
+                  alt={screenshot.alt}
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+              <div class="p-4">
+                <h3 class="text-lg font-semibold text-white mb-2">{screenshot.alt}</h3>
+                <p class="text-secondary-300 text-sm">{screenshot.description}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <ImageViewer images={screenshots} />
+</Layout>
