@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import FeatureCard from '../components/FeatureCard.astro';
 import ImageViewer from '../components/ImageViewer.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import { testimonials } from '../data/testimonials';
 
 // Feature data
 const features = [
@@ -103,44 +105,9 @@ const screenshots = [
         <p class="text-secondary-300">Hear from sim racers who improved their performance with Pits n' Giggles.</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
-          <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-accent-500 rounded-full flex items-center justify-center font-bold text-xl mr-4">K</div>
-            <div>
-              <h4 class="text-white font-semibold">Katpadi Kumar</h4>
-              <p class="text-secondary-400 text-sm">Monza T1 Enjoyer</p>
-            </div>
-          </div>
-          <p class="text-secondary-300 font-body">
-            "I like car."
-          </p>
-        </div>
-
-        <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
-          <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center font-bold text-xl mr-4">S</div>
-            <div>
-              <h4 class="text-white font-semibold">Sarah K.</h4>
-              <p class="text-secondary-400 text-sm">F1 Game Player</p>
-            </div>
-          </div>
-          <p class="text-secondary-300 font-body">
-            "Being able to compare my telemetry against rivals mid race is such an advantage!"
-          </p>
-        </div>
-
-        <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
-          <div class="flex items-center mb-4">
-            <div class="w-12 h-12 bg-accent-900 rounded-full flex items-center justify-center font-bold text-xl mr-4">J</div>
-            <div>
-              <h4 class="text-white font-semibold">James R.</h4>
-              <p class="text-secondary-400 text-sm">Assetto Corsa Driver</p>
-            </div>
-          </div>
-          <p class="text-secondary-300 font-body">
-            "Being able to compare my telemetry with my teammates has transformed our practice sessions. We're all pushing each other to improve using the data."
-          </p>
-        </div>
+        {testimonials.map(testimonial => (
+          <TestimonialCard {...testimonial} />
+        ))}
       </div>
     </div>
   </section>
