@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { marked } from 'marked';
+import Button from '../components/Button.astro';
 
 // Define types for GitHub Release data
 interface GitHubAsset {
@@ -28,8 +29,6 @@ async function getGitHubReleases(): Promise<GitHubRelease[]> {
     const response = await fetch(GITHUB_API, {
       headers: {
         'Accept': 'application/vnd.github.v3+json',
-        // Add Authorization header with token if you need higher rate limits
-        // 'Authorization': `token ${import.meta.env.GITHUB_TOKEN}`
       }
     });
 
@@ -38,7 +37,6 @@ async function getGitHubReleases(): Promise<GitHubRelease[]> {
     }
 
     const allReleases = await response.json();
-    // Limit to latest 5 releases
     return allReleases.slice(0, numberOfReleases);
   } catch (error) {
     console.error('Error fetching GitHub releases:', error);
@@ -48,6 +46,8 @@ async function getGitHubReleases(): Promise<GitHubRelease[]> {
 
 // Get the releases data
 const releases: GitHubRelease[] = await getGitHubReleases();
+const latestRelease = releases[0];
+const latestAsset = latestRelease?.assets?.find(a => a.browser_download_url.includes("pits_n_giggles"));
 
 // Function to parse markdown content
 function parseMarkdown(content: string | undefined): string {
@@ -70,13 +70,30 @@ function parseMarkdown(content: string | undefined): string {
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h1 class="text-4xl font-bold mb-4">Releases</h1>
         <div class="w-20 h-1 bg-primary-500 mx-auto mb-6"></div>
-        <p class="text-secondary-300 font-body">
+        <p class="text-secondary-300 font-body mb-8">
           Stay up to date with the latest versions and improvements to Pits n' Giggles. Each release brings new features, bug fixes, and performance enhancements.
         </p>
+        
+        {latestAsset && (
+          <Button 
+            href={latestAsset.browser_download_url}
+            variant="primary"
+            size="lg"
+            download
+            class="inline-flex items-center gap-2"
+          >
+            Download Latest Version
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </Button>
+        )}
       </div>
 
       <div class="mb-8 flex justify-between items-center">
-        <h2 class="text-2xl font-semibold">Latest Releases</h2>
+        <h2 class="text-2xl font-semibold">Release History</h2>
         <a
           href="https://github.com/ashwin-nat/pits-n-giggles/releases"
           target="_blank"

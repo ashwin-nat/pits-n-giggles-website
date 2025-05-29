@@ -1,0 +1,36 @@
+---
+interface Props {
+  name: string;
+  title: string;
+  testimonial: string;
+  photoUrl?: string;
+}
+
+const { name, title, testimonial, photoUrl } = Astro.props;
+
+// Get first letter for avatar fallback
+const initial = name.charAt(0).toUpperCase();
+---
+
+<div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
+  <div class="flex items-center mb-4">
+    {photoUrl ? (
+      <img 
+        src={photoUrl} 
+        alt={name} 
+        class="w-12 h-12 rounded-full object-cover mr-4"
+      />
+    ) : (
+      <div class="w-12 h-12 bg-accent-500 rounded-full flex items-center justify-center font-bold text-xl mr-4">
+        {initial}
+      </div>
+    )}
+    <div>
+      <h4 class="text-white font-semibold">{name}</h4>
+      <p class="text-secondary-400 text-sm">{title}</p>
+    </div>
+  </div>
+  <p class="text-secondary-300 font-body">
+    {testimonial}
+  </p>
+</div>
