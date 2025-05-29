@@ -17,7 +17,17 @@ const blogCollection = defineCollection({
   }),
 });
 
+// Define the schema for about content
+const aboutCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    lastUpdated: z.date(),
+  }),
+});
+
 // Export the collections
 export const collections = {
   'blog': blogCollection,
+  'about': aboutCollection,
 };
