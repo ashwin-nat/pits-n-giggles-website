@@ -93,8 +93,17 @@ const navLinks = [
   const mobileMenu = document.getElementById('mobile-menu');
 
   // Mobile menu toggle
-  mobileMenuBtn?.addEventListener('click', () => {
+  mobileMenuBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
     mobileMenu?.classList.toggle('hidden');
+  });
+
+  // Close mobile menu when clicking outside
+  document.addEventListener('click', (e) => {
+    const target = e.target as Node;
+    if (mobileMenu && !mobileMenu.contains(target) && !mobileMenuBtn?.contains(target)) {
+      mobileMenu.classList.add('hidden');
+    }
   });
 
   // Close mobile menu when clicking on a link
