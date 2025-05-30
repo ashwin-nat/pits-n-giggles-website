@@ -59,7 +59,7 @@ const navLinks = [
 
       <!-- Mobile Navigation -->
       <nav id="mobile-menu" class="fixed left-0 right-0 top-[57px] hidden lg:hidden">
-        <div class="bg-secondary-950 shadow-lg border border-secondary-800 rounded-b-lg mx-4">
+        <div class="bg-secondary-950 shadow-lg border border-secondary-800 rounded-b-lg mx-4 transform origin-top transition-all duration-200 opacity-0 scale-95">
           <div class="p-4 flex flex-col gap-4">
             {navLinks.map(link => (
               <a
@@ -91,18 +91,39 @@ const navLinks = [
   const navbar = document.getElementById('navbar');
   const mobileMenuBtn = document.getElementById('mobile-menu-button');
   const mobileMenu = document.getElementById('mobile-menu');
+  const menuContent = mobileMenu?.querySelector('div');
 
   // Mobile menu toggle
   mobileMenuBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
-    mobileMenu?.classList.toggle('hidden');
+    const isHidden = mobileMenu?.classList.contains('hidden');
+    
+    if (isHidden) {
+      mobileMenu?.classList.remove('hidden');
+      // Small delay to ensure the display: block has taken effect
+      requestAnimationFrame(() => {
+        menuContent?.classList.remove('opacity-0', 'scale-95');
+        menuContent?.classList.add('opacity-100', 'scale-100');
+      });
+    } else {
+      menuContent?.classList.add('opacity-0', 'scale-95');
+      menuContent?.classList.remove('opacity-100', 'scale-100');
+      // Wait for animation to complete before hiding
+      setTimeout(() => {
+        mobileMenu?.classList.add('hidden');
+      }, 200);
+    }
   });
 
   // Close mobile menu when clicking outside
   document.addEventListener('click', (e) => {
     const target = e.target as Node;
     if (mobileMenu && !mobileMenu.contains(target) && !mobileMenuBtn?.contains(target)) {
-      mobileMenu.classList.add('hidden');
+      menuContent?.classList.add('opacity-0', 'scale-95');
+      menuContent?.classList.remove('opacity-100', 'scale-100');
+      setTimeout(() => {
+        mobileMenu.classList.add('hidden');
+      }, 200);
     }
   });
 
@@ -110,7 +131,11 @@ const navLinks = [
   const mobileLinks = mobileMenu?.querySelectorAll('a');
   mobileLinks?.forEach(link => {
     link.addEventListener('click', () => {
-      mobileMenu?.classList.add('hidden');
+      menuContent?.classList.add('opacity-0', 'scale-95');
+      menuContent?.classList.remove('opacity-100', 'scale-100');
+      setTimeout(() => {
+        mobileMenu?.classList.add('hidden');
+      }, 200);
     });
   });
 </script>
