@@ -60,8 +60,11 @@ The entire interface is built to **deliver insights at a glance**, so you can st
 
 ## Get Started
 
-🏁 Ready to take control of your racing strategy?
+🏁 Ready to take control of your racing strategy? <br/>
 [**Download Pits n' Giggles**](/releases) and start making every lap count.
+
+💡 [Head to the blog section for tips and tricks](/blog)
+
 
 ---
 
