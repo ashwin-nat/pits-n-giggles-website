@@ -103,5 +103,3 @@ The Tyre Delta feature is one of many tools in **Pits n' Giggles** built to give
 If you're serious about improving your race strategy in **F1 25**, or just want your own mini AI race engineer, this feature is a must-try.
 
 Ready to box smart? 🧠🏎️
-
-> *📸 Screenshot placeholder: Button prompt and TTS voice prompt demo*
