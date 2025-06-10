@@ -31,7 +31,7 @@ To start using Tyre Delta, you only need to set up a quick custom notification i
 3. Assign **any UDP action code (1–12)** to a button on your wheel or controller.
 4. We recommend **action code 11**, as that's the default used by Pits n' Giggles.
 
-> *📸 Screenshot placeholder: F1 25 custom UDP button binding*
+![F1 25 settings](/blog_assets/tyre-delta-feature/game-settings.jpg)
 
 ### In *Pits n' Giggles*:
 
