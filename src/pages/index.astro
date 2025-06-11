@@ -3,9 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import ImageViewer from '../components/ImageViewer.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
+import FeatureCard from '../components/FeatureCard.astro';
 import { Image } from 'astro:assets';
 import { testimonials } from '../data/testimonials';
-import { getEntry } from 'astro:content';
 
 const heroImage = {
   url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
@@ -13,8 +13,28 @@ const heroImage = {
   description: "The main dashboard showing real-time telemetry data during a race"
 };
 
-const aboutEntry = await getEntry('about', 'index');
-const { Content: AboutContent } = await aboutEntry.render();
+const features = [
+  {
+    title: "Real-time Telemetry",
+    description: "Get instant feedback on your driving with millisecond precision telemetry data from F1 23, F1 24, and F1 25.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>`
+  },
+  {
+    title: "Advanced Analytics",
+    description: "Dive deep into your racing performance with comprehensive analytics tools and lap-by-lap breakdowns.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>`
+  },
+  {
+    title: "Race Strategy",
+    description: "Make smarter pit stop decisions with tire wear prediction and fuel consumption analysis.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`
+  },
+  {
+    title: "OBS Integration",
+    description: "Stream your telemetry data live with built-in OBS overlay support for content creators.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`
+  }
+];
 ---
 
 <Layout title="Home">
@@ -23,9 +43,9 @@ const { Content: AboutContent } = await aboutEntry.render();
     <div class="container mx-auto px-4">
       <div class="max-w-4xl mx-auto text-center mb-12">
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Advanced Self-Engineering tool for F1 Sim Racing</h1>
-        <p class="text-xl text-secondary-300 mb-8">Take your sim racing to the next level with real-time data and performance analytics at a glance without any user input</p>
+        <p class="text-xl text-secondary-300 mb-8">Take your sim racing to the next level with real-time data, performance analytics, and prediction comparisons against other drivers.</p>
         <div class="flex flex-wrap justify-center gap-4">
-          <Button href="/features" variant="outline" size="lg">Explore Features</Button>
+          <Button href="/about" variant="outline" size="lg">Learn More</Button>
           <Button href="/releases" variant="primary" size="lg">Download Now</Button>
         </div>
       </div>
@@ -45,17 +65,45 @@ const { Content: AboutContent } = await aboutEntry.render();
     </div>
   </section>
 
-  <!-- About Section -->
-  <section id="about" class="py-20 bg-secondary-900/50">
+  <!-- Features Section -->
+  <section id="features" class="py-20 bg-secondary-900/50">
     <div class="container mx-auto px-4">
-      <div class="max-w-4xl mx-auto prose prose-invert prose-lg">
-        <AboutContent />
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Why Choose Pits n' Giggles?</h2>
+        <p class="text-secondary-300">Everything you need to be your own race engineer, all in one lightweight application.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {features.map(feature => (
+          <FeatureCard {...feature} />
+        ))}
+      </div>
+      <div class="text-center mt-12">
+        <Button href="/features" variant="accent" size="lg">Explore All Features</Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Start Section -->
+  <section class="py-20">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Race Smarter?</h2>
+        <p class="text-xl text-secondary-300 mb-8">
+          Get started in minutes. No installation required - just download, run, and connect to your F1 game.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+          <Button href="/releases" variant="primary" size="lg">Download Latest Version</Button>
+          <Button href="/blog/setting-up-udp-telemetry-f1" variant="outline" size="lg">Setup Guide</Button>
+        </div>
+        <p class="text-secondary-400 text-sm">
+          Supports F1 23, F1 24, and F1 25 • Windows • No account required
+        </p>
       </div>
     </div>
   </section>
 
   {testimonials.length > 0 && (
-    <section class="py-20">
+    <section class="py-20 bg-secondary-900/50">
       <div class="container mx-auto px-4">
         <div class="text-center max-w-3xl mx-auto mb-16">
           <h2 class="text-3xl md:text-4xl font-bold mb-4">What Racers Say</h2>
@@ -72,24 +120,3 @@ const { Content: AboutContent } = await aboutEntry.render();
 
   <ImageViewer images={[heroImage]} />
 </Layout>
-
-<style>
-  .prose {
-    --tw-prose-body: theme('colors.secondary.300');
-    --tw-prose-headings: theme('colors.white');
-    --tw-prose-lead: theme('colors.secondary.300');
-    --tw-prose-links: theme('colors.accent.500');
-    --tw-prose-bold: theme('colors.white');
-    --tw-prose-counters: theme('colors.secondary.400');
-    --tw-prose-bullets: theme('colors.secondary.400');
-    --tw-prose-hr: theme('colors.secondary.800');
-    --tw-prose-quotes: theme('colors.secondary.200');
-    --tw-prose-quote-borders: theme('colors.primary.500');
-    --tw-prose-captions: theme('colors.secondary.400');
-    --tw-prose-code: theme('colors.white');
-    --tw-prose-pre-code: theme('colors.secondary.300');
-    --tw-prose-pre-bg: theme('colors.secondary.950');
-    --tw-prose-th-borders: theme('colors.secondary.800');
-    --tw-prose-td-borders: theme('colors.secondary.800');
-  }
-</style>
