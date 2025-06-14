@@ -15,6 +15,9 @@ interface Props {
 }
 
 const { title, description = "Pits n' Giggles - F1 Sim Racing Telemetry for F1 23, F1 24 and F1 25" } = Astro.props;
+
+// Google Analytics Measurement ID - replace with your actual ID
+const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX'; // Replace with your actual Google Analytics ID
 ---
 
 <!doctype html>
@@ -22,6 +25,16 @@ const { title, description = "Pits n' Giggles - F1 Sim Racing Telemetry for F1 2
   <head>
     <Analytics/>
     <SpeedInsights/>
+    
+    <!-- Google Analytics -->
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+    <script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', GA_MEASUREMENT_ID);
+    </script>
+    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/logo.png" />
