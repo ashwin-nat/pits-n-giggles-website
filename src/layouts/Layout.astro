@@ -7,6 +7,7 @@ import '@fontsource/source-sans-pro/600.css';
 import NavBar from '../components/NavBar.astro';
 import Footer from '../components/Footer.astro';
 import Analytics from '@vercel/analytics/astro';
+import SpeedInsights from '@vercel/speed-insights/astro';
 
 interface Props {
   title: string;
@@ -20,6 +21,7 @@ const { title, description = "Pits n' Giggles - F1 Sim Racing Telemetry for F1 2
 <html lang="en" class="scroll-smooth">
   <head>
     <Analytics/>
+    <SpeedInsights/>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/logo.png" />
