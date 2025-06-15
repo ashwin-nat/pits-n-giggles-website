@@ -27,12 +27,39 @@ const features = [
   {
     title: "Race Strategy",
     description: "Make smarter pit stop decisions with tire wear prediction and fuel consumption analysis.",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13l-4 7 4 7H8l4-7-4-7z"/><path d="M6.5 8.5L9 12l-2.5 3.5"/><path d="M2.5 8.5L5 12l-2.5 3.5"/></svg>`
   },
   {
-    title: "OBS Integration",
-    description: "Stream your telemetry data live with built-in OBS overlay support for content creators.",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`
+    title: "Streaming Integration",
+    description: "Stream your telemetry data live with built-in overlay support for Twitch, YouTube, and other platforms.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M11.64 5.93H13.07V10.21H11.64M15.57 5.93H17V10.21H15.57M7 2L3.43 5.57V18.43H6.85V22L10.42 18.43H13.85L20.57 11.71V2M19.14 11.07L16.35 13.86H13.57L11.14 16.29V13.86H7.71V3.43H19.14Z"/></svg>`
+  }
+];
+
+const platforms = [
+  {
+    name: "Windows",
+    status: "Available",
+    icon: "bi-windows",
+    color: "text-blue-400",
+    bgColor: "bg-blue-400/10",
+    borderColor: "border-blue-400/20"
+  },
+  {
+    name: "macOS",
+    status: "Coming Soon",
+    icon: "bi-apple",
+    color: "text-gray-300",
+    bgColor: "bg-gray-300/10",
+    borderColor: "border-gray-300/20"
+  },
+  {
+    name: "Linux",
+    status: "Coming Soon",
+    icon: "bi-ubuntu",
+    color: "text-orange-400",
+    bgColor: "bg-orange-400/10",
+    borderColor: "border-orange-400/20"
   }
 ];
 ---
@@ -83,8 +110,41 @@ const features = [
     </div>
   </section>
 
-  <!-- Quick Start Section -->
+  <!-- Supported Platforms Section -->
   <section class="py-20">
+    <div class="container mx-auto px-4">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Supported Platforms</h2>
+        <p class="text-secondary-300">Available now on Windows, with macOS and Linux support coming soon.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        {platforms.map(platform => (
+          <div class={`relative bg-secondary-900/50 backdrop-blur-sm border ${platform.borderColor} rounded-lg p-6 text-center transition-all duration-300 hover:shadow-card hover:border-opacity-40`}>
+            <div class={`${platform.bgColor} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4`}>
+              <i class={`${platform.icon} ${platform.color} text-2xl`}></i>
+            </div>
+            <h3 class="text-xl font-semibold text-white mb-2">{platform.name}</h3>
+            <div class="flex items-center justify-center gap-2">
+              {platform.status === "Available" ? (
+                <>
+                  <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span class="text-green-400 font-medium text-sm">{platform.status}</span>
+                </>
+              ) : (
+                <>
+                  <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                  <span class="text-yellow-400 font-medium text-sm">{platform.status}</span>
+                </>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Start Section -->
+  <section class="py-20 bg-secondary-900/50">
     <div class="container mx-auto px-4">
       <div class="max-w-4xl mx-auto text-center">
         <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Race Smarter?</h2>
@@ -103,7 +163,7 @@ const features = [
   </section>
 
   {testimonials.length > 0 && (
-    <section class="py-20 bg-secondary-900/50">
+    <section class="py-20">
       <div class="container mx-auto px-4">
         <div class="text-center max-w-3xl mx-auto mb-16">
           <h2 class="text-3xl md:text-4xl font-bold mb-4">What Racers Say</h2>
