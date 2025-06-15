@@ -23,23 +23,85 @@ const GA_MEASUREMENT_ID = 'G-RJ5QKM03ZM'; // Replace with your actual Google Ana
 <!doctype html>
 <html lang="en" class="scroll-smooth">
   <head>
-    <Analytics/>
-    <SpeedInsights/>
-    
-    <!-- Google Analytics -->
-    <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
-    <script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', GA_MEASUREMENT_ID);
-    </script>
-    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/logo.png" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="/_astro/montserrat-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/_astro/montserrat-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/_astro/montserrat-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/_astro/source-sans-pro-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    
+    <!-- Critical CSS inline to prevent FOUC -->
+    <style>
+      /* Critical styles to prevent FOUC */
+      html {
+        font-family: 'Montserrat', system-ui, sans-serif;
+        color-scheme: dark;
+        scroll-behavior: smooth;
+      }
+      
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        background: linear-gradient(to bottom, #0a0a0a, #1a1a1a);
+        color: white;
+        font-family: 'Montserrat', system-ui, sans-serif;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+      }
+      
+      /* Hide content until fonts are loaded */
+      .font-loading {
+        visibility: hidden;
+      }
+      
+      .font-loaded {
+        visibility: visible;
+      }
+      
+      /* Prevent layout shift */
+      * {
+        box-sizing: border-box;
+      }
+      
+      /* Critical layout styles */
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+    </style>
+    
+    <!-- Font loading script -->
+    <script>
+      // Add font-loading class initially
+      document.documentElement.classList.add('font-loading');
+      
+      // Check if fonts are loaded
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+          document.documentElement.classList.remove('font-loading');
+          document.documentElement.classList.add('font-loaded');
+        });
+      } else {
+        // Fallback for browsers without font loading API
+        window.addEventListener('load', () => {
+          setTimeout(() => {
+            document.documentElement.classList.remove('font-loading');
+            document.documentElement.classList.add('font-loaded');
+          }, 100);
+        });
+      }
+    </script>
+    
     <!-- OpenGraph Meta Tags -->
     <meta property="og:title" content="Pits n Giggles | F1 Telemetry Dashboard for Sim Racers" />
     <meta property="og:description" content="Pits n' Giggles provides live telemetry data during F1 races, giving you valuable insights to make informed decisions on track. It is a single standalone executable that requires no install" />
@@ -53,6 +115,19 @@ const GA_MEASUREMENT_ID = 'G-RJ5QKM03ZM'; // Replace with your actual Google Ana
     <meta name="twitter:description" content="Pits n' Giggles provides live telemetry data during F1 races, giving you valuable insights to make informed decisions on track. It is a single standalone executable that requires no install" />
     <meta name="twitter:image" content="https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true" />
     <title>{title} | Pits n' Giggles | F1 Sim Racing Telemetry</title>
+    
+    <!-- Analytics -->
+    <Analytics/>
+    <SpeedInsights/>
+    
+    <!-- Google Analytics -->
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+    <script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', GA_MEASUREMENT_ID);
+    </script>
   </head>
   <body class="min-h-screen bg-gradient-to-b from-secondary-950 to-secondary-900 text-white font-sans">
     <div class="relative z-10">
@@ -120,4 +195,18 @@ const GA_MEASUREMENT_ID = 'G-RJ5QKM03ZM'; // Replace with your actual Google Ana
     animation: fadeIn 0.5s ease-in forwards;
   }
 
+  /* Font loading states */
+  .font-loading * {
+    visibility: hidden;
+  }
+  
+  .font-loaded * {
+    visibility: visible;
+  }
+  
+  /* Exception for critical elements that should always be visible */
+  .font-loading .always-visible,
+  .font-loading .always-visible * {
+    visibility: visible !important;
+  }
 </style>
