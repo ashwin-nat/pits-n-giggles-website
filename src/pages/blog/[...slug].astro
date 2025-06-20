@@ -52,6 +52,44 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
         </div>
       </div>
 
+      <!-- Mobile TOC Button -->
+      {tocHeadings.length > 0 && (
+        <div class="lg:hidden max-w-3xl mx-auto mb-8">
+          <button
+            id="mobile-toc-toggle"
+            class="flex items-center gap-2 bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg px-4 py-3 text-secondary-300 hover:text-white hover:border-secondary-700 transition-all duration-200"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18"></path>
+              <path d="M3 12h18"></path>
+              <path d="M3 18h18"></path>
+            </svg>
+            <span class="font-medium">Table of Contents</span>
+            <svg id="toc-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-200">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          
+          <!-- Mobile TOC Dropdown -->
+          <div id="mobile-toc" class="hidden mt-2 bg-secondary-900/95 backdrop-blur-sm border border-secondary-800 rounded-lg p-4 shadow-lg">
+            <nav class="toc-nav">
+              <ul class="space-y-2">
+                {tocHeadings.map((heading) => (
+                  <li class={`toc-item toc-depth-${heading.depth}`}>
+                    <a
+                      href={`#${heading.slug}`}
+                      class="mobile-toc-link block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-sm leading-relaxed py-1"
+                    >
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        </div>
+      )}
+
       <!-- Main Content Layout -->
       <div class="max-w-6xl mx-auto flex gap-8">
         <!-- Table of Contents - Desktop Only -->
@@ -73,7 +111,7 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
                       <li class={`toc-item toc-depth-${heading.depth}`}>
                         <a
                           href={`#${heading.slug}`}
-                          class="block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-sm leading-relaxed"
+                          class="desktop-toc-link block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-sm leading-relaxed"
                         >
                           {heading.text}
                         </a>
@@ -118,7 +156,7 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
             </a>
             <a href="#" class="text-secondary-400 hover:text-white transition-colors">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19.633 7.997c.013.175.013.349.013.523 0 5.325-4.053 11.461-11.46 11.461-2.282 0-4.402-.661-6.186-1.809.324.037.636.05.973.05a8.07 8.07 0 0 0 5.001-1.721 4.036 4.036 0 0 1-3.767-2.793c.249.037.499.062.761.062.361 0 .724-.05 1.061-.137a4.027 4.027 0 0 1-3.23-3.953v-.05c.537.299 1.16.486 1.82.511a4.022 4.022 0 0 1-1.796-3.354c0-.748.199-1.434.548-2.032a11.457 11.457 0 0 0 8.306 4.215c-.062-.3-.1-.599-.1-.898a4.026 4.026 0 0 1 4.028-4.028c1.16 0 2.207.486 2.943 1.272a7.957 7.957 0 0 0 2.556-.973 4.02 4.02 0 0 1-1.771 2.22 8.073 8.073 0 0 0 2.319-.624 8.645 8.645 0 0 1-2.019 2.083z"/>
+                <path d="M19.633 7.997c.013.175.013.349.013.523 0 5.325-4.053 11.461-11.46 11.461-2.282 0-4.402-.661-6.186-1.809.324.037.636.05.973.50a8.07 8.07 0 0 0 5.001-1.721 4.036 4.036 0 0 1-3.767-2.793c.249.037.499.062.761.062.361 0 .724-.05 1.061-.137a4.027 4.027 0 0 1-3.23-3.953v-.05c.537.299 1.16.486 1.82.511a4.022 4.022 0 0 1-1.796-3.354c0-.748.199-1.434.548-2.032a11.457 11.457 0 0 0 8.306 4.215c-.062-.3-.1-.599-.1-.898a4.026 4.026 0 0 1 4.028-4.028c1.16 0 2.207.486 2.943 1.272a7.957 7.957 0 0 0 2.556-.973 4.02 4.02 0 0 1-1.771 2.22 8.073 8.073 0 0 0 2.319-.624 8.645 8.645 0 0 1-2.019 2.083z"/>
               </svg>
             </a>
           </div>
@@ -130,7 +168,35 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
   <!-- Table of Contents JavaScript -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Smooth scrolling for TOC links
+      // Mobile TOC toggle functionality
+      const mobileToggle = document.getElementById('mobile-toc-toggle');
+      const mobileToc = document.getElementById('mobile-toc');
+      const tocChevron = document.getElementById('toc-chevron');
+
+      if (mobileToggle && mobileToc && tocChevron) {
+        mobileToggle.addEventListener('click', function() {
+          const isHidden = mobileToc.classList.contains('hidden');
+          
+          if (isHidden) {
+            mobileToc.classList.remove('hidden');
+            tocChevron.style.transform = 'rotate(180deg)';
+          } else {
+            mobileToc.classList.add('hidden');
+            tocChevron.style.transform = 'rotate(0deg)';
+          }
+        });
+
+        // Close mobile TOC when clicking on a link
+        const mobileLinks = document.querySelectorAll('.mobile-toc-link');
+        mobileLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            mobileToc.classList.add('hidden');
+            tocChevron.style.transform = 'rotate(0deg)';
+          });
+        });
+      }
+
+      // Smooth scrolling for all TOC links
       const tocLinks = document.querySelectorAll('.toc-nav a[href^="#"]');
       
       tocLinks.forEach(link => {
@@ -152,21 +218,21 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
         });
       });
 
-      // Highlight current section in TOC
+      // Highlight current section in desktop TOC only
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           const id = entry.target.getAttribute('id');
-          const tocLink = document.querySelector(`.toc-nav a[href="#${id}"]`);
+          const desktopTocLink = document.querySelector(`.desktop-toc-link[href="#${id}"]`);
           
           if (entry.isIntersecting) {
-            // Remove active class from all TOC links
-            document.querySelectorAll('.toc-nav a').forEach(link => {
+            // Remove active class from all desktop TOC links
+            document.querySelectorAll('.desktop-toc-link').forEach(link => {
               link.classList.remove('toc-active');
             });
             
             // Add active class to current section
-            if (tocLink) {
-              tocLink.classList.add('toc-active');
+            if (desktopTocLink) {
+              desktopTocLink.classList.add('toc-active');
             }
           }
         });
@@ -270,13 +336,13 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
     padding-left: 2rem;
   }
 
-  .toc-nav a.toc-active {
+  .desktop-toc-link.toc-active {
     color: theme('colors.accent.400');
     font-weight: 600;
     position: relative;
   }
 
-  .toc-nav a.toc-active::before {
+  .desktop-toc-link.toc-active::before {
     content: '';
     position: absolute;
     left: -1rem;
@@ -286,6 +352,37 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
     height: 1rem;
     background-color: theme('colors.accent.400');
     border-radius: 2px;
+  }
+
+  /* Mobile TOC specific styles */
+  #mobile-toc {
+    animation: slideDown 0.2s ease-out;
+  }
+
+  #mobile-toc.hidden {
+    animation: slideUp 0.2s ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
   }
 
   /* Ensure headings have proper spacing for scroll positioning */
