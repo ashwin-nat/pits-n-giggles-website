@@ -3,17 +3,339 @@ import Layout from '../layouts/Layout.astro';
 import { getEntry } from 'astro:content';
 
 const aboutEntry = await getEntry('about', 'index');
-const { Content } = await aboutEntry.render();
+const { Content, headings } = await aboutEntry.render();
+
+// Filter headings for table of contents (only h2 and h3)
+const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.depth <= 3);
 ---
 
 <Layout title="About">
   <div class="pt-32 pb-20">
     <div class="container mx-auto px-4">
-      <div class="max-w-3xl mx-auto prose prose-invert prose-lg">
-        <Content />
+      <!-- Mobile TOC Button -->
+      {tocHeadings.length > 0 && (
+        <div class="lg:hidden max-w-3xl mx-auto mb-8" id="mobile-toc-container">
+          <button
+            id="mobile-toc-toggle"
+            class="flex items-center gap-2 bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg px-4 py-3 text-secondary-300 hover:text-white hover:border-secondary-700 transition-all duration-200"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18"></path>
+              <path d="M3 12h18"></path>
+              <path d="M3 18h18"></path>
+            </svg>
+            <span class="font-medium">Table of Contents</span>
+            <svg id="toc-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-200">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          
+          <!-- Mobile TOC Dropdown -->
+          <div id="mobile-toc" class="hidden mt-2 bg-secondary-900/95 backdrop-blur-sm border border-secondary-800 rounded-lg p-4 shadow-lg">
+            <nav class="toc-nav">
+              <ul class="space-y-2">
+                {tocHeadings.map((heading) => (
+                  <li class={`toc-item toc-depth-${heading.depth}`}>
+                    <a
+                      href={`#${heading.slug}`}
+                      class="mobile-toc-link block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-sm leading-relaxed py-1"
+                    >
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        </div>
+      )}
+
+      <!-- Floating TOC for Mobile (appears on scroll) -->
+      {tocHeadings.length > 0 && (
+        <div id="floating-toc-mobile" class="lg:hidden fixed top-16 left-4 right-4 z-40 opacity-0 pointer-events-none transition-all duration-300 transform -translate-y-2">
+          <div class="bg-secondary-900/95 backdrop-blur-md border border-secondary-700 rounded-lg shadow-xl">
+            <button
+              id="floating-toc-toggle"
+              class="w-full flex items-center justify-between px-4 py-3 text-secondary-300 hover:text-white transition-colors duration-200"
+            >
+              <div class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18"></path>
+                  <path d="M3 12h18"></path>
+                  <path d="M3 18h18"></path>
+                </svg>
+                <span class="font-medium text-sm">Contents</span>
+              </div>
+              <svg id="floating-toc-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-200">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            
+            <div id="floating-toc-content" class="hidden border-t border-secondary-700 max-h-64 overflow-y-auto">
+              <nav class="p-3">
+                <ul class="space-y-1">
+                  {tocHeadings.map((heading) => (
+                    <li class={`toc-item toc-depth-${heading.depth}`}>
+                      <a
+                        href={`#${heading.slug}`}
+                        class="floating-toc-link block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-xs leading-relaxed py-1 px-2 rounded hover:bg-secondary-800/50"
+                      >
+                        {heading.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <!-- Main Content Layout -->
+      <div class="max-w-6xl mx-auto flex gap-8">
+        <!-- Table of Contents - Desktop Only -->
+        {tocHeadings.length > 0 && (
+          <aside class="hidden lg:block w-64 flex-shrink-0">
+            <div class="sticky top-32" id="desktop-toc-container">
+              <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"></path>
+                    <path d="M3 12h18"></path>
+                    <path d="M3 18h18"></path>
+                  </svg>
+                  Table of Contents
+                </h3>
+                <nav class="toc-nav">
+                  <ul class="space-y-2">
+                    {tocHeadings.map((heading) => (
+                      <li class={`toc-item toc-depth-${heading.depth}`}>
+                        <a
+                          href={`#${heading.slug}`}
+                          class="desktop-toc-link block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-sm leading-relaxed"
+                        >
+                          {heading.text}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </aside>
+        )}
+
+        <!-- Floating TOC for Desktop (appears on scroll) -->
+        {tocHeadings.length > 0 && (
+          <div id="floating-toc-desktop" class="hidden lg:block fixed top-20 right-6 w-72 z-40 opacity-0 pointer-events-none transition-all duration-300 transform translate-x-4">
+            <div class="bg-secondary-900/95 backdrop-blur-md border border-secondary-700 rounded-lg shadow-xl p-4">
+              <div class="flex items-center gap-2 mb-3 pb-2 border-b border-secondary-700">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18"></path>
+                  <path d="M3 12h18"></path>
+                  <path d="M3 18h18"></path>
+                </svg>
+                <span class="font-medium text-white text-sm">Contents</span>
+              </div>
+              <nav class="max-h-64 overflow-y-auto">
+                <ul class="space-y-1">
+                  {tocHeadings.map((heading) => (
+                    <li class={`toc-item toc-depth-${heading.depth}`}>
+                      <a
+                        href={`#${heading.slug}`}
+                        class="floating-desktop-toc-link block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-xs leading-relaxed py-1 px-2 rounded hover:bg-secondary-800/50"
+                      >
+                        {heading.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+          </div>
+        )}
+
+        <!-- About Content -->
+        <div class="flex-1 min-w-0">
+          <div class="max-w-3xl mx-auto prose prose-invert prose-lg">
+            <Content />
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Table of Contents JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobile TOC toggle functionality
+      const mobileToggle = document.getElementById('mobile-toc-toggle');
+      const mobileToc = document.getElementById('mobile-toc');
+      const tocChevron = document.getElementById('toc-chevron');
+
+      if (mobileToggle && mobileToc && tocChevron) {
+        mobileToggle.addEventListener('click', function() {
+          const isHidden = mobileToc.classList.contains('hidden');
+          
+          if (isHidden) {
+            mobileToc.classList.remove('hidden');
+            tocChevron.style.transform = 'rotate(180deg)';
+          } else {
+            mobileToc.classList.add('hidden');
+            tocChevron.style.transform = 'rotate(0deg)';
+          }
+        });
+
+        // Close mobile TOC when clicking on a link
+        const mobileLinks = document.querySelectorAll('.mobile-toc-link');
+        mobileLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            mobileToc.classList.add('hidden');
+            tocChevron.style.transform = 'rotate(0deg)';
+          });
+        });
+      }
+
+      // Floating TOC functionality
+      const floatingTocMobile = document.getElementById('floating-toc-mobile');
+      const floatingTocDesktop = document.getElementById('floating-toc-desktop');
+      const floatingTocToggle = document.getElementById('floating-toc-toggle');
+      const floatingTocContent = document.getElementById('floating-toc-content');
+      const floatingTocChevron = document.getElementById('floating-toc-chevron');
+      const mobileTocContainer = document.getElementById('mobile-toc-container');
+      const desktopTocContainer = document.getElementById('desktop-toc-container');
+
+      // Floating TOC toggle for mobile
+      if (floatingTocToggle && floatingTocContent && floatingTocChevron) {
+        floatingTocToggle.addEventListener('click', function() {
+          const isHidden = floatingTocContent.classList.contains('hidden');
+          
+          if (isHidden) {
+            floatingTocContent.classList.remove('hidden');
+            floatingTocChevron.style.transform = 'rotate(180deg)';
+          } else {
+            floatingTocContent.classList.add('hidden');
+            floatingTocChevron.style.transform = 'rotate(0deg)';
+          }
+        });
+
+        // Close floating TOC when clicking on a link
+        const floatingLinks = document.querySelectorAll('.floating-toc-link');
+        floatingLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            floatingTocContent.classList.add('hidden');
+            floatingTocChevron.style.transform = 'rotate(0deg)';
+          });
+        });
+      }
+
+      // Scroll behavior for floating TOCs
+      let ticking = false;
+      
+      function updateFloatingToc() {
+        const scrollY = window.scrollY;
+        
+        // Check if we've scrolled past the original TOC containers
+        const mobileTocRect = mobileTocContainer?.getBoundingClientRect();
+        const desktopTocRect = desktopTocContainer?.getBoundingClientRect();
+        
+        // Show floating mobile TOC when original is out of view
+        if (floatingTocMobile && mobileTocRect) {
+          const shouldShow = mobileTocRect.bottom < 0;
+          
+          if (shouldShow) {
+            floatingTocMobile.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
+            floatingTocMobile.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+          } else {
+            floatingTocMobile.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
+            floatingTocMobile.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+            // Close the dropdown when hiding
+            if (floatingTocContent) {
+              floatingTocContent.classList.add('hidden');
+              if (floatingTocChevron) floatingTocChevron.style.transform = 'rotate(0deg)';
+            }
+          }
+        }
+        
+        // Show floating desktop TOC when original is out of view
+        if (floatingTocDesktop && desktopTocRect) {
+          const shouldShow = desktopTocRect.bottom < 100; // Show a bit earlier for desktop
+          
+          if (shouldShow) {
+            floatingTocDesktop.classList.remove('opacity-0', 'pointer-events-none', 'translate-x-4');
+            floatingTocDesktop.classList.add('opacity-100', 'pointer-events-auto', 'translate-x-0');
+          } else {
+            floatingTocDesktop.classList.add('opacity-0', 'pointer-events-none', 'translate-x-4');
+            floatingTocDesktop.classList.remove('opacity-100', 'pointer-events-auto', 'translate-x-0');
+          }
+        }
+        
+        ticking = false;
+      }
+
+      function requestTick() {
+        if (!ticking) {
+          requestAnimationFrame(updateFloatingToc);
+          ticking = true;
+        }
+      }
+
+      window.addEventListener('scroll', requestTick);
+
+      // Smooth scrolling for all TOC links
+      const tocLinks = document.querySelectorAll('.toc-nav a[href^="#"], .floating-toc-link[href^="#"], .floating-desktop-toc-link[href^="#"]');
+      
+      tocLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href').substring(1);
+          const targetElement = document.getElementById(targetId);
+          
+          if (targetElement) {
+            const headerOffset = 120; // Account for fixed header
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+
+      // Highlight current section in desktop TOC only
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const id = entry.target.getAttribute('id');
+          const desktopTocLink = document.querySelector(`.desktop-toc-link[href="#${id}"]`);
+          const floatingDesktopTocLink = document.querySelector(`.floating-desktop-toc-link[href="#${id}"]`);
+          
+          if (entry.isIntersecting) {
+            // Remove active class from all desktop TOC links
+            document.querySelectorAll('.desktop-toc-link, .floating-desktop-toc-link').forEach(link => {
+              link.classList.remove('toc-active');
+            });
+            
+            // Add active class to current section
+            if (desktopTocLink) {
+              desktopTocLink.classList.add('toc-active');
+            }
+            if (floatingDesktopTocLink) {
+              floatingDesktopTocLink.classList.add('toc-active');
+            }
+          }
+        });
+      }, {
+        rootMargin: '-120px 0px -80% 0px' // Trigger when heading is near top of viewport
+      });
+
+      // Observe all headings
+      document.querySelectorAll('h2[id], h3[id]').forEach(heading => {
+        observer.observe(heading);
+      });
+    });
+  </script>
 </Layout>
 
 <style>
@@ -34,5 +356,160 @@ const { Content } = await aboutEntry.render();
     --tw-prose-pre-bg: theme('colors.secondary.950');
     --tw-prose-th-borders: theme('colors.secondary.800');
     --tw-prose-td-borders: theme('colors.secondary.800');
+  }
+
+  .prose a {
+    text-decoration: none;
+    border-bottom: 1px solid theme('colors.accent.500');
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .prose a:hover {
+    border-bottom-color: theme('colors.accent.400');
+    color: theme('colors.accent.400');
+  }
+
+  .prose pre {
+    background-color: theme('colors.secondary.950');
+    border: 1px solid theme('colors.secondary.800');
+    border-radius: 0.375rem;
+  }
+
+  .prose img {
+    border-radius: 0.375rem;
+  }
+
+  .prose code {
+    background-color: theme('colors.secondary.800');
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+
+  .prose blockquote {
+    border-left-color: theme('colors.primary.500');
+    background-color: theme('colors.secondary.900');
+    padding: 1rem;
+    border-radius: 0.375rem;
+  }
+
+  /* Override default prose list spacing with tighter spacing */
+  .prose :where(ul > li):not(:where([class~="not-prose"] *)),
+  .prose :where(ol > li):not(:where([class~="not-prose"] *)) {
+    margin-top: 0.125rem !important;
+    margin-bottom: 0.125rem !important;
+  }
+
+  /* Maintain normal spacing between lists and other elements */
+  .prose :where(ul):not(:where([class~="not-prose"] *)),
+  .prose :where(ol):not(:where([class~="not-prose"] *)) {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* Nested lists should have minimal top margin */
+  .prose :where(ul ul, ul ol, ol ul, ol ol):not(:where([class~="not-prose"] *)) {
+    margin-top: 0.25rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  /* Table of Contents Styles */
+  .toc-depth-2 {
+    padding-left: 0;
+  }
+
+  .toc-depth-3 {
+    padding-left: 1rem;
+  }
+
+  .toc-depth-4 {
+    padding-left: 2rem;
+  }
+
+  .desktop-toc-link.toc-active,
+  .floating-desktop-toc-link.toc-active {
+    color: theme('colors.accent.400');
+    font-weight: 600;
+    position: relative;
+  }
+
+  .desktop-toc-link.toc-active::before {
+    content: '';
+    position: absolute;
+    left: -1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 1rem;
+    background-color: theme('colors.accent.400');
+    border-radius: 2px;
+  }
+
+  .floating-desktop-toc-link.toc-active::before {
+    content: '';
+    position: absolute;
+    left: -0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 0.75rem;
+    background-color: theme('colors.accent.400');
+    border-radius: 1px;
+  }
+
+  /* Mobile TOC specific styles */
+  #mobile-toc {
+    animation: slideDown 0.2s ease-out;
+  }
+
+  #mobile-toc.hidden {
+    animation: slideUp 0.2s ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+  /* Floating TOC specific styles */
+  #floating-toc-mobile,
+  #floating-toc-desktop {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  /* Ensure headings have proper spacing for scroll positioning */
+  .prose h2,
+  .prose h3 {
+    scroll-margin-top: 120px;
+  }
+
+  /* Floating TOC depth styling */
+  #floating-toc-mobile .toc-depth-3,
+  #floating-toc-desktop .toc-depth-3 {
+    padding-left: 0.75rem;
+  }
+
+  /* Subtle shadow for floating elements */
+  #floating-toc-mobile > div,
+  #floating-toc-desktop > div {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
   }
 </style>
