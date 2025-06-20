@@ -55,7 +55,7 @@ Start your F1 game-*Pits n' Giggles* supports **F1 2021** through **F1 25** (and
 
    * **UDP Telemetry**: `On`
    * **UDP Port**: `20777` (or the port you set in the app)
-   * **UDP Send Rate**: `20Hz` or higher (recommended)
+   * **UDP Send Rate**: `60Hz`
    * **UDP Format**: Choose your game version: `2023`, `2024` or `2025`
    * **Your Telemetry**: `Public`
    * **Show Names**: `On` (this enables driver names in the dashboard)
@@ -68,6 +68,15 @@ These settings ensure your game streams real-time **F1 telemetry data** to *Pits
 
 ![Game settings](/blog_assets/f1-telemetry-setup/f1-game-settings.png)
 
+
+> NOTE: If you're on console (PS/XBox),
+```
+1. set UDP Broadcast Mode to On
+2. Run Pits n' Giggles on a windows computer (PC/laptop)
+3. Optional: If you have changed the port number in the F1 game settings
+    * Set the same UDP port number in Settings -> Network -> F1 UDP Telemetry Port
+```
+![Settings page screenshot](/blog_assets/f1-telemetry-setup/png-settings.png)
 ---
 
 ## ✅ That’s it!
