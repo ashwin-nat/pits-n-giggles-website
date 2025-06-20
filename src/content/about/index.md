@@ -24,7 +24,7 @@ Race smarter with real-time telemetry designed for solo racers:
 ## Built for F1 25 Telemetry
 
 Pits n' Giggles is optimized for:
-- **F1 23**, **F1 24**, and ready for **F1 25 telemetry** (support added once the official docs are released)
+- **F1 23**, **F1 24** and **F1 25**
 - Local sessions, online league races, or Twitch streams
 - Sim racers who crave clean, accurate data without the need for extra tools or engineers
 
