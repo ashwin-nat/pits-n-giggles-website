@@ -143,4 +143,27 @@ const formattedDate = dayjs(entry.data.pubDate).format('MMMM D, YYYY');
     padding: 1rem;
     border-radius: 0.375rem;
   }
+
+  /* Tighter spacing for list items */
+  .prose ul li,
+  .prose ol li {
+    margin-top: 0.125rem;
+    margin-bottom: 0.125rem;
+  }
+
+  /* Maintain normal spacing between lists and other elements */
+  .prose ul,
+  .prose ol {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Nested lists should have minimal top margin */
+  .prose ul ul,
+  .prose ul ol,
+  .prose ol ul,
+  .prose ol ol {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
 </style>
