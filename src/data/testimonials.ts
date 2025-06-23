@@ -4,6 +4,7 @@ export interface Testimonial {
   testimonial: string;
   photoUrl?: string;
   link?: string; // Optional link to user's site/profile
+  linkTooltip?: string; // Optional tooltip describing the link
 }
 
 export const testimonials: Testimonial[] = [
@@ -16,6 +17,7 @@ export const testimonials: Testimonial[] = [
     name: "Scurl",
     title: "League admin",
     testimonial: "The amount of overview Pits n' Giggles provides is an absolute gamechanger for me as a League Admin and Race Engineer. It combines extensive telemetry with a congenial design, which makes analyzing data as easy as it could get. It's simply a must have!",
-    link: "https://discord.gg/4PqurpnBYq"
+    link: "https://discord.gg/4PqurpnBYq",
+    linkTooltip: "Join Scurl's Discord community"
   }
 ];
