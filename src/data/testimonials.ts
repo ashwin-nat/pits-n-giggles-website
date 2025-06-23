@@ -17,5 +17,6 @@ export const testimonials: Testimonial[] = [
     name: "Scurl",
     title: "League admin",
     testimonial: "The amount of overview Pits n' Giggles provides is an absolute gamechanger for me as a League Admin and Race Engineer. It combines extensive telemetry with a congenial design, which makes analyzing data as easy as it could get. It's simply a must have!",
+    link: "https://discord.gg/4PqurpnBYq"
   }
 ];
