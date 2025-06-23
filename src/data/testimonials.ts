@@ -3,13 +3,15 @@ export interface Testimonial {
   title: string;
   testimonial: string;
   photoUrl?: string;
+  link?: string; // Optional link to user's site/profile
 }
 
 export const testimonials: Testimonial[] = [
   {
     name: "Rage Nail",
     title: "Content creator",
-    testimonial: "I use Pits n' Giggles mainly for the OBS stream overlay-makes it easy for my viewers to follow my lap times and help with consistency. The pace comparison overlay's been especially useful during races to get real-time feedback on where I'm gaining or losing time."
+    testimonial: "I use Pits n' Giggles mainly for the OBS stream overlay-makes it easy for my viewers to follow my lap times and help with consistency. The pace comparison overlay's been especially useful during races to get real-time feedback on where I'm gaining or losing time.",
+    link: "https://www.youtube.com/@RageNail" // Example link
   },
   {
     name: "Scurl",
