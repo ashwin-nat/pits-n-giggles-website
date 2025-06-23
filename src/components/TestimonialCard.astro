@@ -28,18 +28,41 @@ const avatarColor = avatarColors[index % avatarColors.length];
 
 <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
   <div class="flex items-center mb-4">
-    {photoUrl ? (
-      <Image 
-        src={photoUrl}
-        alt={name}
-        width={48}
-        height={48}
-        class="w-12 h-12 rounded-full object-cover mr-4"
-      />
+    {link ? (
+      <a 
+        href={link} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="mr-4 transition-transform duration-200 hover:scale-105"
+      >
+        {photoUrl ? (
+          <Image 
+            src={photoUrl}
+            alt={name}
+            width={48}
+            height={48}
+            class="w-12 h-12 rounded-full object-cover"
+          />
+        ) : (
+          <div class={`w-12 h-12 ${avatarColor} rounded-full flex items-center justify-center font-bold text-xl text-white`}>
+            {initial}
+          </div>
+        )}
+      </a>
     ) : (
-      <div class={`w-12 h-12 ${avatarColor} rounded-full flex items-center justify-center font-bold text-xl mr-4 text-white`}>
-        {initial}
-      </div>
+      photoUrl ? (
+        <Image 
+          src={photoUrl}
+          alt={name}
+          width={48}
+          height={48}
+          class="w-12 h-12 rounded-full object-cover mr-4"
+        />
+      ) : (
+        <div class={`w-12 h-12 ${avatarColor} rounded-full flex items-center justify-center font-bold text-xl mr-4 text-white`}>
+          {initial}
+        </div>
+      )
     )}
     <div>
       {link ? (
