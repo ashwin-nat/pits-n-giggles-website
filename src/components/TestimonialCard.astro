@@ -6,31 +6,98 @@ interface Props {
   title: string;
   testimonial: string;
   photoUrl?: string;
+  link?: string;
+  linkTooltip?: string;
+  index?: number; // Add index prop to determine color
 }
 
-const { name, title, testimonial, photoUrl } = Astro.props;
+const { name, title, testimonial, photoUrl, link, linkTooltip, index = 0 } = Astro.props;
 
 // Get first letter for avatar fallback
 const initial = name.charAt(0).toUpperCase();
+
+// Simple array of colors to cycle through
+const avatarColors = [
+  'bg-blue-500',    // Blue
+  'bg-red-500',     // Red  
+  'bg-green-500'    // Green
+];
+
+// Get color based on index
+const avatarColor = avatarColors[index % avatarColors.length];
 ---
 
-<div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
+<div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6 relative">
   <div class="flex items-center mb-4">
-    {photoUrl ? (
-      <Image 
-        src={photoUrl}
-        alt={name}
-        width={48}
-        height={48}
-        class="w-12 h-12 rounded-full object-cover mr-4"
-      />
-    ) : (
-      <div class="w-12 h-12 bg-accent-500 rounded-full flex items-center justify-center font-bold text-xl mr-4">
-        {initial}
+    {link ? (
+      <div class="relative tooltip-container mr-4">
+        <a 
+          href={link} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="block transition-transform duration-200 hover:scale-105"
+        >
+          {photoUrl ? (
+            <Image 
+              src={photoUrl}
+              alt={name}
+              width={48}
+              height={48}
+              class="w-12 h-12 rounded-full object-cover"
+            />
+          ) : (
+            <div class={`w-12 h-12 ${avatarColor} rounded-full flex items-center justify-center font-bold text-xl text-white`}>
+              {initial}
+            </div>
+          )}
+        </a>
+        {linkTooltip && (
+          <div class="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-secondary-950 border border-secondary-700 rounded-lg text-white text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-200 z-10 shadow-lg">
+            {linkTooltip}
+            <div class="tooltip-arrow absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-secondary-700"></div>
+          </div>
+        )}
       </div>
+    ) : (
+      photoUrl ? (
+        <Image 
+          src={photoUrl}
+          alt={name}
+          width={48}
+          height={48}
+          class="w-12 h-12 rounded-full object-cover mr-4"
+        />
+      ) : (
+        <div class={`w-12 h-12 ${avatarColor} rounded-full flex items-center justify-center font-bold text-xl mr-4 text-white`}>
+          {initial}
+        </div>
+      )
     )}
     <div>
-      <h4 class="text-white font-semibold">{name}</h4>
+      {link ? (
+        <div class="relative tooltip-container">
+          <a 
+            href={link} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="text-white font-semibold hover:text-accent-400 transition-colors duration-200 inline-flex items-center gap-1"
+          >
+            {name}
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-60">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          {linkTooltip && (
+            <div class="tooltip absolute bottom-full left-0 mb-2 px-3 py-2 bg-secondary-950 border border-secondary-700 rounded-lg text-white text-sm whitespace-nowrap opacity-0 pointer-events-none transition-all duration-200 z-10 shadow-lg">
+              {linkTooltip}
+              <div class="tooltip-arrow absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-secondary-700"></div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <h4 class="text-white font-semibold">{name}</h4>
+      )}
       <p class="text-secondary-400 text-sm">{title}</p>
     </div>
   </div>
@@ -38,3 +105,25 @@ const initial = name.charAt(0).toUpperCase();
     {testimonial}
   </p>
 </div>
+
+<style>
+  .tooltip-container:hover .tooltip {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(-2px);
+  }
+
+  .tooltip-container:hover .tooltip:has(.tooltip-arrow) {
+    transform: translateX(-50%) translateY(-2px);
+  }
+
+  .tooltip {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .tooltip-arrow {
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
+  }
+</style>
