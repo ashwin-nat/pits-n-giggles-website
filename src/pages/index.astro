@@ -43,7 +43,9 @@ const platforms = [
     icon: "bi-windows",
     color: "text-blue-400",
     bgColor: "bg-blue-400/10",
-    borderColor: "border-blue-400/20"
+    borderColor: "border-blue-400/20",
+    hoverBorderColor: "hover:border-blue-400/40",
+    hoverBgColor: "hover:bg-blue-400/20"
   },
   {
     name: "macOS",
@@ -51,7 +53,9 @@ const platforms = [
     icon: "bi-apple",
     color: "text-gray-300",
     bgColor: "bg-gray-300/10",
-    borderColor: "border-gray-300/20"
+    borderColor: "border-gray-300/20",
+    hoverBorderColor: "hover:border-gray-300/40",
+    hoverBgColor: "hover:bg-gray-300/20"
   },
   {
     name: "Linux",
@@ -59,7 +63,9 @@ const platforms = [
     icon: "bi-ubuntu",
     color: "text-orange-400",
     bgColor: "bg-orange-400/10",
-    borderColor: "border-orange-400/20"
+    borderColor: "border-orange-400/20",
+    hoverBorderColor: "hover:border-orange-400/40",
+    hoverBgColor: "hover:bg-orange-400/20"
   }
 ];
 ---
@@ -119,23 +125,31 @@ const platforms = [
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
         {platforms.map(platform => (
-          <div class={`relative bg-secondary-900/50 backdrop-blur-sm border ${platform.borderColor} rounded-lg p-6 text-center transition-all duration-300 hover:shadow-card hover:border-opacity-40`}>
-            <div class={`${platform.bgColor} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4`}>
-              <i class={`${platform.icon} ${platform.color} text-2xl`}></i>
+          <div 
+            class={`platform-tile relative bg-secondary-900/50 backdrop-blur-sm border ${platform.borderColor} ${platform.hoverBorderColor} ${platform.hoverBgColor} rounded-lg p-6 text-center transition-all duration-300 hover:shadow-card hover:border-opacity-40 hover:-translate-y-1 cursor-pointer group`}
+            data-platform={platform.name.toLowerCase()}
+          >
+            <div class={`${platform.bgColor} group-hover:scale-110 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-all duration-300`}>
+              <i class={`${platform.icon} ${platform.color} text-2xl transition-all duration-300 group-hover:text-opacity-90`}></i>
             </div>
-            <h3 class="text-xl font-semibold text-white mb-2">{platform.name}</h3>
+            <h3 class="text-xl font-semibold text-white mb-2 group-hover:text-opacity-90 transition-all duration-300">{platform.name}</h3>
             <div class="flex items-center justify-center gap-2">
               {platform.status === "Available" ? (
                 <>
-                  <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span class="text-green-400 font-medium text-sm">{platform.status}</span>
+                  <div class="w-2 h-2 bg-green-500 rounded-full group-hover:shadow-green-500/50 group-hover:shadow-md transition-all duration-300"></div>
+                  <span class="text-green-400 font-medium text-sm group-hover:text-green-300 transition-colors duration-300">{platform.status}</span>
                 </>
               ) : (
                 <>
-                  <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                  <span class="text-yellow-400 font-medium text-sm">{platform.status}</span>
+                  <div class="w-2 h-2 bg-yellow-500 rounded-full group-hover:shadow-yellow-500/50 group-hover:shadow-md transition-all duration-300"></div>
+                  <span class="text-yellow-400 font-medium text-sm group-hover:text-yellow-300 transition-colors duration-300">{platform.status}</span>
                 </>
               )}
+            </div>
+            
+            <!-- Subtle glow effect on hover -->
+            <div class="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              <div class={`absolute inset-0 rounded-lg ${platform.bgColor} blur-xl scale-110`}></div>
             </div>
           </div>
         ))}
@@ -179,4 +193,75 @@ const platforms = [
   )}
 
   <ImageViewer images={[heroImage]} />
+
+  <!-- Platform Tile Click Handler -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const platformTiles = document.querySelectorAll('.platform-tile');
+      
+      platformTiles.forEach(tile => {
+        tile.addEventListener('click', function() {
+          // Navigate to releases page when any platform tile is clicked
+          window.location.href = '/releases';
+        });
+        
+        // Add keyboard accessibility
+        tile.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            window.location.href = '/releases';
+          }
+        });
+        
+        // Make tiles focusable for keyboard navigation
+        tile.setAttribute('tabindex', '0');
+        tile.setAttribute('role', 'button');
+        tile.setAttribute('aria-label', `View releases for ${tile.dataset.platform}`);
+      });
+    });
+  </script>
+</Layout>
+
+<style>
+  /* Enhanced platform tile hover effects */
+  .platform-tile {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .platform-tile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    transition: left 0.6s ease;
+    pointer-events: none;
+  }
+  
+  .platform-tile:hover::before {
+    left: 100%;
+  }
+  
+  /* Focus styles for accessibility */
+  .platform-tile:focus {
+    outline: 2px solid theme('colors.accent.500');
+    outline-offset: 2px;
+  }
+  
+  /* Additional glow effect for available platforms */
+  .platform-tile[data-platform="windows"]:hover {
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+  }
+  
+  .platform-tile[data-platform="macos"]:hover {
+    box-shadow: 0 0 20px rgba(209, 213, 219, 0.3);
+  }
+  
+  .platform-tile[data-platform="linux"]:hover {
+    box-shadow: 0 0 20px rgba(251, 146, 60, 0.3);
+  }
+</style>
 </Layout>
