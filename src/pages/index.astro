@@ -120,32 +120,41 @@ const platforms = [
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
         {platforms.map(platform => {
           const isAvailable = platform.status === "Available";
-          return (
-            <div 
-              class={`platform-tile relative bg-secondary-900/50 backdrop-blur-sm border ${platform.borderColor} rounded-lg p-6 text-center transition-all duration-300 ${isAvailable ? 'cursor-pointer' : 'cursor-default'}`}
-              data-platform={platform.name.toLowerCase()}
-              data-available={isAvailable.toString()}
-              data-href={isAvailable ? '/releases' : ''}
-            >
-              <div class={`platform-icon ${platform.bgColor} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-all duration-300`}>
-                <i class={`${platform.icon} ${platform.color} text-2xl transition-all duration-300`}></i>
+          
+          if (isAvailable) {
+            return (
+              <a 
+                href="/releases"
+                class={`platform-tile block relative bg-secondary-900/50 backdrop-blur-sm border ${platform.borderColor} rounded-lg p-6 text-center transition-all duration-300 cursor-pointer hover:shadow-card hover:border-opacity-40 no-underline`}
+                data-platform={platform.name.toLowerCase()}
+              >
+                <div class={`platform-icon ${platform.bgColor} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-all duration-300`}>
+                  <i class={`${platform.icon} ${platform.color} text-2xl transition-all duration-300`}></i>
+                </div>
+                <h3 class="platform-title text-xl font-semibold text-white mb-2 transition-all duration-300">{platform.name}</h3>
+                <div class="flex items-center justify-center gap-2">
+                  <div class="status-dot w-2 h-2 bg-green-500 rounded-full transition-all duration-300"></div>
+                  <span class="status-text text-green-400 font-medium text-sm transition-colors duration-300">{platform.status}</span>
+                </div>
+              </a>
+            );
+          } else {
+            return (
+              <div 
+                class={`platform-tile relative bg-secondary-900/50 backdrop-blur-sm border ${platform.borderColor} rounded-lg p-6 text-center transition-all duration-300 cursor-default`}
+                data-platform={platform.name.toLowerCase()}
+              >
+                <div class={`platform-icon ${platform.bgColor} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-all duration-300`}>
+                  <i class={`${platform.icon} ${platform.color} text-2xl transition-all duration-300`}></i>
+                </div>
+                <h3 class="platform-title text-xl font-semibold text-white mb-2 transition-all duration-300">{platform.name}</h3>
+                <div class="flex items-center justify-center gap-2">
+                  <div class="status-dot w-2 h-2 bg-yellow-500 rounded-full transition-all duration-300"></div>
+                  <span class="status-text text-yellow-400 font-medium text-sm transition-colors duration-300">{platform.status}</span>
+                </div>
               </div>
-              <h3 class="platform-title text-xl font-semibold text-white mb-2 transition-all duration-300">{platform.name}</h3>
-              <div class="flex items-center justify-center gap-2">
-                {platform.status === "Available" ? (
-                  <>
-                    <div class="status-dot w-2 h-2 bg-green-500 rounded-full transition-all duration-300"></div>
-                    <span class="status-text text-green-400 font-medium text-sm transition-colors duration-300">{platform.status}</span>
-                  </>
-                ) : (
-                  <>
-                    <div class="status-dot w-2 h-2 bg-yellow-500 rounded-full transition-all duration-300"></div>
-                    <span class="status-text text-yellow-400 font-medium text-sm transition-colors duration-300">{platform.status}</span>
-                  </>
-                )}
-              </div>
-            </div>
-          );
+            );
+          }
         })}
       </div>
     </div>
@@ -190,35 +199,36 @@ const platforms = [
 </Layout>
 
 <style>
-  /* Subtle hover effects only for available platforms */
-  .platform-tile[data-available="true"]:hover {
+  /* Subtle hover effects only for available platforms (anchor tags) */
+  a.platform-tile:hover {
     background: rgba(26, 26, 26, 0.8);
     border-color: rgba(96, 165, 250, 0.4);
     box-shadow: 0 4px 20px rgba(96, 165, 250, 0.15);
+    text-decoration: none;
   }
   
   /* Windows platform specific hover effects */
-  .platform-tile[data-platform="windows"]:hover .platform-icon {
+  a.platform-tile[data-platform="windows"]:hover .platform-icon {
     background: rgba(96, 165, 250, 0.2);
     box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
   }
   
-  .platform-tile[data-platform="windows"]:hover .bi-windows {
+  a.platform-tile[data-platform="windows"]:hover .bi-windows {
     color: rgb(147, 197, 253);
     text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
   }
   
-  .platform-tile[data-platform="windows"]:hover .status-text {
+  a.platform-tile[data-platform="windows"]:hover .status-text {
     color: rgb(74, 222, 128);
   }
   
-  .platform-tile[data-platform="windows"]:hover .status-dot {
+  a.platform-tile[data-platform="windows"]:hover .status-dot {
     background-color: rgb(74, 222, 128);
     box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
   }
   
-  /* Focus styles for accessibility - only for available platforms */
-  .platform-tile[data-available="true"]:focus {
+  /* Focus styles for accessibility - only for anchor tags */
+  a.platform-tile:focus {
     outline: 2px solid theme('colors.accent.500');
     outline-offset: 2px;
   }
@@ -240,37 +250,3 @@ const platforms = [
     transition: all 0.3s ease;
   }
 </style>
-
-<script is:inline>
-  document.addEventListener('DOMContentLoaded', function() {
-    const platformTiles = document.querySelectorAll('.platform-tile');
-    
-    platformTiles.forEach(function(tile) {
-      const htmlElement = tile as HTMLElement;
-      const isAvailable = htmlElement.dataset.available === 'true';
-      const href = htmlElement.dataset.href;
-      
-      if (isAvailable && href) {
-        // Add click functionality for available platforms
-        tile.addEventListener('click', function(e) {
-          e.preventDefault();
-          window.location.href = href;
-        });
-        
-        // Add keyboard accessibility
-        tile.addEventListener('keydown', function(e) {
-          const keyboardEvent = e as KeyboardEvent;
-          if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') {
-            e.preventDefault();
-            window.location.href = href;
-          }
-        });
-        
-        // Make tiles focusable for keyboard navigation
-        htmlElement.setAttribute('tabindex', '0');
-        htmlElement.setAttribute('role', 'button');
-        htmlElement.setAttribute('aria-label', `View releases for ${htmlElement.dataset.platform}`);
-      }
-    });
-  });
-</script>
