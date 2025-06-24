@@ -122,24 +122,25 @@ const platforms = [
           const isAvailable = platform.status === "Available";
           return (
             <div 
-              class={`platform-tile relative bg-secondary-900/50 backdrop-blur-sm border ${platform.borderColor} rounded-lg p-6 text-center transition-all duration-300 ${isAvailable ? 'cursor-pointer hover:shadow-card hover:border-opacity-60' : 'cursor-default'}`}
+              class={`platform-tile relative bg-secondary-900/50 backdrop-blur-sm border ${platform.borderColor} rounded-lg p-6 text-center transition-all duration-300 ${isAvailable ? 'cursor-pointer' : 'cursor-default'}`}
               data-platform={platform.name.toLowerCase()}
               data-available={isAvailable}
+              data-href={isAvailable ? '/releases' : ''}
             >
-              <div class={`${platform.bgColor} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-all duration-300`}>
+              <div class={`platform-icon ${platform.bgColor} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-all duration-300`}>
                 <i class={`${platform.icon} ${platform.color} text-2xl transition-all duration-300`}></i>
               </div>
-              <h3 class="text-xl font-semibold text-white mb-2 transition-all duration-300">{platform.name}</h3>
+              <h3 class="platform-title text-xl font-semibold text-white mb-2 transition-all duration-300">{platform.name}</h3>
               <div class="flex items-center justify-center gap-2">
                 {platform.status === "Available" ? (
                   <>
-                    <div class="w-2 h-2 bg-green-500 rounded-full transition-all duration-300"></div>
-                    <span class="text-green-400 font-medium text-sm transition-colors duration-300">{platform.status}</span>
+                    <div class="status-dot w-2 h-2 bg-green-500 rounded-full transition-all duration-300"></div>
+                    <span class="status-text text-green-400 font-medium text-sm transition-colors duration-300">{platform.status}</span>
                   </>
                 ) : (
                   <>
-                    <div class="w-2 h-2 bg-yellow-500 rounded-full transition-all duration-300"></div>
-                    <span class="text-yellow-400 font-medium text-sm transition-colors duration-300">{platform.status}</span>
+                    <div class="status-dot w-2 h-2 bg-yellow-500 rounded-full transition-all duration-300"></div>
+                    <span class="status-text text-yellow-400 font-medium text-sm transition-colors duration-300">{platform.status}</span>
                   </>
                 )}
               </div>
@@ -194,18 +195,20 @@ const platforms = [
       
       platformTiles.forEach(tile => {
         const isAvailable = tile.dataset.available === 'true';
+        const href = tile.dataset.href;
         
-        if (isAvailable) {
-          // Only add click functionality for available platforms
-          tile.addEventListener('click', function() {
-            window.location.href = '/releases';
+        if (isAvailable && href) {
+          // Add click functionality for available platforms
+          tile.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = href;
           });
           
           // Add keyboard accessibility
           tile.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
-              window.location.href = '/releases';
+              window.location.href = href;
             }
           });
           
@@ -222,19 +225,29 @@ const platforms = [
 <style>
   /* Subtle hover effects only for available platforms */
   .platform-tile[data-available="true"]:hover {
-    background-color: rgba(255, 255, 255, 0.02);
+    background: rgba(26, 26, 26, 0.8);
+    border-color: rgba(96, 165, 250, 0.4);
+    box-shadow: 0 4px 20px rgba(96, 165, 250, 0.15);
   }
   
-  .platform-tile[data-available="true"]:hover .bg-blue-400\/10 {
-    background-color: rgba(96, 165, 250, 0.15);
+  /* Windows platform specific hover effects */
+  .platform-tile[data-platform="windows"]:hover .platform-icon {
+    background: rgba(96, 165, 250, 0.2);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
   }
   
-  .platform-tile[data-available="true"]:hover .text-blue-400 {
+  .platform-tile[data-platform="windows"]:hover .bi-windows {
     color: rgb(147, 197, 253);
+    text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
   }
   
-  .platform-tile[data-available="true"]:hover .text-green-400 {
+  .platform-tile[data-platform="windows"]:hover .status-text {
     color: rgb(74, 222, 128);
+  }
+  
+  .platform-tile[data-platform="windows"]:hover .status-dot {
+    background-color: rgb(74, 222, 128);
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
   }
   
   /* Focus styles for accessibility - only for available platforms */
@@ -243,8 +256,20 @@ const platforms = [
     outline-offset: 2px;
   }
   
-  /* Very subtle glow effect for available platforms only */
-  .platform-tile[data-available="true"]:hover {
-    box-shadow: 0 4px 12px rgba(96, 165, 250, 0.1);
+  /* Ensure smooth transitions */
+  .platform-tile {
+    transition: all 0.3s ease;
+  }
+  
+  .platform-icon {
+    transition: all 0.3s ease;
+  }
+  
+  .status-dot {
+    transition: all 0.3s ease;
+  }
+  
+  .status-text {
+    transition: all 0.3s ease;
   }
 </style>
