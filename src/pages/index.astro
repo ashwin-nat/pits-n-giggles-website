@@ -124,7 +124,7 @@ const platforms = [
             <div 
               class={`platform-tile relative bg-secondary-900/50 backdrop-blur-sm border ${platform.borderColor} rounded-lg p-6 text-center transition-all duration-300 ${isAvailable ? 'cursor-pointer' : 'cursor-default'}`}
               data-platform={platform.name.toLowerCase()}
-              data-available={isAvailable}
+              data-available={isAvailable.toString()}
               data-href={isAvailable ? '/releases' : ''}
             >
               <div class={`platform-icon ${platform.bgColor} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 transition-all duration-300`}>
@@ -187,39 +187,6 @@ const platforms = [
   )}
 
   <ImageViewer images={[heroImage]} />
-
-  <!-- Platform Tile Click Handler -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const platformTiles = document.querySelectorAll('.platform-tile');
-      
-      platformTiles.forEach(tile => {
-        const isAvailable = tile.dataset.available === 'true';
-        const href = tile.dataset.href;
-        
-        if (isAvailable && href) {
-          // Add click functionality for available platforms
-          tile.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.location.href = href;
-          });
-          
-          // Add keyboard accessibility
-          tile.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              window.location.href = href;
-            }
-          });
-          
-          // Make tiles focusable for keyboard navigation
-          tile.setAttribute('tabindex', '0');
-          tile.setAttribute('role', 'button');
-          tile.setAttribute('aria-label', `View releases for ${tile.dataset.platform}`);
-        }
-      });
-    });
-  </script>
 </Layout>
 
 <style>
@@ -273,3 +240,37 @@ const platforms = [
     transition: all 0.3s ease;
   }
 </style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    const platformTiles = document.querySelectorAll('.platform-tile');
+    
+    platformTiles.forEach(function(tile) {
+      const htmlElement = tile as HTMLElement;
+      const isAvailable = htmlElement.dataset.available === 'true';
+      const href = htmlElement.dataset.href;
+      
+      if (isAvailable && href) {
+        // Add click functionality for available platforms
+        tile.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = href;
+        });
+        
+        // Add keyboard accessibility
+        tile.addEventListener('keydown', function(e) {
+          const keyboardEvent = e as KeyboardEvent;
+          if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') {
+            e.preventDefault();
+            window.location.href = href;
+          }
+        });
+        
+        // Make tiles focusable for keyboard navigation
+        htmlElement.setAttribute('tabindex', '0');
+        htmlElement.setAttribute('role', 'button');
+        htmlElement.setAttribute('aria-label', `View releases for ${htmlElement.dataset.platform}`);
+      }
+    });
+  });
+</script>
