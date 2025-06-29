@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+
 interface Props {
   images: {
     url: string;
@@ -12,7 +14,7 @@ const { images, initialIndex = 0 } = Astro.props;
 ---
 
 <div id="imageViewer" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm">
-  <div class="relative w-full h-full flex items-center justify-center p-4">
+  <div class="relative w-full h-full flex flex-col items-center justify-center p-4">
     <!-- Close button -->
     <button id="closeViewer" class="absolute top-4 right-4 text-white hover:text-accent-400 z-20">
       <span class="sr-only">Close</span>
@@ -37,13 +39,47 @@ const { images, initialIndex = 0 } = Astro.props;
       </svg>
     </button>
 
-    <!-- Image container -->
-    <div class="relative max-w-7xl w-full h-full flex flex-col items-center justify-center">
-      <img id="currentImage" src="" alt="" class="max-w-full max-h-[80vh] object-contain mb-4" />
+    <!-- Main image container -->
+    <div class="relative max-w-7xl w-full flex-1 flex flex-col items-center justify-center">
+      <!-- Main image display container -->
+      <div id="mainImageContainer" class="max-w-full max-h-[70vh] mb-4 flex items-center justify-center">
+        <!-- Main image will be inserted here by JavaScript -->
+      </div>
+      
       <div class="text-center">
         <h3 id="imageTitle" class="text-white text-xl font-semibold mb-2"></h3>
         <p id="imageDescription" class="text-secondary-300 max-w-2xl"></p>
       </div>
+    </div>
+
+    <!-- Thumbnail strip -->
+    <div class="w-full max-w-6xl mt-6 mb-4">
+      <div class="flex items-center justify-center">
+        <div id="thumbnailContainer" class="flex gap-2 overflow-x-auto max-w-full px-4 py-2 scrollbar-hide">
+          {images.map((image, index) => (
+            <button 
+              class="thumbnail-btn flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 border-transparent hover:border-accent-400 transition-all duration-200 opacity-60 hover:opacity-100"
+              data-index={index}
+              data-src={image.url}
+              data-alt={image.alt}
+            >
+              <img
+                src={image.url}
+                alt={image.alt}
+                width="80"
+                height="80"
+                class="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Image counter -->
+    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
+      <span id="imageCounter" class="text-white text-sm font-medium"></span>
     </div>
   </div>
 </div>
@@ -51,22 +87,64 @@ const { images, initialIndex = 0 } = Astro.props;
 <script define:vars={{ images, initialIndex }}>
   let currentIndex = initialIndex;
   const viewer = document.getElementById('imageViewer');
-  const imgElement = document.getElementById('currentImage');
+  const mainImageContainer = document.getElementById('mainImageContainer');
   const titleElement = document.getElementById('imageTitle');
   const descriptionElement = document.getElementById('imageDescription');
+  const counterElement = document.getElementById('imageCounter');
   const prevBtn = document.getElementById('prevImage');
   const nextBtn = document.getElementById('nextImage');
   const closeBtn = document.getElementById('closeViewer');
+  const thumbnailBtns = document.querySelectorAll('.thumbnail-btn');
+
+  function createMainImage(imageData) {
+    const img = document.createElement('img');
+    img.src = imageData.url;
+    img.alt = imageData.alt;
+    img.className = 'max-w-full max-h-full object-contain';
+    img.loading = 'eager'; // Load main image immediately when viewer opens
+    img.width = 1920;
+    img.height = 1080;
+    return img;
+  }
 
   function updateImage() {
     const image = images[currentIndex];
-    imgElement.src = image.url;
-    imgElement.alt = image.alt;
+    
+    // Clear current main image
+    mainImageContainer.innerHTML = '';
+    
+    // Create and add new main image
+    const mainImg = createMainImage(image);
+    mainImageContainer.appendChild(mainImg);
+    
     titleElement.textContent = image.alt;
     descriptionElement.textContent = image.description || '';
+    counterElement.textContent = `${currentIndex + 1} / ${images.length}`;
+    
+    // Update thumbnail active state
+    thumbnailBtns.forEach((btn, index) => {
+      if (index === currentIndex) {
+        btn.classList.remove('opacity-60');
+        btn.classList.add('opacity-100', 'border-accent-400');
+      } else {
+        btn.classList.add('opacity-60');
+        btn.classList.remove('opacity-100', 'border-accent-400');
+      }
+    });
+
+    // Scroll active thumbnail into view
+    const activeThumbnail = document.querySelector(`[data-index="${currentIndex}"]`);
+    if (activeThumbnail) {
+      activeThumbnail.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
   }
 
-  function showViewer() {
+  function showViewer(startIndex = currentIndex) {
+    currentIndex = startIndex;
     viewer.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     updateImage();
@@ -77,32 +155,143 @@ const { images, initialIndex = 0 } = Astro.props;
     document.body.style.overflow = '';
   }
 
-  prevBtn.addEventListener('click', () => {
+  function goToPrevious() {
     currentIndex = (currentIndex - 1 + images.length) % images.length;
     updateImage();
-  });
+  }
 
-  nextBtn.addEventListener('click', () => {
+  function goToNext() {
     currentIndex = (currentIndex + 1) % images.length;
     updateImage();
-  });
+  }
 
+  function goToImage(index) {
+    currentIndex = index;
+    updateImage();
+  }
+
+  // Event listeners
+  prevBtn.addEventListener('click', goToPrevious);
+  nextBtn.addEventListener('click', goToNext);
   closeBtn.addEventListener('click', hideViewer);
 
+  // Thumbnail click handlers
+  thumbnailBtns.forEach((btn, index) => {
+    btn.addEventListener('click', () => goToImage(index));
+  });
+
   // Add click handlers to all screenshots
-  document.querySelectorAll('[data-screenshot]').forEach((img, index) => {
-    img.addEventListener('click', () => {
-      currentIndex = index;
+  document.querySelectorAll('[data-screenshot]').forEach((element) => {
+    element.addEventListener('click', () => {
+      // Get the index from data-index attribute if available, otherwise use the element's position
+      const index = element.getAttribute('data-index');
+      if (index !== null) {
+        currentIndex = parseInt(index, 10);
+      } else {
+        // Fallback: find index based on element position
+        const allScreenshots = document.querySelectorAll('[data-screenshot]');
+        currentIndex = Array.from(allScreenshots).indexOf(element);
+      }
       showViewer();
     });
   });
+
+  // Listen for custom events to open the viewer (for releases page)
+  document.addEventListener('openImageViewer', (event) => {
+    const index = event.detail?.index || 0;
+    showViewer(index);
+  });
+
+  // Make currentIndex globally accessible for releases page
+  window.currentIndex = currentIndex;
 
   // Handle keyboard navigation
   document.addEventListener('keydown', (e) => {
     if (!viewer.classList.contains('hidden')) {
       if (e.key === 'Escape') hideViewer();
-      if (e.key === 'ArrowLeft') prevBtn.click();
-      if (e.key === 'ArrowRight') nextBtn.click();
+      if (e.key === 'ArrowLeft') goToPrevious();
+      if (e.key === 'ArrowRight') goToNext();
+      if (e.key >= '1' && e.key <= '9') {
+        const index = parseInt(e.key) - 1;
+        if (index < images.length) goToImage(index);
+      }
     }
   });
+
+  // Handle swipe gestures on touch devices
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  mainImageContainer.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  });
+
+  mainImageContainer.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  });
+
+  function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+        goToNext(); // Swipe left - next image
+      } else {
+        goToPrevious(); // Swipe right - previous image
+      }
+    }
+  }
 </script>
+
+<style>
+  /* Hide scrollbar for thumbnail container */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Smooth transitions for thumbnails */
+  .thumbnail-btn {
+    transition: all 0.2s ease;
+  }
+
+  .thumbnail-btn:hover {
+    transform: scale(1.05);
+  }
+
+  /* Ensure thumbnails maintain aspect ratio */
+  .thumbnail-btn img {
+    transition: transform 0.2s ease;
+  }
+
+  .thumbnail-btn:hover img {
+    transform: scale(1.1);
+  }
+
+  /* Custom focus styles for accessibility */
+  .thumbnail-btn:focus {
+    outline: 2px solid theme('colors.accent.400');
+    outline-offset: 2px;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    #thumbnailContainer {
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  /* Ensure main image container maintains proper sizing */
+  #mainImageContainer {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>

@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ImageViewer from '../components/ImageViewer.astro';
+import { Image } from 'astro:assets';
 
 const screenshots = [
   {
@@ -68,13 +69,18 @@ const screenshots = [
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {screenshots.map((screenshot, index) => (
-          <div class="group cursor-pointer" data-screenshot>
+          <div class="group cursor-pointer" data-screenshot data-index={index}>
             <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-secondary-700">
               <div class="aspect-video relative overflow-hidden">
-                <img
+                <Image
                   src={screenshot.url}
                   alt={screenshot.alt}
+                  width={640}
+                  height={360}
                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading={index < 6 ? "eager" : "lazy"}
+                  format="webp"
+                  quality={85}
                 />
               </div>
               <div class="p-4">
