@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import { marked } from 'marked';
 import Button from '../components/Button.astro';
+import ImageViewer from '../components/ImageViewer.astro';
+import { Image } from 'astro:assets';
 
 // Define types for GitHub Release data
 interface GitHubAsset {
@@ -75,21 +77,75 @@ function getPlatformInfo(filename: string) {
   }
 }
 
-// Get the releases data
-const releases: GitHubRelease[] = await getGitHubReleases();
-const latestRelease = releases[0];
-const latestAsset = latestRelease?.assets?.find(a => a.browser_download_url.includes("pits_n_giggles"));
+// Function to extract images from markdown content
+function extractImagesFromMarkdown(content: string | undefined): Array<{url: string, alt: string, description?: string}> {
+  if (!content) return [];
+  
+  const images: Array<{url: string, alt: string, description?: string}> = [];
+  
+  // Match markdown images: ![alt](url) or ![alt](url "title")
+  const imageRegex = /!\[([^\]]*)\]\(([^)]+?)(?:\s+"([^"]*)")?\)/g;
+  let match;
+  
+  while ((match = imageRegex.exec(content)) !== null) {
+    const [, alt, url, title] = match;
+    images.push({
+      url: url.trim(),
+      alt: alt || 'Release Image',
+      description: title || alt || 'Release Image'
+    });
+  }
+  
+  return images;
+}
 
-// Function to parse markdown content
-function parseMarkdown(content: string | undefined): string {
+// Function to parse markdown content and replace images with clickable versions
+function parseMarkdownWithClickableImages(content: string | undefined, releaseIndex: number): string {
   try {
     if (!content) return '';
-    return marked.parse(content) as string;
+    
+    let processedContent = content;
+    const images = extractImagesFromMarkdown(content);
+    
+    // Replace each image with a clickable version
+    images.forEach((image, imageIndex) => {
+      const originalImageRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${image.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s+"[^"]*")?\\)`, 'g');
+      
+      const clickableImage = `<div class="release-image-container my-4">
+        <img 
+          src="${image.url}" 
+          alt="${image.alt}" 
+          class="release-image cursor-pointer rounded-lg max-w-full h-auto transition-transform duration-200 hover:scale-[1.02]" 
+          data-release-index="${releaseIndex}" 
+          data-image-index="${imageIndex}"
+          loading="lazy"
+        />
+      </div>`;
+      
+      processedContent = processedContent.replace(originalImageRegex, clickableImage);
+    });
+    
+    return marked.parse(processedContent) as string;
   } catch (error) {
     console.error('Error parsing markdown:', error);
     return content || '';
   }
 }
+
+// Get the releases data
+const releases: GitHubRelease[] = await getGitHubReleases();
+const latestRelease = releases[0];
+const latestAsset = latestRelease?.assets?.find(a => a.browser_download_url.includes("pits_n_giggles"));
+
+// Extract all images from all releases for the ImageViewer
+const allReleaseImages: Array<{url: string, alt: string, description?: string}> = [];
+const releaseImageMap: Map<number, Array<{url: string, alt: string, description?: string}>> = new Map();
+
+releases.forEach((release, releaseIndex) => {
+  const images = extractImagesFromMarkdown(release.body);
+  releaseImageMap.set(releaseIndex, images);
+  allReleaseImages.push(...images);
+});
 ---
 
 <Layout
@@ -141,134 +197,148 @@ function parseMarkdown(content: string | undefined): string {
 
       {releases.length > 0 ? (
         <div class="space-y-8">
-          {releases.map((release: GitHubRelease) => (
-            <div class="bg-secondary-800 rounded-lg p-6 shadow-lg border border-secondary-700">
-              <div class="flex justify-between items-start mb-4">
-                <div>
-                  <h3 class="text-xl font-bold text-primary-300">{release.name || release.tag_name}</h3>
-                  <p class="text-secondary-400 text-sm">
-                    Released on {new Date(release.published_at).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </p>
-                </div>
-                <a
-                  href={release.html_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-accent-500 hover:text-accent-400 text-sm font-medium"
-                >
-                  {release.tag_name}
-                </a>
-              </div>
-
-              {release.body && (
-                <div class="release-notes mb-6">
-                  <style is:global>
-                    /* Custom styling for GitHub markdown content */
-                    .release-notes h1, .release-notes h2, .release-notes h3 {
-                      margin-top: 1.5rem;
-                      margin-bottom: 0.75rem;
-                      font-weight: 600;
-                      color: #e2e8f0;
-                    }
-                    .release-notes h1 {
-                      font-size: 1.5rem;
-                    }
-                    .release-notes h2 {
-                      font-size: 1.25rem;
-                      padding-bottom: 0.3rem;
-                      border-bottom: 1px solid #4a5568;
-                    }
-                    .release-notes h3 {
-                      font-size: 1.125rem;
-                    }
-                    .release-notes ul, .release-notes ol {
-                      margin-top: 0.5rem;
-                      margin-bottom: 1rem;
-                      padding-left: 1.5rem;
-                    }
-                    .release-notes ul {
-                      list-style-type: disc;
-                    }
-                    .release-notes ol {
-                      list-style-type: decimal;
-                    }
-                    .release-notes li {
-                      margin-bottom: 0.375rem;
-                      color: #cbd5e0;
-                    }
-                    .release-notes p {
-                      margin-bottom: 1rem;
-                      color: #cbd5e0;
-                    }
-                    .release-notes a {
-                      color: #63b3ed;
-                      text-decoration: none;
-                    }
-                    .release-notes a:hover {
-                      text-decoration: underline;
-                    }
-                    .release-notes code {
-                      padding: 0.2em 0.4em;
-                      margin: 0;
-                      font-size: 85%;
-                      background-color: #2d3748;
-                      border-radius: 3px;
-                      color: #e2e8f0;
-                    }
-                    .release-notes pre {
-                      background-color: #2d3748;
-                      padding: 1rem;
-                      border-radius: 0.375rem;
-                      overflow-x: auto;
-                      margin: 1rem 0;
-                    }
-                    .release-notes pre code {
-                      background-color: transparent;
-                      padding: 0;
-                      border-radius: 0;
-                    }
-                  </style>
-                  <Fragment set:html={parseMarkdown(release.body)} />
-                </div>
-              )}
-
-              {release.assets && release.assets.length > 0 && (
-                <div>
-                  <h4 class="text-lg font-semibold mb-2 text-primary-200">Downloads</h4>
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {release.assets.map(asset => {
-                      const platformInfo = getPlatformInfo(asset.name);
-                      return (
-                        <a
-                          href={asset.browser_download_url}
-                          class="flex items-center justify-between bg-secondary-700 hover:bg-secondary-600 transition-colors p-3 rounded-md group"
-                        >
-                          <div class="flex items-center gap-2 min-w-0 flex-1">
-                            <div class="flex items-center gap-2">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent-500 flex-shrink-0">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                              </svg>
-                              <div class={`flex items-center ${platformInfo.color} flex-shrink-0`} title={platformInfo.platform}>
-                                <i class={`${platformInfo.icon} text-lg`}></i>
-                              </div>
-                            </div>
-                            <span class="text-sm truncate">{asset.name}</span>
-                          </div>
-                          <span class="text-xs text-secondary-400 ml-2 flex-shrink-0">{asset.download_count.toLocaleString()} downloads</span>
-                        </a>
-                      );
-                    })}
+          {releases.map((release: GitHubRelease, releaseIndex: number) => {
+            const releaseImages = releaseImageMap.get(releaseIndex) || [];
+            return (
+              <div class="bg-secondary-800 rounded-lg p-6 shadow-lg border border-secondary-700">
+                <div class="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 class="text-xl font-bold text-primary-300">{release.name || release.tag_name}</h3>
+                    <p class="text-secondary-400 text-sm">
+                      Released on {new Date(release.published_at).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </p>
                   </div>
+                  <a
+                    href={release.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-accent-500 hover:text-accent-400 text-sm font-medium"
+                  >
+                    {release.tag_name}
+                  </a>
                 </div>
-              )}
-            </div>
-          ))}
+
+                {release.body && (
+                  <div class="release-notes mb-6">
+                    <style is:global>
+                      /* Custom styling for GitHub markdown content */
+                      .release-notes h1, .release-notes h2, .release-notes h3 {
+                        margin-top: 1.5rem;
+                        margin-bottom: 0.75rem;
+                        font-weight: 600;
+                        color: #e2e8f0;
+                      }
+                      .release-notes h1 {
+                        font-size: 1.5rem;
+                      }
+                      .release-notes h2 {
+                        font-size: 1.25rem;
+                        padding-bottom: 0.3rem;
+                        border-bottom: 1px solid #4a5568;
+                      }
+                      .release-notes h3 {
+                        font-size: 1.125rem;
+                      }
+                      .release-notes ul, .release-notes ol {
+                        margin-top: 0.5rem;
+                        margin-bottom: 1rem;
+                        padding-left: 1.5rem;
+                      }
+                      .release-notes ul {
+                        list-style-type: disc;
+                      }
+                      .release-notes ol {
+                        list-style-type: decimal;
+                      }
+                      .release-notes li {
+                        margin-bottom: 0.375rem;
+                        color: #cbd5e0;
+                      }
+                      .release-notes p {
+                        margin-bottom: 1rem;
+                        color: #cbd5e0;
+                      }
+                      .release-notes a {
+                        color: #63b3ed;
+                        text-decoration: none;
+                      }
+                      .release-notes a:hover {
+                        text-decoration: underline;
+                      }
+                      .release-notes code {
+                        padding: 0.2em 0.4em;
+                        margin: 0;
+                        font-size: 85%;
+                        background-color: #2d3748;
+                        border-radius: 3px;
+                        color: #e2e8f0;
+                      }
+                      .release-notes pre {
+                        background-color: #2d3748;
+                        padding: 1rem;
+                        border-radius: 0.375rem;
+                        overflow-x: auto;
+                        margin: 1rem 0;
+                      }
+                      .release-notes pre code {
+                        background-color: transparent;
+                        padding: 0;
+                        border-radius: 0;
+                      }
+                      .release-image-container {
+                        text-align: center;
+                      }
+                      .release-image {
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                        border: 1px solid #4a5568;
+                      }
+                      .release-image:hover {
+                        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+                        border-color: #63b3ed;
+                      }
+                    </style>
+                    <Fragment set:html={parseMarkdownWithClickableImages(release.body, releaseIndex)} />
+                  </div>
+                )}
+
+                {release.assets && release.assets.length > 0 && (
+                  <div>
+                    <h4 class="text-lg font-semibold mb-2 text-primary-200">Downloads</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {release.assets.map(asset => {
+                        const platformInfo = getPlatformInfo(asset.name);
+                        return (
+                          <a
+                            href={asset.browser_download_url}
+                            class="flex items-center justify-between bg-secondary-700 hover:bg-secondary-600 transition-colors p-3 rounded-md group"
+                          >
+                            <div class="flex items-center gap-2 min-w-0 flex-1">
+                              <div class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent-500 flex-shrink-0">
+                                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                  <polyline points="7 10 12 15 17 10"></polyline>
+                                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                <div class={`flex items-center ${platformInfo.color} flex-shrink-0`} title={platformInfo.platform}>
+                                  <i class={`${platformInfo.icon} text-lg`}></i>
+                                </div>
+                              </div>
+                              <span class="text-sm truncate">{asset.name}</span>
+                            </div>
+                            <span class="text-xs text-secondary-400 ml-2 flex-shrink-0">{asset.download_count.toLocaleString()} downloads</span>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       ) : (
         <div class="bg-secondary-800 rounded-lg p-6 text-center">
@@ -296,4 +366,43 @@ function parseMarkdown(content: string | undefined): string {
       </div>
     </div>
   </section>
+
+  <!-- Image Viewer Component -->
+  {allReleaseImages.length > 0 && (
+    <ImageViewer images={allReleaseImages} />
+  )}
+
+  <!-- JavaScript for handling image clicks -->
+  <script define:vars={{ allReleaseImages, releaseImageMap: Object.fromEntries(releaseImageMap) }}>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Handle clicks on release images
+      document.querySelectorAll('.release-image').forEach(img => {
+        img.addEventListener('click', function() {
+          const releaseIndex = parseInt(this.getAttribute('data-release-index'));
+          const imageIndex = parseInt(this.getAttribute('data-image-index'));
+          
+          // Calculate the global index for this image
+          let globalIndex = 0;
+          for (let i = 0; i < releaseIndex; i++) {
+            const releaseImages = releaseImageMap[i] || [];
+            globalIndex += releaseImages.length;
+          }
+          globalIndex += imageIndex;
+          
+          // Trigger the image viewer
+          const viewer = document.getElementById('imageViewer');
+          if (viewer) {
+            // Set the current index and show the viewer
+            window.currentIndex = globalIndex;
+            
+            // Dispatch a custom event to open the viewer
+            const event = new CustomEvent('openImageViewer', { 
+              detail: { index: globalIndex } 
+            });
+            document.dispatchEvent(event);
+          }
+        });
+      });
+    });
+  </script>
 </Layout>
