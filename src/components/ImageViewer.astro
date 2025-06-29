@@ -102,6 +102,8 @@ const { images, initialIndex = 0 } = Astro.props;
     img.alt = imageData.alt;
     img.className = 'max-w-full max-h-full object-contain';
     img.loading = 'eager'; // Load main image immediately when viewer opens
+    img.width = 1920;
+    img.height = 1080;
     return img;
   }
 
@@ -178,9 +180,17 @@ const { images, initialIndex = 0 } = Astro.props;
   });
 
   // Add click handlers to all screenshots
-  document.querySelectorAll('[data-screenshot]').forEach((img, index) => {
-    img.addEventListener('click', () => {
-      currentIndex = index;
+  document.querySelectorAll('[data-screenshot]').forEach((element) => {
+    element.addEventListener('click', () => {
+      // Get the index from data-index attribute if available, otherwise use the element's position
+      const index = element.getAttribute('data-index');
+      if (index !== null) {
+        currentIndex = parseInt(index, 10);
+      } else {
+        // Fallback: find index based on element position
+        const allScreenshots = document.querySelectorAll('[data-screenshot]');
+        currentIndex = Array.from(allScreenshots).indexOf(element);
+      }
       showViewer();
     });
   });
