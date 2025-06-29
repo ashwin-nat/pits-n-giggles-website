@@ -41,23 +41,6 @@ const { images, initialIndex = 0 } = Astro.props;
 
     <!-- Main image container -->
     <div class="relative max-w-7xl w-full flex-1 flex flex-col items-center justify-center">
-      <!-- Hidden images for preloading - using Astro Image component -->
-      <div class="hidden" id="preloadedImages">
-        {images.map((image, index) => (
-          <Image
-            src={image.url}
-            alt={image.alt}
-            width={1920}
-            height={1080}
-            class="main-image"
-            data-index={index}
-            loading={index === initialIndex ? "eager" : "lazy"}
-            format="webp"
-            quality={90}
-          />
-        ))}
-      </div>
-      
       <!-- Main image display container -->
       <div id="mainImageContainer" class="max-w-full max-h-[70vh] mb-4 flex items-center justify-center">
         <!-- Main image will be inserted here by JavaScript -->
@@ -77,16 +60,16 @@ const { images, initialIndex = 0 } = Astro.props;
             <button 
               class="thumbnail-btn flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 border-transparent hover:border-accent-400 transition-all duration-200 opacity-60 hover:opacity-100"
               data-index={index}
+              data-src={image.url}
+              data-alt={image.alt}
             >
-              <Image
+              <img
                 src={image.url}
                 alt={image.alt}
-                width={80}
-                height={80}
+                width="80"
+                height="80"
                 class="w-full h-full object-cover"
                 loading="lazy"
-                format="webp"
-                quality={75}
               />
             </button>
           ))}
@@ -112,7 +95,15 @@ const { images, initialIndex = 0 } = Astro.props;
   const nextBtn = document.getElementById('nextImage');
   const closeBtn = document.getElementById('closeViewer');
   const thumbnailBtns = document.querySelectorAll('.thumbnail-btn');
-  const preloadedImages = document.querySelectorAll('.main-image');
+
+  function createMainImage(imageData) {
+    const img = document.createElement('img');
+    img.src = imageData.url;
+    img.alt = imageData.alt;
+    img.className = 'max-w-full max-h-full object-contain';
+    img.loading = 'eager'; // Load main image immediately when viewer opens
+    return img;
+  }
 
   function updateImage() {
     const image = images[currentIndex];
@@ -120,14 +111,9 @@ const { images, initialIndex = 0 } = Astro.props;
     // Clear current main image
     mainImageContainer.innerHTML = '';
     
-    // Clone the preloaded image and add it to the main container
-    const preloadedImg = preloadedImages[currentIndex];
-    if (preloadedImg) {
-      const clonedImg = preloadedImg.cloneNode(true);
-      clonedImg.classList.remove('hidden');
-      clonedImg.classList.add('max-w-full', 'max-h-full', 'object-contain');
-      mainImageContainer.appendChild(clonedImg);
-    }
+    // Create and add new main image
+    const mainImg = createMainImage(image);
+    mainImageContainer.appendChild(mainImg);
     
     titleElement.textContent = image.alt;
     descriptionElement.textContent = image.description || '';
