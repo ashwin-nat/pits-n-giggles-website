@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+
 interface Props {
   images: {
     url: string;
@@ -39,7 +41,28 @@ const { images, initialIndex = 0 } = Astro.props;
 
     <!-- Main image container -->
     <div class="relative max-w-7xl w-full flex-1 flex flex-col items-center justify-center">
-      <img id="currentImage" src="" alt="" class="max-w-full max-h-[70vh] object-contain mb-4" />
+      <!-- Hidden images for preloading - using Astro Image component -->
+      <div class="hidden" id="preloadedImages">
+        {images.map((image, index) => (
+          <Image
+            src={image.url}
+            alt={image.alt}
+            width={1920}
+            height={1080}
+            class="main-image"
+            data-index={index}
+            loading={index === initialIndex ? "eager" : "lazy"}
+            format="webp"
+            quality={90}
+          />
+        ))}
+      </div>
+      
+      <!-- Main image display container -->
+      <div id="mainImageContainer" class="max-w-full max-h-[70vh] mb-4 flex items-center justify-center">
+        <!-- Main image will be inserted here by JavaScript -->
+      </div>
+      
       <div class="text-center">
         <h3 id="imageTitle" class="text-white text-xl font-semibold mb-2"></h3>
         <p id="imageDescription" class="text-secondary-300 max-w-2xl"></p>
@@ -55,10 +78,15 @@ const { images, initialIndex = 0 } = Astro.props;
               class="thumbnail-btn flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 border-transparent hover:border-accent-400 transition-all duration-200 opacity-60 hover:opacity-100"
               data-index={index}
             >
-              <img 
-                src={image.url} 
+              <Image
+                src={image.url}
                 alt={image.alt}
+                width={80}
+                height={80}
                 class="w-full h-full object-cover"
+                loading="lazy"
+                format="webp"
+                quality={75}
               />
             </button>
           ))}
@@ -76,7 +104,7 @@ const { images, initialIndex = 0 } = Astro.props;
 <script define:vars={{ images, initialIndex }}>
   let currentIndex = initialIndex;
   const viewer = document.getElementById('imageViewer');
-  const imgElement = document.getElementById('currentImage');
+  const mainImageContainer = document.getElementById('mainImageContainer');
   const titleElement = document.getElementById('imageTitle');
   const descriptionElement = document.getElementById('imageDescription');
   const counterElement = document.getElementById('imageCounter');
@@ -84,11 +112,23 @@ const { images, initialIndex = 0 } = Astro.props;
   const nextBtn = document.getElementById('nextImage');
   const closeBtn = document.getElementById('closeViewer');
   const thumbnailBtns = document.querySelectorAll('.thumbnail-btn');
+  const preloadedImages = document.querySelectorAll('.main-image');
 
   function updateImage() {
     const image = images[currentIndex];
-    imgElement.src = image.url;
-    imgElement.alt = image.alt;
+    
+    // Clear current main image
+    mainImageContainer.innerHTML = '';
+    
+    // Clone the preloaded image and add it to the main container
+    const preloadedImg = preloadedImages[currentIndex];
+    if (preloadedImg) {
+      const clonedImg = preloadedImg.cloneNode(true);
+      clonedImg.classList.remove('hidden');
+      clonedImg.classList.add('max-w-full', 'max-h-full', 'object-contain');
+      mainImageContainer.appendChild(clonedImg);
+    }
+    
     titleElement.textContent = image.alt;
     descriptionElement.textContent = image.description || '';
     counterElement.textContent = `${currentIndex + 1} / ${images.length}`;
@@ -176,11 +216,11 @@ const { images, initialIndex = 0 } = Astro.props;
   let touchStartX = 0;
   let touchEndX = 0;
 
-  imgElement.addEventListener('touchstart', (e) => {
+  mainImageContainer.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
   });
 
-  imgElement.addEventListener('touchend', (e) => {
+  mainImageContainer.addEventListener('touchend', (e) => {
     touchEndX = e.changedTouches[0].screenX;
     handleSwipe();
   });
@@ -239,5 +279,13 @@ const { images, initialIndex = 0 } = Astro.props;
     #thumbnailContainer {
       padding: 0.5rem 1rem;
     }
+  }
+
+  /* Ensure main image container maintains proper sizing */
+  #mainImageContainer {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>
