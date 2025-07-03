@@ -37,6 +37,18 @@ import Layout from '../layouts/Layout.astro';
           <li><strong>Local data only:</strong> All race data and settings remain on your computer</li>
         </ul>
 
+        <h3>Version Checking</h3>
+        <p>
+          The application may periodically check for new versions by making a simple GET request to GitHub's public API. This check:
+        </p>
+        <ul>
+          <li><strong>Is anonymous:</strong> No user identification or personal data is sent</li>
+          <li><strong>Only retrieves public information:</strong> Latest release version and download links</li>
+          <li><strong>Doesn't track users:</strong> The server has no way to know who made the request</li>
+          <li><strong>Is purely informational:</strong> Only notifies you if a newer version is available</li>
+          <li><strong>Never auto-updates:</strong> You always choose whether to download and install updates</li>
+        </ul>
+
         <h3>Website Analytics (pitsngiggles.com)</h3>
         <p>
           Our website uses analytics services to understand how visitors use our site and improve the user experience:
@@ -83,7 +95,8 @@ import Layout from '../layouts/Layout.astro';
         <h3>GitHub</h3>
         <p>
           Our source code is hosted on GitHub, and releases are distributed through GitHub's platform. 
-          When you download the application from GitHub, their privacy policy applies to that interaction.
+          When you download the application from GitHub or when the app checks for updates, GitHub's privacy policy applies to that interaction.
+          The version checking feature uses GitHub's public API and does not require authentication or user identification.
         </p>
 
         <h3>External Links</h3>
@@ -111,13 +124,14 @@ import Layout from '../layouts/Layout.astro';
         <p>
           Pits n' Giggles is open source software released under the MIT License. You can review our code at 
           <a href="https://github.com/ashwin-nat/pits-n-giggles" target="_blank" rel="noopener noreferrer">github.com/ashwin-nat/pits-n-giggles</a> 
-          to verify our privacy claims.
+          to verify our privacy claims, including how version checking works.
         </p>
 
         <h2>Your Rights</h2>
         <p>Since we collect minimal data, your rights are straightforward:</p>
         <ul>
           <li><strong>Application data:</strong> You have complete control - it's all stored locally</li>
+          <li><strong>Version checking:</strong> Anonymous and cannot be linked back to you</li>
           <li><strong>Website analytics:</strong> You can opt out using browser settings or ad blockers</li>
           <li><strong>Cookies:</strong> You can clear them anytime through your browser</li>
         </ul>
@@ -141,7 +155,7 @@ import Layout from '../layouts/Layout.astro';
           <h3 class="mt-0 mb-4">Summary</h3>
           <p class="mb-0">
             <strong>Pits n' Giggles respects your privacy.</strong> The app collects no data about you. 
-            Our website uses standard analytics to improve the user experience. Your racing data stays on your computer, 
+            Version checks are anonymous GET requests that can't identify users. Your racing data stays on your computer, 
             under your control.
           </p>
         </div>
