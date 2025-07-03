@@ -43,7 +43,7 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
           </button>
-          
+
           <!-- Mobile TOC Dropdown -->
           <div id="mobile-toc" class="hidden mt-2 bg-secondary-900/95 backdrop-blur-sm border border-secondary-800 rounded-lg p-4 shadow-lg">
             <nav class="toc-nav">
@@ -84,7 +84,7 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
             </button>
-            
+
             <div id="floating-toc-content" class="hidden border-t border-secondary-700 max-h-64 overflow-y-auto">
               <nav class="p-3">
                 <ul class="space-y-1">
@@ -107,16 +107,9 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
 
       <!-- Post Header Layout -->
       <div class="max-w-6xl mx-auto flex gap-8 mb-12">
-        <!-- Left Section (Empty for now, aligns with TOC) -->
-        {tocHeadings.length > 0 && (
-          <aside class="hidden lg:block w-64 flex-shrink-0">
-            <!-- Empty space to align with TOC -->
-          </aside>
-        )}
-
         <!-- Post Header Content (aligns with post content) -->
         <div class="flex-1 min-w-0">
-          <div class="max-w-3xl mx-auto">
+          <div class="mx-auto">
             <div class="flex gap-2 mb-4">
               {entry.data.tags.map((tag: string) => (
                 <span class="inline-block bg-secondary-800 text-secondary-300 text-xs px-3 py-1 rounded">
@@ -271,7 +264,7 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
       if (mobileToggle && mobileToc && tocChevron) {
         mobileToggle.addEventListener('click', function() {
           const isHidden = mobileToc.classList.contains('hidden');
-          
+
           if (isHidden) {
             mobileToc.classList.remove('hidden');
             tocChevron.style.transform = 'rotate(180deg)';
@@ -304,7 +297,7 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
       if (floatingTocToggle && floatingTocContent && floatingTocChevron) {
         floatingTocToggle.addEventListener('click', function() {
           const isHidden = floatingTocContent.classList.contains('hidden');
-          
+
           if (isHidden) {
             floatingTocContent.classList.remove('hidden');
             floatingTocChevron.style.transform = 'rotate(180deg)';
@@ -326,18 +319,18 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
 
       // Scroll behavior for floating TOCs
       let ticking = false;
-      
+
       function updateFloatingToc() {
         const scrollY = window.scrollY;
-        
+
         // Check if we've scrolled past the original TOC containers
         const mobileTocRect = mobileTocContainer?.getBoundingClientRect();
         const desktopTocRect = desktopTocContainer?.getBoundingClientRect();
-        
+
         // Show floating mobile TOC when original is out of view
         if (floatingTocMobile && mobileTocRect) {
           const shouldShow = mobileTocRect.bottom < 0;
-          
+
           if (shouldShow) {
             floatingTocMobile.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
             floatingTocMobile.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
@@ -351,11 +344,11 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
             }
           }
         }
-        
+
         // Show floating desktop TOC when original is out of view
         if (floatingTocDesktop && desktopTocRect) {
           const shouldShow = desktopTocRect.bottom < 100; // Show a bit earlier for desktop
-          
+
           if (shouldShow) {
             floatingTocDesktop.classList.remove('opacity-0', 'pointer-events-none', 'translate-x-4');
             floatingTocDesktop.classList.add('opacity-100', 'pointer-events-auto', 'translate-x-0');
@@ -364,7 +357,7 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
             floatingTocDesktop.classList.remove('opacity-100', 'pointer-events-auto', 'translate-x-0');
           }
         }
-        
+
         ticking = false;
       }
 
@@ -379,13 +372,13 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
 
       // Smooth scrolling for all TOC links
       const tocLinks = document.querySelectorAll('.toc-nav a[href^="#"], .floating-toc-link[href^="#"], .floating-desktop-toc-link[href^="#"]');
-      
+
       tocLinks.forEach(link => {
         link.addEventListener('click', function(e) {
           e.preventDefault();
           const targetId = this.getAttribute('href').substring(1);
           const targetElement = document.getElementById(targetId);
-          
+
           if (targetElement) {
             const headerOffset = 120; // Account for fixed header
             const elementPosition = targetElement.getBoundingClientRect().top;
@@ -405,13 +398,13 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
           const id = entry.target.getAttribute('id');
           const desktopTocLink = document.querySelector(`.desktop-toc-link[href="#${id}"]`);
           const floatingDesktopTocLink = document.querySelector(`.floating-desktop-toc-link[href="#${id}"]`);
-          
+
           if (entry.isIntersecting) {
             // Remove active class from all desktop TOC links
             document.querySelectorAll('.desktop-toc-link, .floating-desktop-toc-link').forEach(link => {
               link.classList.remove('toc-active');
             });
-            
+
             // Add active class to current section
             if (desktopTocLink) {
               desktopTocLink.classList.add('toc-active');
