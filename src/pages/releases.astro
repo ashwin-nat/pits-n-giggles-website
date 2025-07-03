@@ -99,7 +99,7 @@ function extractImagesFromMarkdown(content: string | undefined): Array<{url: str
   return images;
 }
 
-// Function to parse markdown content and replace images with clickable previews
+// Function to parse markdown content and replace images with clickable thumbnail grids
 function parseMarkdownWithClickableImages(content: string | undefined, releaseIndex: number): string {
   try {
     if (!content) return '';
@@ -107,29 +107,37 @@ function parseMarkdownWithClickableImages(content: string | undefined, releaseIn
     let processedContent = content;
     const images = extractImagesFromMarkdown(content);
     
-    // Replace each image with a clickable preview version
-    images.forEach((image, imageIndex) => {
-      const originalImageRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${image.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s+"[^"]*")?\\)`, 'g');
-      
-      const clickableImagePreview = `<div class="release-image-container my-4">
-        <div class="release-image-preview cursor-pointer rounded-lg overflow-hidden border border-secondary-700 hover:border-accent-400 transition-all duration-200 max-w-sm mx-auto" 
-             data-release-screenshot 
-             data-release-index="${releaseIndex}" 
-             data-image-index="${imageIndex}">
-          <img 
-            src="${image.url}" 
-            alt="${image.alt}" 
-            class="w-full h-32 object-cover transition-transform duration-200 hover:scale-105" 
-            loading="lazy"
-          />
-          <div class="p-2 bg-secondary-800/50">
-            <p class="text-xs text-secondary-300 text-center">Click to view full size</p>
+    if (images.length === 0) {
+      return marked.parse(processedContent) as string;
+    }
+    
+    // Create a grid of all images for this release
+    const imageGrid = `<div class="release-images-grid my-6">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        ${images.map((image, imageIndex) => `
+          <div class="release-image-thumbnail cursor-pointer rounded-lg overflow-hidden border border-secondary-700 hover:border-accent-400 transition-all duration-200 aspect-square bg-secondary-800/50" 
+               data-release-screenshot 
+               data-release-index="${releaseIndex}" 
+               data-image-index="${imageIndex}">
+            <img 
+              src="${image.url}" 
+              alt="${image.alt}" 
+              class="w-full h-full object-cover transition-transform duration-200 hover:scale-105" 
+              loading="lazy"
+            />
           </div>
-        </div>
-      </div>`;
-      
-      processedContent = processedContent.replace(originalImageRegex, clickableImagePreview);
+        `).join('')}
+      </div>
+    </div>`;
+    
+    // Remove all individual image references and replace with the grid at the end
+    images.forEach((image) => {
+      const originalImageRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${image.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s+"[^"]*")?\\)`, 'g');
+      processedContent = processedContent.replace(originalImageRegex, '');
     });
+    
+    // Add the image grid at the end of the content
+    processedContent += '\n\n' + imageGrid;
     
     return marked.parse(processedContent) as string;
   } catch (error) {
@@ -295,16 +303,16 @@ releases.forEach((release, releaseIndex) => {
                         padding: 0;
                         border-radius: 0;
                       }
-                      .release-image-container {
-                        text-align: center;
+                      .release-images-grid {
+                        margin: 1.5rem 0;
                       }
-                      .release-image-preview {
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                      .release-image-thumbnail {
+                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
                         background: rgba(26, 26, 26, 0.8);
                       }
-                      .release-image-preview:hover {
-                        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-                        transform: translateY(-2px);
+                      .release-image-thumbnail:hover {
+                        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+                        transform: translateY(-1px);
                       }
                     </style>
                     <Fragment set:html={parseMarkdownWithClickableImages(release.body, releaseIndex)} />
