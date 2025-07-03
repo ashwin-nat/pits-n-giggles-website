@@ -376,7 +376,9 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
       tocLinks.forEach(link => {
         link.addEventListener('click', function(e) {
           e.preventDefault();
-          const targetId = this.getAttribute('href').substring(1);
+          const targetId = (e.currentTarget as HTMLAnchorElement).getAttribute('href')?.substring(1);
+          if (!targetId) return;
+          
           const targetElement = document.getElementById(targetId);
 
           if (targetElement) {
