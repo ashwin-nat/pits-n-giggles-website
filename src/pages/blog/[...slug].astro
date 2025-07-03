@@ -28,83 +28,9 @@ const postUrl = `${Astro.site}blog/${entry.slug}`;
 const siteName = "Pits n' Giggles";
 ---
 
-<!doctype html>
-<html lang="en" class="scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/logo.png" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={entry.data.description} />
-    
-    <!-- Critical CSS inline to prevent FOUC -->
-    <style>
-      /* Reset and base styles */
-      *, *::before, *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      
-      html {
-        font-family: system-ui, -apple-system, sans-serif;
-        color-scheme: dark;
-        scroll-behavior: smooth;
-        line-height: 1.5;
-      }
-      
-      body {
-        min-height: 100vh;
-        background: linear-gradient(to bottom, #0a0a0a, #1a1a1a);
-        color: white;
-        font-family: system-ui, -apple-system, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        overflow-x: hidden;
-      }
-      
-      /* Critical layout styles */
-      .container {
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1rem;
-      }
-      
-      /* Prevent layout shift for images */
-      img {
-        max-width: 100%;
-        height: auto;
-        display: block;
-      }
-      
-      /* Critical navigation styles */
-      header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 50;
-        background: rgba(10, 10, 10, 0.95);
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(51, 51, 51, 1);
-      }
-      
-      /* Hide content initially to prevent FOUC */
-      .content-wrapper {
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-      }
-      
-      .content-loaded {
-        opacity: 1;
-      }
-    </style>
-    
-    <!-- Bootstrap Icons CDN - preload for faster loading -->
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"></noscript>
-    
+<Layout title={entry.data.title} description={entry.data.description}>
+  <!-- Additional meta tags for blog posts -->
+  <Fragment slot="head">
     <!-- OpenGraph Meta Tags for Blog Post -->
     <meta property="og:title" content={entry.data.title} />
     <meta property="og:description" content={entry.data.description} />
@@ -128,546 +54,416 @@ const siteName = "Pits n' Giggles";
     <meta name="twitter:description" content={entry.data.description} />
     <meta name="twitter:image" content={socialImage.url} />
     <meta name="twitter:image:alt" content={socialImage.alt} />
-    <meta name="twitter:site" content="@pitsngiggles" />
-    <meta name="twitter:creator" content={`@${entry.data.author.replace(/\s+/g, '').toLowerCase()}`} />
 
     <!-- Canonical URL -->
     <link rel="canonical" href={postUrl} />
+  </Fragment>
 
-    <!-- JSON-LD Structured Data for Blog Post -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
-      "headline": entry.data.title,
-      "description": entry.data.description,
-      "image": socialImage.url,
-      "author": {
-        "@type": "Person",
-        "name": entry.data.author
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": siteName,
-        "logo": {
-          "@type": "ImageObject",
-          "url": `${Astro.site}logo.png`
-        }
-      },
-      "datePublished": entry.data.pubDate.toISOString(),
-      "dateModified": (entry.data.updatedDate || entry.data.pubDate).toISOString(),
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": postUrl
-      },
-      "keywords": entry.data.tags.join(", ")
-    })} />
+  <article class="pt-32 pb-20">
+    <div class="container mx-auto px-4">
+      <!-- Mobile TOC Button -->
+      {tocHeadings.length > 0 && (
+        <div class="lg:hidden max-w-3xl mx-auto mb-8" id="mobile-toc-container">
+          <button
+            id="mobile-toc-toggle"
+            class="flex items-center gap-2 bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg px-4 py-3 text-secondary-300 hover:text-white hover:border-secondary-700 transition-all duration-200"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18"></path>
+              <path d="M3 12h18"></path>
+              <path d="M3 18h18"></path>
+            </svg>
+            <span class="font-medium">Table of Contents</span>
+            <svg id="toc-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-200">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
 
-    <title>{entry.data.title} | {siteName} | F1 Sim Racing Telemetry</title>
-  </head>
-  <body>
-    <div class="content-wrapper" id="content">
-      <div class="relative z-10">
-        <!-- Import and use existing components -->
-        <div id="navbar-placeholder"></div>
-        <main>
-          <article class="pt-32 pb-20">
-            <div class="container mx-auto px-4">
-              <!-- Mobile TOC Button -->
-              {tocHeadings.length > 0 && (
-                <div class="lg:hidden max-w-3xl mx-auto mb-8" id="mobile-toc-container">
-                  <button
-                    id="mobile-toc-toggle"
-                    class="flex items-center gap-2 bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg px-4 py-3 text-secondary-300 hover:text-white hover:border-secondary-700 transition-all duration-200"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M3 6h18"></path>
-                      <path d="M3 12h18"></path>
-                      <path d="M3 18h18"></path>
-                    </svg>
-                    <span class="font-medium">Table of Contents</span>
-                    <svg id="toc-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-200">
-                      <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                  </button>
-
-                  <!-- Mobile TOC Dropdown -->
-                  <div id="mobile-toc" class="hidden mt-2 bg-secondary-900/95 backdrop-blur-sm border border-secondary-800 rounded-lg p-4 shadow-lg">
-                    <nav class="toc-nav">
-                      <ul class="space-y-2">
-                        {tocHeadings.map((heading) => (
-                          <li class={`toc-item toc-depth-${heading.depth}`}>
-                            <a
-                              href={`#${heading.slug}`}
-                              class="mobile-toc-link block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-sm leading-relaxed py-1"
-                            >
-                              {heading.text}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </nav>
-                  </div>
-                </div>
-              )}
-
-              <!-- Floating TOC for Mobile (appears on scroll) -->
-              {tocHeadings.length > 0 && (
-                <div id="floating-toc-mobile" class="lg:hidden fixed top-16 left-4 right-4 z-40 opacity-0 pointer-events-none transition-all duration-300 transform -translate-y-2">
-                  <div class="bg-secondary-900/95 backdrop-blur-md border border-secondary-700 rounded-lg shadow-xl">
-                    <button
-                      id="floating-toc-toggle"
-                      class="w-full flex items-center justify-between px-4 py-3 text-secondary-300 hover:text-white transition-colors duration-200"
+          <!-- Mobile TOC Dropdown -->
+          <div id="mobile-toc" class="hidden mt-2 bg-secondary-900/95 backdrop-blur-sm border border-secondary-800 rounded-lg p-4 shadow-lg">
+            <nav class="toc-nav">
+              <ul class="space-y-2">
+                {tocHeadings.map((heading) => (
+                  <li class={`toc-item toc-depth-${heading.depth}`}>
+                    <a
+                      href={`#${heading.slug}`}
+                      class="mobile-toc-link block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-sm leading-relaxed py-1"
                     >
-                      <div class="flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M3 6h18"></path>
-                          <path d="M3 12h18"></path>
-                          <path d="M3 18h18"></path>
-                        </svg>
-                        <span class="font-medium text-sm">Contents</span>
-                      </div>
-                      <svg id="floating-toc-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-200">
-                        <polyline points="6 9 12 15 18 9"></polyline>
-                      </svg>
-                    </button>
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        </div>
+      )}
 
-                    <div id="floating-toc-content" class="hidden border-t border-secondary-700 max-h-64 overflow-y-auto">
-                      <nav class="p-3">
-                        <ul class="space-y-1">
-                          {tocHeadings.map((heading) => (
-                            <li class={`toc-item toc-depth-${heading.depth}`}>
-                              <a
-                                href={`#${heading.slug}`}
-                                class="floating-toc-link block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-xs leading-relaxed py-1 px-2 rounded hover:bg-secondary-800/50"
-                              >
-                                {heading.text}
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      </nav>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <!-- Post Header Layout -->
-              <div class="max-w-6xl mx-auto flex gap-8 mb-12">
-                <!-- Post Header Content (aligns with post content) -->
-                <div class="flex-1 min-w-0">
-                  <div class="mx-auto">
-                    <div class="flex gap-2 mb-4">
-                      {entry.data.tags.map((tag: string) => (
-                        <span class="inline-block bg-secondary-800 text-secondary-300 text-xs px-3 py-1 rounded">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <h1 class="text-4xl font-bold mb-4">{entry.data.title}</h1>
-                    <div class="flex items-center text-secondary-400 mb-6">
-                      <span>{formattedDate}</span>
-                      <span class="mx-2">•</span>
-                      <span>By {entry.data.author}</span>
-                    </div>
-
-                    <!-- Featured Image -->
-                    <div class="rounded-lg overflow-hidden mb-8">
-                      <img
-                        src={entry.data.image.url}
-                        alt={entry.data.image.alt}
-                        class="w-full h-auto"
-                      />
-                    </div>
-                  </div>
-                </div>
+      <!-- Floating TOC for Mobile (appears on scroll) -->
+      {tocHeadings.length > 0 && (
+        <div id="floating-toc-mobile" class="lg:hidden fixed top-16 left-4 right-4 z-40 opacity-0 pointer-events-none transition-all duration-300 transform -translate-y-2">
+          <div class="bg-secondary-900/95 backdrop-blur-md border border-secondary-700 rounded-lg shadow-xl">
+            <button
+              id="floating-toc-toggle"
+              class="w-full flex items-center justify-between px-4 py-3 text-secondary-300 hover:text-white transition-colors duration-200"
+            >
+              <div class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18"></path>
+                  <path d="M3 12h18"></path>
+                  <path d="M3 18h18"></path>
+                </svg>
+                <span class="font-medium text-sm">Contents</span>
               </div>
+              <svg id="floating-toc-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-200">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
 
-              <!-- Main Content Layout -->
-              <div class="max-w-6xl mx-auto flex gap-8">
-                <!-- Table of Contents - Desktop Only -->
-                {tocHeadings.length > 0 && (
-                  <aside class="hidden lg:block w-64 flex-shrink-0">
-                    <div class="sticky top-32" id="desktop-toc-container">
-                      <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
-                        <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 6h18"></path>
-                            <path d="M3 12h18"></path>
-                            <path d="M3 18h18"></path>
-                          </svg>
-                          Table of Contents
-                        </h3>
-                        <nav class="toc-nav">
-                          <ul class="space-y-2">
-                            {tocHeadings.map((heading) => (
-                              <li class={`toc-item toc-depth-${heading.depth}`}>
-                                <a
-                                  href={`#${heading.slug}`}
-                                  class="desktop-toc-link block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-sm leading-relaxed"
-                                >
-                                  {heading.text}
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        </nav>
-                      </div>
-                    </div>
-                  </aside>
-                )}
-
-                <!-- Floating TOC for Desktop (appears on scroll) -->
-                {tocHeadings.length > 0 && (
-                  <div id="floating-toc-desktop" class="hidden lg:block fixed top-20 right-6 w-72 z-40 opacity-0 pointer-events-none transition-all duration-300 transform translate-x-4">
-                    <div class="bg-secondary-900/95 backdrop-blur-md border border-secondary-700 rounded-lg shadow-xl p-4">
-                      <div class="flex items-center gap-2 mb-3 pb-2 border-b border-secondary-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M3 6h18"></path>
-                          <path d="M3 12h18"></path>
-                          <path d="M3 18h18"></path>
-                        </svg>
-                        <span class="font-medium text-white text-sm">Contents</span>
-                      </div>
-                      <nav class="max-h-64 overflow-y-auto">
-                        <ul class="space-y-1">
-                          {tocHeadings.map((heading) => (
-                            <li class={`toc-item toc-depth-${heading.depth}`}>
-                              <a
-                                href={`#${heading.slug}`}
-                                class="floating-desktop-toc-link block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-xs leading-relaxed py-1 px-2 rounded hover:bg-secondary-800/50"
-                              >
-                                {heading.text}
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      </nav>
-                    </div>
-                  </div>
-                )}
-
-                <!-- Post Content -->
-                <div class="flex-1 min-w-0">
-                  <div class="prose prose-invert prose-lg font-body leading-[1.5] max-w-none">
-                    <Content />
-                  </div>
-                </div>
-              </div>
-
-              <!-- Post Navigation -->
-              <div class="max-w-6xl mx-auto mt-12 pt-8 border-t border-secondary-800">
-                <!-- Left Section (Empty for now, aligns with TOC) -->
-                {tocHeadings.length > 0 && (
-                  <aside class="hidden lg:block w-64 flex-shrink-0">
-                    <!-- Empty space to align with TOC -->
-                  </aside>
-                )}
-
-                <!-- Post Navigation Content (aligns with post content) -->
-                <div class="flex-1 min-w-0">
-                  <div class="max-w-3xl mx-auto">
-                    <div class="flex flex-col sm:flex-row justify-between">
-                      <a href="/blog" class="text-accent-500 hover:text-accent-400 font-semibold inline-flex items-center gap-1 mb-4 sm:mb-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M19 12H5"></path>
-                          <path d="M12 19l-7-7 7-7"></path>
-                        </svg>
-                        Back to Blog
+            <div id="floating-toc-content" class="hidden border-t border-secondary-700 max-h-64 overflow-y-auto">
+              <nav class="p-3">
+                <ul class="space-y-1">
+                  {tocHeadings.map((heading) => (
+                    <li class={`toc-item toc-depth-${heading.depth}`}>
+                      <a
+                        href={`#${heading.slug}`}
+                        class="floating-toc-link block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-xs leading-relaxed py-1 px-2 rounded hover:bg-secondary-800/50"
+                      >
+                        {heading.text}
                       </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      )}
 
-                      <div class="flex gap-4">
-                        <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(entry.data.title)}`} target="_blank" rel="noopener noreferrer" class="text-secondary-400 hover:text-white transition-colors" title="Share on Twitter">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/>
-                          </svg>
+      <!-- Post Header Layout -->
+      <div class="max-w-6xl mx-auto flex gap-8 mb-12">
+        <!-- Post Header Content (aligns with post content) -->
+        <div class="flex-1 min-w-0">
+          <div class="mx-auto">
+            <div class="flex gap-2 mb-4">
+              {entry.data.tags.map((tag: string) => (
+                <span class="inline-block bg-secondary-800 text-secondary-300 text-xs px-3 py-1 rounded">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <h1 class="text-4xl font-bold mb-4">{entry.data.title}</h1>
+            <div class="flex items-center text-secondary-400 mb-6">
+              <span>{formattedDate}</span>
+              <span class="mx-2">•</span>
+              <span>By {entry.data.author}</span>
+            </div>
+
+            <!-- Featured Image -->
+            <div class="rounded-lg overflow-hidden mb-8">
+              <img
+                src={entry.data.image.url}
+                alt={entry.data.image.alt}
+                class="w-full h-auto"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Layout -->
+      <div class="max-w-6xl mx-auto flex gap-8">
+        <!-- Table of Contents - Desktop Only -->
+        {tocHeadings.length > 0 && (
+          <aside class="hidden lg:block w-64 flex-shrink-0">
+            <div class="sticky top-32" id="desktop-toc-container">
+              <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"></path>
+                    <path d="M3 12h18"></path>
+                    <path d="M3 18h18"></path>
+                  </svg>
+                  Table of Contents
+                </h3>
+                <nav class="toc-nav">
+                  <ul class="space-y-2">
+                    {tocHeadings.map((heading) => (
+                      <li class={`toc-item toc-depth-${heading.depth}`}>
+                        <a
+                          href={`#${heading.slug}`}
+                          class="desktop-toc-link block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-sm leading-relaxed"
+                        >
+                          {heading.text}
                         </a>
-                        <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`} target="_blank" rel="noopener noreferrer" class="text-secondary-400 hover:text-white transition-colors" title="Share on Facebook">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/>
-                          </svg>
-                        </a>
-                        <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`} target="_blank" rel="noopener noreferrer" class="text-secondary-400 hover:text-white transition-colors" title="Share on LinkedIn">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19.633 7.997c.013.175.013.349.013.523 0 5.325-4.053 11.461-11.46 11.461-2.282 0-4.402-.661-6.186-1.809.324.037.636.05.973.50a8.07 8.07 0 0 0 5.001-1.721 4.036 4.036 0 0 1-3.767-2.793c.249.037.499.062.761.062.361 0 .724-.05 1.061-.137a4.027 4.027 0 0 1-3.23-3.953v-.05c.537.299 1.16.486 1.82.511a4.022 4.022 0 0 1-1.796-3.354c0-.748.199-1.434.548-2.032a11.457 11.457 0 0 0 8.306 4.215c-.062-.3-.1-.599-.1-.898a4.026 4.026 0 0 1 4.028-4.028c1.16 0 2.207.486 2.943 1.272a7.957 7.957 0 0 0 2.556-.973 4.02 4.02 0 0 1-1.771 2.22 8.073 8.073 0 0 0 2.319-.624 8.645 8.645 0 0 1-2.019 2.083z"/>
-                          </svg>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
               </div>
             </div>
-          </article>
-        </main>
-        <div id="footer-placeholder"></div>
+          </aside>
+        )}
+
+        <!-- Floating TOC for Desktop (appears on scroll) -->
+        {tocHeadings.length > 0 && (
+          <div id="floating-toc-desktop" class="hidden lg:block fixed top-20 right-6 w-72 z-40 opacity-0 pointer-events-none transition-all duration-300 transform translate-x-4">
+            <div class="bg-secondary-900/95 backdrop-blur-md border border-secondary-700 rounded-lg shadow-xl p-4">
+              <div class="flex items-center gap-2 mb-3 pb-2 border-b border-secondary-700">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18"></path>
+                  <path d="M3 12h18"></path>
+                  <path d="M3 18h18"></path>
+                </svg>
+                <span class="font-medium text-white text-sm">Contents</span>
+              </div>
+              <nav class="max-h-64 overflow-y-auto">
+                <ul class="space-y-1">
+                  {tocHeadings.map((heading) => (
+                    <li class={`toc-item toc-depth-${heading.depth}`}>
+                      <a
+                        href={`#${heading.slug}`}
+                        class="floating-desktop-toc-link block text-secondary-300 hover:text-accent-400 transition-colors duration-200 text-xs leading-relaxed py-1 px-2 rounded hover:bg-secondary-800/50"
+                      >
+                        {heading.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+          </div>
+        )}
+
+        <!-- Post Content -->
+        <div class="flex-1 min-w-0">
+          <div class="prose prose-invert prose-lg font-body leading-[1.5] max-w-none">
+            <Content />
+          </div>
+        </div>
       </div>
 
-      <!-- Racing-inspired background animation -->
-      <div class="fixed inset-0 z-0 opacity-10 pointer-events-none">
-        <div class="absolute inset-x-0 top-1/4 h-px bg-gradient-to-r from-transparent via-primary-500 to-transparent animate-pulse-gentle"></div>
-        <div class="absolute inset-x-0 top-2/4 h-px bg-gradient-to-r from-transparent via-accent-500 to-transparent animate-pulse-gentle delay-700"></div>
-        <div class="absolute inset-x-0 top-3/4 h-px bg-gradient-to-r from-transparent via-primary-500 to-transparent animate-pulse-gentle delay-500"></div>
-        <div class="absolute inset-y-0 left-1/4 w-px bg-gradient-to-b from-transparent via-accent-500 to-transparent animate-pulse-gentle delay-300"></div>
-        <div class="absolute inset-y-0 left-2/4 w-px bg-gradient-to-b from-transparent via-primary-500 to-transparent animate-pulse-gentle delay-100"></div>
-        <div class="absolute inset-y-0 left-3/4 w-px bg-gradient-to-b from-transparent via-accent-500 to-transparent animate-pulse-gentle delay-200"></div>
+      <!-- Post Navigation -->
+      <div class="max-w-6xl mx-auto mt-12 pt-8 border-t border-secondary-800">
+        <!-- Left Section (Empty for now, aligns with TOC) -->
+        {tocHeadings.length > 0 && (
+          <aside class="hidden lg:block w-64 flex-shrink-0">
+            <!-- Empty space to align with TOC -->
+          </aside>
+        )}
+
+        <!-- Post Navigation Content (aligns with post content) -->
+        <div class="flex-1 min-w-0">
+          <div class="max-w-3xl mx-auto">
+            <div class="flex flex-col sm:flex-row justify-between">
+              <a href="/blog" class="text-accent-500 hover:text-accent-400 font-semibold inline-flex items-center gap-1 mb-4 sm:mb-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 12H5"></path>
+                  <path d="M12 19l-7-7 7-7"></path>
+                </svg>
+                Back to Blog
+              </a>
+
+              <div class="flex gap-4">
+                <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(entry.data.title)}`} target="_blank" rel="noopener noreferrer" class="text-secondary-400 hover:text-white transition-colors" title="Share on Twitter">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/>
+                  </svg>
+                </a>
+                <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`} target="_blank" rel="noopener noreferrer" class="text-secondary-400 hover:text-white transition-colors" title="Share on Facebook">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/>
+                  </svg>
+                </a>
+                <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`} target="_blank" rel="noopener noreferrer" class="text-secondary-400 hover:text-white transition-colors" title="Share on LinkedIn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.633 7.997c.013.175.013.349.013.523 0 5.325-4.053 11.461-11.46 11.461-2.282 0-4.402-.661-6.186-1.809.324.037.636.05.973.50a8.07 8.07 0 0 0 5.001-1.721 4.036 4.036 0 0 1-3.767-2.793c.249.037.499.062.761.062.361 0 .724-.05 1.061-.137a4.027 4.027 0 0 1-3.23-3.953v-.05c.537.299 1.16.486 1.82.511a4.022 4.022 0 0 1-1.796-3.354c0-.748.199-1.434.548-2.032a11.457 11.457 0 0 0 8.306 4.215c-.062-.3-.1-.599-.1-.898a4.026 4.026 0 0 1 4.028-4.028c1.16 0 2.207.486 2.943 1.272a7.957 7.957 0 0 0 2.556-.973 4.02 4.02 0 0 1-1.771 2.22 8.073 8.073 0 0 0 2.319-.624 8.645 8.645 0 0 1-2.019 2.083z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+  </article>
 
-    <!-- Load components dynamically -->
-    <script>
-      // Load NavBar component
-      import('../../components/NavBar.astro').then(module => {
-        // This would need to be handled differently in a real implementation
-        // For now, we'll use a simpler approach
-      });
-    </script>
+  <!-- Table of Contents JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobile TOC toggle functionality
+      const mobileToggle = document.getElementById('mobile-toc-toggle');
+      const mobileToc = document.getElementById('mobile-toc');
+      const tocChevron = document.getElementById('toc-chevron');
 
-    <!-- Content loading script -->
-    <script>
-      // Show content once DOM is ready
-      document.addEventListener('DOMContentLoaded', function() {
-        const content = document.getElementById('content');
-        if (content) {
-          // Small delay to ensure all critical resources are loaded
-          setTimeout(() => {
-            content.classList.add('content-loaded');
-          }, 50);
+      if (mobileToggle && mobileToc && tocChevron) {
+        mobileToggle.addEventListener('click', function() {
+          const isHidden = mobileToc.classList.contains('hidden');
+
+          if (isHidden) {
+            mobileToc.classList.remove('hidden');
+            tocChevron.style.transform = 'rotate(180deg)';
+          } else {
+            mobileToc.classList.add('hidden');
+            tocChevron.style.transform = 'rotate(0deg)';
+          }
+        });
+
+        // Close mobile TOC when clicking on a link
+        const mobileLinks = document.querySelectorAll('.mobile-toc-link');
+        mobileLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            mobileToc.classList.add('hidden');
+            tocChevron.style.transform = 'rotate(0deg)';
+          });
+        });
+      }
+
+      // Floating TOC functionality
+      const floatingTocMobile = document.getElementById('floating-toc-mobile');
+      const floatingTocDesktop = document.getElementById('floating-toc-desktop');
+      const floatingTocToggle = document.getElementById('floating-toc-toggle');
+      const floatingTocContent = document.getElementById('floating-toc-content');
+      const floatingTocChevron = document.getElementById('floating-toc-chevron');
+      const mobileTocContainer = document.getElementById('mobile-toc-container');
+      const desktopTocContainer = document.getElementById('desktop-toc-container');
+
+      // Floating TOC toggle for mobile
+      if (floatingTocToggle && floatingTocContent && floatingTocChevron) {
+        floatingTocToggle.addEventListener('click', function() {
+          const isHidden = floatingTocContent.classList.contains('hidden');
+
+          if (isHidden) {
+            floatingTocContent.classList.remove('hidden');
+            floatingTocChevron.style.transform = 'rotate(180deg)';
+          } else {
+            floatingTocContent.classList.add('hidden');
+            floatingTocChevron.style.transform = 'rotate(0deg)';
+          }
+        });
+
+        // Close floating TOC when clicking on a link
+        const floatingLinks = document.querySelectorAll('.floating-toc-link');
+        floatingLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            floatingTocContent.classList.add('hidden');
+            floatingTocChevron.style.transform = 'rotate(0deg)';
+          });
+        });
+      }
+
+      // Scroll behavior for floating TOCs
+      let ticking = false;
+
+      function updateFloatingToc() {
+        const scrollY = window.scrollY;
+
+        // Check if we've scrolled past the original TOC containers
+        const mobileTocRect = mobileTocContainer?.getBoundingClientRect();
+        const desktopTocRect = desktopTocContainer?.getBoundingClientRect();
+
+        // Show floating mobile TOC when original is out of view
+        if (floatingTocMobile && mobileTocRect) {
+          const shouldShow = mobileTocRect.bottom < 0;
+
+          if (shouldShow) {
+            floatingTocMobile.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
+            floatingTocMobile.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+          } else {
+            floatingTocMobile.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
+            floatingTocMobile.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+            // Close the dropdown when hiding
+            if (floatingTocContent) {
+              floatingTocContent.classList.add('hidden');
+              if (floatingTocChevron) floatingTocChevron.style.transform = 'rotate(0deg)';
+            }
+          }
         }
-      });
-      
-      // Fallback in case DOMContentLoaded already fired
-      if (document.readyState === 'loading') {
-        // Document is still loading
-      } else {
-        // Document has already loaded
-        const content = document.getElementById('content');
-        if (content) {
-          content.classList.add('content-loaded');
+
+        // Show floating desktop TOC when original is out of view
+        if (floatingTocDesktop && desktopTocRect) {
+          const shouldShow = desktopTocRect.bottom < 100; // Show a bit earlier for desktop
+
+          if (shouldShow) {
+            floatingTocDesktop.classList.remove('opacity-0', 'pointer-events-none', 'translate-x-4');
+            floatingTocDesktop.classList.add('opacity-100', 'pointer-events-auto', 'translate-x-0');
+          } else {
+            floatingTocDesktop.classList.add('opacity-0', 'pointer-events-none', 'translate-x-4');
+            floatingTocDesktop.classList.remove('opacity-100', 'pointer-events-auto', 'translate-x-0');
+          }
+        }
+
+        ticking = false;
+      }
+
+      function requestTick() {
+        if (!ticking) {
+          requestAnimationFrame(updateFloatingToc);
+          ticking = true;
         }
       }
-    </script>
 
-    <!-- Table of Contents JavaScript -->
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // Mobile TOC toggle functionality
-        const mobileToggle = document.getElementById('mobile-toc-toggle');
-        const mobileToc = document.getElementById('mobile-toc');
-        const tocChevron = document.getElementById('toc-chevron');
+      window.addEventListener('scroll', requestTick);
 
-        if (mobileToggle && mobileToc && tocChevron) {
-          mobileToggle.addEventListener('click', function() {
-            const isHidden = mobileToc.classList.contains('hidden');
+      // Smooth scrolling for all TOC links
+      const tocLinks = document.querySelectorAll('.toc-nav a[href^="#"], .floating-toc-link[href^="#"], .floating-desktop-toc-link[href^="#"]');
 
-            if (isHidden) {
-              mobileToc.classList.remove('hidden');
-              tocChevron.style.transform = 'rotate(180deg)';
-            } else {
-              mobileToc.classList.add('hidden');
-              tocChevron.style.transform = 'rotate(0deg)';
-            }
-          });
+      tocLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = (e.currentTarget as HTMLAnchorElement).getAttribute('href')?.substring(1);
+          if (!targetId) return;
+          
+          const targetElement = document.getElementById(targetId);
 
-          // Close mobile TOC when clicking on a link
-          const mobileLinks = document.querySelectorAll('.mobile-toc-link');
-          mobileLinks.forEach(link => {
-            link.addEventListener('click', function() {
-              mobileToc.classList.add('hidden');
-              tocChevron.style.transform = 'rotate(0deg)';
+          if (targetElement) {
+            const headerOffset = 120; // Account for fixed header
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
             });
-          });
-        }
-
-        // Floating TOC functionality
-        const floatingTocMobile = document.getElementById('floating-toc-mobile');
-        const floatingTocDesktop = document.getElementById('floating-toc-desktop');
-        const floatingTocToggle = document.getElementById('floating-toc-toggle');
-        const floatingTocContent = document.getElementById('floating-toc-content');
-        const floatingTocChevron = document.getElementById('floating-toc-chevron');
-        const mobileTocContainer = document.getElementById('mobile-toc-container');
-        const desktopTocContainer = document.getElementById('desktop-toc-container');
-
-        // Floating TOC toggle for mobile
-        if (floatingTocToggle && floatingTocContent && floatingTocChevron) {
-          floatingTocToggle.addEventListener('click', function() {
-            const isHidden = floatingTocContent.classList.contains('hidden');
-
-            if (isHidden) {
-              floatingTocContent.classList.remove('hidden');
-              floatingTocChevron.style.transform = 'rotate(180deg)';
-            } else {
-              floatingTocContent.classList.add('hidden');
-              floatingTocChevron.style.transform = 'rotate(0deg)';
-            }
-          });
-
-          // Close floating TOC when clicking on a link
-          const floatingLinks = document.querySelectorAll('.floating-toc-link');
-          floatingLinks.forEach(link => {
-            link.addEventListener('click', function() {
-              floatingTocContent.classList.add('hidden');
-              floatingTocChevron.style.transform = 'rotate(0deg)';
-            });
-          });
-        }
-
-        // Scroll behavior for floating TOCs
-        let ticking = false;
-
-        function updateFloatingToc() {
-          const scrollY = window.scrollY;
-
-          // Check if we've scrolled past the original TOC containers
-          const mobileTocRect = mobileTocContainer?.getBoundingClientRect();
-          const desktopTocRect = desktopTocContainer?.getBoundingClientRect();
-
-          // Show floating mobile TOC when original is out of view
-          if (floatingTocMobile && mobileTocRect) {
-            const shouldShow = mobileTocRect.bottom < 0;
-
-            if (shouldShow) {
-              floatingTocMobile.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
-              floatingTocMobile.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
-            } else {
-              floatingTocMobile.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
-              floatingTocMobile.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
-              // Close the dropdown when hiding
-              if (floatingTocContent) {
-                floatingTocContent.classList.add('hidden');
-                if (floatingTocChevron) floatingTocChevron.style.transform = 'rotate(0deg)';
-              }
-            }
           }
-
-          // Show floating desktop TOC when original is out of view
-          if (floatingTocDesktop && desktopTocRect) {
-            const shouldShow = desktopTocRect.bottom < 100; // Show a bit earlier for desktop
-
-            if (shouldShow) {
-              floatingTocDesktop.classList.remove('opacity-0', 'pointer-events-none', 'translate-x-4');
-              floatingTocDesktop.classList.add('opacity-100', 'pointer-events-auto', 'translate-x-0');
-            } else {
-              floatingTocDesktop.classList.add('opacity-0', 'pointer-events-none', 'translate-x-4');
-              floatingTocDesktop.classList.remove('opacity-100', 'pointer-events-auto', 'translate-x-0');
-            }
-          }
-
-          ticking = false;
-        }
-
-        function requestTick() {
-          if (!ticking) {
-            requestAnimationFrame(updateFloatingToc);
-            ticking = true;
-          }
-        }
-
-        window.addEventListener('scroll', requestTick);
-
-        // Smooth scrolling for all TOC links
-        const tocLinks = document.querySelectorAll('.toc-nav a[href^="#"], .floating-toc-link[href^="#"], .floating-desktop-toc-link[href^="#"]');
-
-        tocLinks.forEach(link => {
-          link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = (e.currentTarget as HTMLAnchorElement).getAttribute('href')?.substring(1);
-            if (!targetId) return;
-            
-            const targetElement = document.getElementById(targetId);
-
-            if (targetElement) {
-              const headerOffset = 120; // Account for fixed header
-              const elementPosition = targetElement.getBoundingClientRect().top;
-              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-              window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-              });
-            }
-          });
-        });
-
-        // Highlight current section in desktop TOC only
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            const id = entry.target.getAttribute('id');
-            const desktopTocLink = document.querySelector(`.desktop-toc-link[href="#${id}"]`);
-            const floatingDesktopTocLink = document.querySelector(`.floating-desktop-toc-link[href="#${id}"]`);
-
-            if (entry.isIntersecting) {
-              // Remove active class from all desktop TOC links
-              document.querySelectorAll('.desktop-toc-link, .floating-desktop-toc-link').forEach(link => {
-                link.classList.remove('toc-active');
-              });
-
-              // Add active class to current section
-              if (desktopTocLink) {
-                desktopTocLink.classList.add('toc-active');
-              }
-              if (floatingDesktopTocLink) {
-                floatingDesktopTocLink.classList.add('toc-active');
-              }
-            }
-          });
-        }, {
-          rootMargin: '-120px 0px -80% 0px' // Trigger when heading is near top of viewport
-        });
-
-        // Observe all headings
-        document.querySelectorAll('h2[id], h3[id]').forEach(heading => {
-          observer.observe(heading);
         });
       });
-    </script>
-  </body>
-</html>
 
-<style is:global>
-  html {
-    font-family: 'Montserrat', system-ui, sans-serif;
-    color-scheme: dark;
-  }
+      // Highlight current section in desktop TOC only
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const id = entry.target.getAttribute('id');
+          const desktopTocLink = document.querySelector(`.desktop-toc-link[href="#${id}"]`);
+          const floatingDesktopTocLink = document.querySelector(`.floating-desktop-toc-link[href="#${id}"]`);
 
-  body {
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+          if (entry.isIntersecting) {
+            // Remove active class from all desktop TOC links
+            document.querySelectorAll('.desktop-toc-link, .floating-desktop-toc-link').forEach(link => {
+              link.classList.remove('toc-active');
+            });
 
-  h1, h2, h3, h4, h5, h6 {
-    line-height: 1.2;
-    font-weight: 700;
-    margin: 0;
-  }
+            // Add active class to current section
+            if (desktopTocLink) {
+              desktopTocLink.classList.add('toc-active');
+            }
+            if (floatingDesktopTocLink) {
+              floatingDesktopTocLink.classList.add('toc-active');
+            }
+          }
+        });
+      }, {
+        rootMargin: '-120px 0px -80% 0px' // Trigger when heading is near top of viewport
+      });
 
-  p {
-    font-family: 'Source Sans Pro', system-ui, sans-serif;
-    margin: 0;
-  }
+      // Observe all headings
+      document.querySelectorAll('h2[id], h3[id]').forEach(heading => {
+        observer.observe(heading);
+      });
+    });
+  </script>
+</Layout>
 
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  .container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-  }
-
-  /* Animations */
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  .animate-fadeIn {
-    animation: fadeIn 0.5s ease-in forwards;
-  }
-
+<style>
   .prose {
     --tw-prose-body: theme('colors.secondary.300');
     --tw-prose-headings: theme('colors.white');
