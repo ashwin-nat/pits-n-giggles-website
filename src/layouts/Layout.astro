@@ -12,9 +12,41 @@ import SpeedInsights from '@vercel/speed-insights/astro';
 interface Props {
   title: string;
   description?: string;
+  // Open Graph props
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  ogUrl?: string;
+  ogType?: string;
+  // Twitter props
+  twitterTitle?: string;
+  twitterDescription?: string;
+  twitterImage?: string;
 }
 
-const { title, description = "Pits n' Giggles - F1 Sim Racing Telemetry for F1 23, F1 24 and F1 25" } = Astro.props;
+const { 
+  title, 
+  description = "Pits n' Giggles - F1 Sim Racing Telemetry for F1 23, F1 24 and F1 25",
+  ogTitle,
+  ogDescription,
+  ogImage,
+  ogUrl,
+  ogType = "website",
+  twitterTitle,
+  twitterDescription,
+  twitterImage
+} = Astro.props;
+
+// Use provided OG values or fall back to defaults
+const finalOgTitle = ogTitle || "Pits n Giggles | F1 Telemetry Dashboard for Sim Racers";
+const finalOgDescription = ogDescription || "Pits n' Giggles provides live telemetry data during F1 races, giving you valuable insights to make informed decisions on track. It is a single standalone executable that requires no install";
+const finalOgImage = ogImage || "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true";
+const finalOgUrl = ogUrl || "https://www.pitsngiggles.com";
+
+// Use provided Twitter values or fall back to OG values
+const finalTwitterTitle = twitterTitle || finalOgTitle;
+const finalTwitterDescription = twitterDescription || finalOgDescription;
+const finalTwitterImage = twitterImage || finalOgImage;
 
 // Google Analytics Measurement ID - replace with your actual ID
 const GA_MEASUREMENT_ID = 'G-RJ5QKM03ZM'; // Replace with your actual Google Analytics ID
@@ -98,18 +130,22 @@ const GA_MEASUREMENT_ID = 'G-RJ5QKM03ZM'; // Replace with your actual Google Ana
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"></noscript>
     
     <!-- OpenGraph Meta Tags -->
-    <meta property="og:title" content="Pits n Giggles | F1 Telemetry Dashboard for Sim Racers" />
-    <meta property="og:description" content="Pits n' Giggles provides live telemetry data during F1 races, giving you valuable insights to make informed decisions on track. It is a single standalone executable that requires no install" />
-    <meta property="og:image" content="https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true" />
-    <meta property="og:url" content="https://www.pitsngiggles.com" />
-    <meta property="og:type" content="website" />
+    <meta property="og:title" content={finalOgTitle} />
+    <meta property="og:description" content={finalOgDescription} />
+    <meta property="og:image" content={finalOgImage} />
+    <meta property="og:url" content={finalOgUrl} />
+    <meta property="og:type" content={ogType} />
 
     <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Pits n Giggles | F1 Telemetry Dashboard for Sim Racers" />
-    <meta name="twitter:description" content="Pits n' Giggles provides live telemetry data during F1 races, giving you valuable insights to make informed decisions on track. It is a single standalone executable that requires no install" />
-    <meta name="twitter:image" content="https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true" />
+    <meta name="twitter:title" content={finalTwitterTitle} />
+    <meta name="twitter:description" content={finalTwitterDescription} />
+    <meta name="twitter:image" content={finalTwitterImage} />
+    
     <title>{title} | Pits n' Giggles | F1 Sim Racing Telemetry</title>
+    
+    <!-- Additional head content from pages -->
+    <slot name="head" />
     
     <!-- Analytics -->
     <Analytics/>
