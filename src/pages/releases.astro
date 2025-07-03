@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import { marked } from 'marked';
 import Button from '../components/Button.astro';
-import ImageViewer from '../components/ImageViewer.astro';
+import ImageViewerReleases from '../components/ImageViewerReleases.astro';
 import { Image } from 'astro:assets';
 
 // Define types for GitHub Release data
@@ -99,7 +99,7 @@ function extractImagesFromMarkdown(content: string | undefined): Array<{url: str
   return images;
 }
 
-// Function to parse markdown content and replace images with clickable versions
+// Function to parse markdown content and replace images with clickable previews
 function parseMarkdownWithClickableImages(content: string | undefined, releaseIndex: number): string {
   try {
     if (!content) return '';
@@ -107,22 +107,28 @@ function parseMarkdownWithClickableImages(content: string | undefined, releaseIn
     let processedContent = content;
     const images = extractImagesFromMarkdown(content);
     
-    // Replace each image with a clickable version
+    // Replace each image with a clickable preview version
     images.forEach((image, imageIndex) => {
       const originalImageRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${image.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s+"[^"]*")?\\)`, 'g');
       
-      const clickableImage = `<div class="release-image-container my-4">
-        <img 
-          src="${image.url}" 
-          alt="${image.alt}" 
-          class="release-image cursor-pointer rounded-lg max-w-full h-auto transition-transform duration-200 hover:scale-[1.02]" 
-          data-release-index="${releaseIndex}" 
-          data-image-index="${imageIndex}"
-          loading="lazy"
-        />
+      const clickableImagePreview = `<div class="release-image-container my-4">
+        <div class="release-image-preview cursor-pointer rounded-lg overflow-hidden border border-secondary-700 hover:border-accent-400 transition-all duration-200 max-w-sm mx-auto" 
+             data-release-screenshot 
+             data-release-index="${releaseIndex}" 
+             data-image-index="${imageIndex}">
+          <img 
+            src="${image.url}" 
+            alt="${image.alt}" 
+            class="w-full h-32 object-cover transition-transform duration-200 hover:scale-105" 
+            loading="lazy"
+          />
+          <div class="p-2 bg-secondary-800/50">
+            <p class="text-xs text-secondary-300 text-center">Click to view full size</p>
+          </div>
+        </div>
       </div>`;
       
-      processedContent = processedContent.replace(originalImageRegex, clickableImage);
+      processedContent = processedContent.replace(originalImageRegex, clickableImagePreview);
     });
     
     return marked.parse(processedContent) as string;
@@ -292,13 +298,13 @@ releases.forEach((release, releaseIndex) => {
                       .release-image-container {
                         text-align: center;
                       }
-                      .release-image {
+                      .release-image-preview {
                         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                        border: 1px solid #4a5568;
+                        background: rgba(26, 26, 26, 0.8);
                       }
-                      .release-image:hover {
+                      .release-image-preview:hover {
                         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-                        border-color: #63b3ed;
+                        transform: translateY(-2px);
                       }
                     </style>
                     <Fragment set:html={parseMarkdownWithClickableImages(release.body, releaseIndex)} />
@@ -375,16 +381,16 @@ releases.forEach((release, releaseIndex) => {
     </div>
   </section>
 
-  <!-- Image Viewer Component -->
+  <!-- Image Viewer Component for Releases -->
   {allReleaseImages.length > 0 && (
-    <ImageViewer images={allReleaseImages} />
+    <ImageViewerReleases images={allReleaseImages} />
   )}
 
   <!-- JavaScript for handling image clicks -->
   <script define:vars={{ allReleaseImages, releaseImageMap: Object.fromEntries(releaseImageMap) }}>
     document.addEventListener('DOMContentLoaded', function() {
       // Handle clicks on release images
-      document.querySelectorAll('.release-image').forEach(img => {
+      document.querySelectorAll('[data-release-screenshot]').forEach(img => {
         img.addEventListener('click', function() {
           const releaseIndex = parseInt(this.getAttribute('data-release-index'));
           const imageIndex = parseInt(this.getAttribute('data-image-index'));
@@ -398,13 +404,10 @@ releases.forEach((release, releaseIndex) => {
           globalIndex += imageIndex;
           
           // Trigger the image viewer
-          const viewer = document.getElementById('imageViewer');
+          const viewer = document.getElementById('imageViewerReleases');
           if (viewer) {
-            // Set the current index and show the viewer
-            window.currentIndex = globalIndex;
-            
             // Dispatch a custom event to open the viewer
-            const event = new CustomEvent('openImageViewer', { 
+            const event = new CustomEvent('openImageViewerReleases', { 
               detail: { index: globalIndex } 
             });
             document.dispatchEvent(event);
