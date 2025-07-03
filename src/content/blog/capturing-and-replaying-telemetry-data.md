@@ -3,7 +3,7 @@ title: 'Recording and Replaying Telemetry Data'
 description: 'Learn how to interpret telemetry data and use it to improve your lap times in any sim racing game.'
 pubDate: 2025-05-05
 author: 'Ashwin Natarajan'
-authorDescription: 'Testing 69420'
+authorDescription: 'Developer'
 image:
   url: '/blog_assets/capturing-replaying-data/thumbnail.png'
   alt: 'Racing sim setup with telemetry on screen'
