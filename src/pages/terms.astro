@@ -1,0 +1,206 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout 
+  title="Terms of Service"
+  description="Terms of Service for Pits n' Giggles - Learn about the terms and conditions for using our software."
+>
+  <div class="pt-32 pb-20">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto prose prose-invert prose-lg">
+        <h1>Terms of Service</h1>
+        <p class="text-secondary-300 text-lg mb-8">
+          <strong>Last updated:</strong> {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </p>
+
+        <div class="bg-blue-900/20 border border-blue-700 rounded-lg p-6 mb-8">
+          <h2 class="text-blue-400 mt-0 mb-4">Free & Open Source</h2>
+          <p class="mb-0">
+            Pits n' Giggles is free, open-source software released under the MIT License. 
+            You're free to use, modify, and distribute it according to the license terms.
+          </p>
+        </div>
+
+        <h2>Acceptance of Terms</h2>
+        <p>
+          By downloading, installing, or using Pits n' Giggles, you agree to be bound by these Terms of Service. 
+          If you do not agree to these terms, do not use the software.
+        </p>
+
+        <h2>License</h2>
+        <p>
+          Pits n' Giggles is licensed under the MIT License. The full license text is available in the 
+          <a href="https://github.com/ashwin-nat/pits-n-giggles/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">GitHub repository</a>.
+        </p>
+
+        <h3>What You Can Do</h3>
+        <ul>
+          <li>Use the software for any purpose, including commercial use</li>
+          <li>Modify the source code</li>
+          <li>Distribute copies of the software</li>
+          <li>Distribute modified versions</li>
+          <li>Use the software in private or public projects</li>
+        </ul>
+
+        <h3>What You Must Do</h3>
+        <ul>
+          <li>Include the original copyright notice and license in any copies or substantial portions</li>
+          <li>Not hold the authors liable for any damages</li>
+        </ul>
+
+        <h2>Permitted Use</h2>
+        <p>You may use Pits n' Giggles for:</p>
+        <ul>
+          <li>Personal sim racing and telemetry analysis</li>
+          <li>Educational purposes and learning about racing data</li>
+          <li>Content creation and streaming</li>
+          <li>League racing and competitive events</li>
+          <li>Research and development projects</li>
+          <li>Commercial applications (subject to MIT License terms)</li>
+        </ul>
+
+        <h2>Prohibited Use</h2>
+        <p>You may not use Pits n' Giggles to:</p>
+        <ul>
+          <li>Violate any applicable laws or regulations</li>
+          <li>Infringe on the rights of others</li>
+          <li>Distribute malware or harmful code</li>
+          <li>Attempt to reverse engineer copy protection (there isn't any, but still)</li>
+          <li>Use the software to cheat in online competitions where prohibited</li>
+        </ul>
+
+        <h2>Disclaimer of Warranties</h2>
+        <p>
+          <strong>Pits n' Giggles is provided "AS IS" without warranty of any kind.</strong> We make no warranties, 
+          express or implied, including but not limited to:
+        </p>
+        <ul>
+          <li>Merchantability or fitness for a particular purpose</li>
+          <li>That the software will be error-free or uninterrupted</li>
+          <li>That defects will be corrected</li>
+          <li>That the software will meet your requirements</li>
+        </ul>
+
+        <h2>Limitation of Liability</h2>
+        <p>
+          In no event shall the authors or copyright holders be liable for any claim, damages, or other liability, 
+          whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the 
+          software or the use or other dealings in the software.
+        </p>
+
+        <h2>Game Compatibility</h2>
+        <p>
+          Pits n' Giggles is designed to work with F1 games (F1 23, F1 24, F1 25) via UDP telemetry. 
+          We are not affiliated with Codemasters, EA Sports, or Formula 1. Game compatibility depends on:
+        </p>
+        <ul>
+          <li>The game's UDP telemetry feature being enabled</li>
+          <li>Network configuration allowing UDP traffic</li>
+          <li>Game updates not changing the telemetry format</li>
+        </ul>
+
+        <h2>User-Generated Content</h2>
+        <p>
+          When you save race data or share files created by Pits n' Giggles:
+        </p>
+        <ul>
+          <li>You retain ownership of your data</li>
+          <li>You are responsible for any data you choose to share</li>
+          <li>We are not responsible for shared content or its accuracy</li>
+          <li>Shared data should not contain personal information (it shouldn't by design)</li>
+        </ul>
+
+        <h2>Third-Party Services</h2>
+        <p>
+          Pits n' Giggles may interact with third-party services:
+        </p>
+        <ul>
+          <li><strong>F1 Games:</strong> Via UDP telemetry (local network only)</li>
+          <li><strong>GitHub:</strong> For updates and releases (manual only)</li>
+          <li><strong>OBS:</strong> For streaming integration (local only)</li>
+        </ul>
+        <p>
+          Use of these services is subject to their respective terms of service.
+        </p>
+
+        <h2>Updates and Modifications</h2>
+        <p>
+          We may update Pits n' Giggles from time to time. Updates are:
+        </p>
+        <ul>
+          <li>Always optional - the software doesn't auto-update</li>
+          <li>Available through GitHub releases</li>
+          <li>Subject to the same MIT License terms</li>
+          <li>May include new features, bug fixes, or compatibility updates</li>
+        </ul>
+
+        <h2>Community Guidelines</h2>
+        <p>
+          When participating in our community (Discord, GitHub, etc.):
+        </p>
+        <ul>
+          <li>Be respectful and constructive</li>
+          <li>Don't spam or post off-topic content</li>
+          <li>Help others when you can</li>
+          <li>Report bugs and suggest improvements</li>
+          <li>Follow the platform's terms of service</li>
+        </ul>
+
+        <h2>Termination</h2>
+        <p>
+          These terms remain in effect until terminated. You may terminate them at any time by:
+        </p>
+        <ul>
+          <li>Uninstalling the software</li>
+          <li>Deleting all copies in your possession</li>
+          <li>Ceasing use of our website and services</li>
+        </ul>
+
+        <h2>Open Source Contributions</h2>
+        <p>
+          If you contribute to the Pits n' Giggles project:
+        </p>
+        <ul>
+          <li>Your contributions will be licensed under the same MIT License</li>
+          <li>You retain copyright to your contributions</li>
+          <li>You grant us permission to use, modify, and distribute your contributions</li>
+          <li>You confirm you have the right to make the contribution</li>
+        </ul>
+
+        <h2>Governing Law</h2>
+        <p>
+          These terms shall be governed by and construed in accordance with the laws of the jurisdiction 
+          where the software is used, without regard to conflict of law principles.
+        </p>
+
+        <h2>Changes to Terms</h2>
+        <p>
+          We may update these terms from time to time. Material changes will be announced through:
+        </p>
+        <ul>
+          <li>Updates to this page with a new "Last updated" date</li>
+          <li>GitHub release notes (for significant changes)</li>
+          <li>Discord announcements (for major changes)</li>
+        </ul>
+
+        <h2>Contact Information</h2>
+        <p>
+          For questions about these terms, please contact us through:
+        </p>
+        <ul>
+          <li>GitHub Issues: <a href="https://github.com/ashwin-nat/pits-n-giggles/issues" target="_blank" rel="noopener noreferrer">github.com/ashwin-nat/pits-n-giggles/issues</a></li>
+          <li>Discord: <a href="https://discord.gg/pq3R49wR3d" target="_blank" rel="noopener noreferrer">discord.gg/pq3R49wR3d</a></li>
+        </ul>
+
+        <div class="bg-secondary-900/50 border border-secondary-700 rounded-lg p-6 mt-12">
+          <h3 class="mt-0 mb-4">Summary</h3>
+          <p class="mb-0">
+            <strong>Simple terms for simple software.</strong> Pits n' Giggles is free to use, modify, and share. 
+            We provide it as-is with no warranties. Use it responsibly and have fun racing!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

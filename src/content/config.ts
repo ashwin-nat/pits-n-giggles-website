@@ -14,6 +14,11 @@ const blogCollection = defineCollection({
     }),
     tags: z.array(z.string()),
     draft: z.boolean().default(false),
+    // Add optional social sharing image (falls back to main image if not provided)
+    socialImage: z.object({
+      url: z.string(),
+      alt: z.string()
+    }).optional(),
   }),
 });
 
