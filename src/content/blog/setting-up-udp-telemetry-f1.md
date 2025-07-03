@@ -18,7 +18,7 @@ This guide covers setup for all modern F1 games including **F1 25**, with built-
 
 ## 📥 1. Download the App
 
-Go to [www.pitsngiggles.com](https://www.pitsngiggles.com) and download the latest version of the app.
+Go to [www.pitsngiggles.com](/releases) and download the latest version of the app.
 *Pits n' Giggles* is a lightweight **F1 telemetry dashboard** that requires no installation-just run and drive.
 
 ## 📁 2. Create a Folder for the App
@@ -88,3 +88,7 @@ Click the **"Dashboard"** button in the UI to open the live dashboard if it does
 You're now ready to analyze your laps, compare race data, and enjoy all the features of this easy-to-use **F1 25 telemetry tool**.
 
 It’s hammer time. 🏁
+
+## For more advanced tips, check out
+1. [The features page](/features)
+2. [Blog articles](/blog)

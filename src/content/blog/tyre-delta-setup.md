@@ -20,6 +20,10 @@ Whether you're racing in wet-dry conditions or battling changing grip levels, **
 
 ---
 
+## Download Pits n' Giggles
+Pits n' Giggles is a free and open source F1 sim racing app and can be downloaded from [www.pitsngiggles.com](/releases)
+Once downloaded, [configure the app](/blog/setting-up-udp-telemetry-f1) to work with the F1 game (supported games are F1 23 onwards)
+
 ## 🛠️ Quick Setup: Enable the Tyre Delta Trigger
 
 To start using Tyre Delta, you only need to set up a quick custom notification in the game and match it in **Pits n' Giggles**.
@@ -103,3 +107,7 @@ The Tyre Delta feature is one of many tools in **Pits n' Giggles** built to give
 If you're serious about improving your race strategy in **F1 25**, or just want your own mini AI race engineer, this feature is a must-try.
 
 Ready to box smart? 🧠🏎️
+
+## For more advanced tips, check out
+1. [The features page](/features)
+2. [Blog articles](/blog)
