@@ -1,0 +1,283 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  images: {
+    url: string;
+    alt: string;
+    description?: string;
+  }[];
+  initialIndex?: number;
+}
+
+const { images, initialIndex = 0 } = Astro.props;
+---
+
+<div id="imageViewerReleases" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm">
+  <div class="relative w-full h-full flex flex-col items-center justify-center p-4">
+    <!-- Close button -->
+    <button id="closeViewerReleases" class="absolute top-4 right-4 text-white hover:text-accent-400 z-20">
+      <span class="sr-only">Close</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <!-- Navigation buttons -->
+    <button id="prevImageReleases" class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-accent-400 z-20">
+      <span class="sr-only">Previous</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+
+    <button id="nextImageReleases" class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-accent-400 z-20">
+      <span class="sr-only">Next</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+
+    <!-- Main image container -->
+    <div class="relative max-w-7xl w-full flex-1 flex flex-col items-center justify-center">
+      <!-- Main image display container -->
+      <div id="mainImageContainerReleases" class="max-w-full max-h-[80vh] mb-4 flex items-center justify-center">
+        <!-- Main image will be inserted here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Thumbnail strip -->
+    <div class="w-full max-w-6xl mt-6 mb-4">
+      <div class="flex items-center justify-center">
+        <div id="thumbnailContainerReleases" class="flex gap-2 overflow-x-auto max-w-full px-4 py-2 scrollbar-hide">
+          {images.map((image, index) => (
+            <button 
+              class="thumbnail-btn-releases flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 border-transparent hover:border-accent-400 transition-all duration-200 opacity-60 hover:opacity-100"
+              data-index={index}
+              data-src={image.url}
+              data-alt={image.alt}
+            >
+              <img
+                src={image.url}
+                alt={image.alt}
+                width="80"
+                height="80"
+                class="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Image counter -->
+    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
+      <span id="imageCounterReleases" class="text-white text-sm font-medium"></span>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ images, initialIndex }}>
+  let currentIndexReleases = initialIndex;
+  const viewerReleases = document.getElementById('imageViewerReleases');
+  const mainImageContainerReleases = document.getElementById('mainImageContainerReleases');
+  const counterElementReleases = document.getElementById('imageCounterReleases');
+  const prevBtnReleases = document.getElementById('prevImageReleases');
+  const nextBtnReleases = document.getElementById('nextImageReleases');
+  const closeBtnReleases = document.getElementById('closeViewerReleases');
+  const thumbnailBtnsReleases = document.querySelectorAll('.thumbnail-btn-releases');
+
+  function createMainImageReleases(imageData) {
+    const img = document.createElement('img');
+    img.src = imageData.url;
+    img.alt = imageData.alt;
+    img.className = 'max-w-full max-h-full object-contain';
+    img.loading = 'eager';
+    img.width = 1920;
+    img.height = 1080;
+    return img;
+  }
+
+  function updateImageReleases() {
+    const image = images[currentIndexReleases];
+    
+    // Clear current main image
+    mainImageContainerReleases.innerHTML = '';
+    
+    // Create and add new main image
+    const mainImg = createMainImageReleases(image);
+    mainImageContainerReleases.appendChild(mainImg);
+    
+    counterElementReleases.textContent = `${currentIndexReleases + 1} / ${images.length}`;
+    
+    // Update thumbnail active state
+    thumbnailBtnsReleases.forEach((btn, index) => {
+      if (index === currentIndexReleases) {
+        btn.classList.remove('opacity-60');
+        btn.classList.add('opacity-100', 'border-accent-400');
+      } else {
+        btn.classList.add('opacity-60');
+        btn.classList.remove('opacity-100', 'border-accent-400');
+      }
+    });
+
+    // Scroll active thumbnail into view
+    const activeThumbnail = document.querySelector(`[data-index="${currentIndexReleases}"]`);
+    if (activeThumbnail) {
+      activeThumbnail.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  }
+
+  function showViewerReleases(startIndex = currentIndexReleases) {
+    currentIndexReleases = startIndex;
+    viewerReleases.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    updateImageReleases();
+  }
+
+  function hideViewerReleases() {
+    viewerReleases.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  function goToPreviousReleases() {
+    currentIndexReleases = (currentIndexReleases - 1 + images.length) % images.length;
+    updateImageReleases();
+  }
+
+  function goToNextReleases() {
+    currentIndexReleases = (currentIndexReleases + 1) % images.length;
+    updateImageReleases();
+  }
+
+  function goToImageReleases(index) {
+    currentIndexReleases = index;
+    updateImageReleases();
+  }
+
+  // Event listeners
+  prevBtnReleases.addEventListener('click', goToPreviousReleases);
+  nextBtnReleases.addEventListener('click', goToNextReleases);
+  closeBtnReleases.addEventListener('click', hideViewerReleases);
+
+  // Thumbnail click handlers
+  thumbnailBtnsReleases.forEach((btn, index) => {
+    btn.addEventListener('click', () => goToImageReleases(index));
+  });
+
+  // Add click handlers to all release screenshots
+  document.querySelectorAll('[data-release-screenshot]').forEach((element) => {
+    element.addEventListener('click', () => {
+      const index = element.getAttribute('data-index');
+      if (index !== null) {
+        currentIndexReleases = parseInt(index, 10);
+      } else {
+        const allScreenshots = document.querySelectorAll('[data-release-screenshot]');
+        currentIndexReleases = Array.from(allScreenshots).indexOf(element);
+      }
+      showViewerReleases();
+    });
+  });
+
+  // Listen for custom events to open the viewer
+  document.addEventListener('openImageViewerReleases', (event) => {
+    const index = event.detail?.index || 0;
+    showViewerReleases(index);
+  });
+
+  // Handle keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (!viewerReleases.classList.contains('hidden')) {
+      if (e.key === 'Escape') hideViewerReleases();
+      if (e.key === 'ArrowLeft') goToPreviousReleases();
+      if (e.key === 'ArrowRight') goToNextReleases();
+      if (e.key >= '1' && e.key <= '9') {
+        const index = parseInt(e.key) - 1;
+        if (index < images.length) goToImageReleases(index);
+      }
+    }
+  });
+
+  // Handle swipe gestures on touch devices
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  mainImageContainerReleases.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  });
+
+  mainImageContainerReleases.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipeReleases();
+  });
+
+  function handleSwipeReleases() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+        goToNextReleases();
+      } else {
+        goToPreviousReleases();
+      }
+    }
+  }
+</script>
+
+<style>
+  /* Hide scrollbar for thumbnail container */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Smooth transitions for thumbnails */
+  .thumbnail-btn-releases {
+    transition: all 0.2s ease;
+  }
+
+  .thumbnail-btn-releases:hover {
+    transform: scale(1.05);
+  }
+
+  /* Ensure thumbnails maintain aspect ratio */
+  .thumbnail-btn-releases img {
+    transition: transform 0.2s ease;
+  }
+
+  .thumbnail-btn-releases:hover img {
+    transform: scale(1.1);
+  }
+
+  /* Custom focus styles for accessibility */
+  .thumbnail-btn-releases:focus {
+    outline: 2px solid theme('colors.accent.400');
+    outline-offset: 2px;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    #thumbnailContainerReleases {
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  /* Ensure main image container maintains proper sizing */
+  #mainImageContainerReleases {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>

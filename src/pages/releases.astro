@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import { marked } from 'marked';
 import Button from '../components/Button.astro';
-import ImageViewer from '../components/ImageViewer.astro';
+import ImageViewerReleases from '../components/ImageViewerReleases.astro';
 import { Image } from 'astro:assets';
 
 // Define types for GitHub Release data
@@ -99,31 +99,19 @@ function extractImagesFromMarkdown(content: string | undefined): Array<{url: str
   return images;
 }
 
-// Function to parse markdown content and replace images with clickable versions
-function parseMarkdownWithClickableImages(content: string | undefined, releaseIndex: number): string {
+// Function to parse markdown content and remove images (we'll display them separately)
+function parseMarkdownWithoutImages(content: string | undefined): string {
   try {
     if (!content) return '';
     
     let processedContent = content;
-    const images = extractImagesFromMarkdown(content);
     
-    // Replace each image with a clickable version
-    images.forEach((image, imageIndex) => {
-      const originalImageRegex = new RegExp(`!\\[([^\\]]*)\\]\\(${image.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:\\s+"[^"]*")?\\)`, 'g');
-      
-      const clickableImage = `<div class="release-image-container my-4">
-        <img 
-          src="${image.url}" 
-          alt="${image.alt}" 
-          class="release-image cursor-pointer rounded-lg max-w-full h-auto transition-transform duration-200 hover:scale-[1.02]" 
-          data-release-index="${releaseIndex}" 
-          data-image-index="${imageIndex}"
-          loading="lazy"
-        />
-      </div>`;
-      
-      processedContent = processedContent.replace(originalImageRegex, clickableImage);
-    });
+    // Remove all image references
+    const imageRegex = /!\[([^\]]*)\]\(([^)]+?)(?:\s+"([^"]*)")?\)/g;
+    processedContent = processedContent.replace(imageRegex, '');
+    
+    // Remove empty lines that might be left after removing images
+    processedContent = processedContent.replace(/\n\s*\n\s*\n/g, '\n\n');
     
     return marked.parse(processedContent) as string;
   } catch (error) {
@@ -289,19 +277,34 @@ releases.forEach((release, releaseIndex) => {
                         padding: 0;
                         border-radius: 0;
                       }
-                      .release-image-container {
-                        text-align: center;
-                      }
-                      .release-image {
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                        border: 1px solid #4a5568;
-                      }
-                      .release-image:hover {
-                        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-                        border-color: #63b3ed;
-                      }
                     </style>
-                    <Fragment set:html={parseMarkdownWithClickableImages(release.body, releaseIndex)} />
+                    <Fragment set:html={parseMarkdownWithoutImages(release.body)} />
+                  </div>
+                )}
+
+                {/* Display images in a grid if they exist */}
+                {releaseImages.length > 0 && (
+                  <div class="mb-6">
+                    <h4 class="text-lg font-semibold mb-3 text-primary-200">Screenshots</h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                      {releaseImages.map((image, imageIndex) => (
+                        <div 
+                          class="release-image-thumbnail cursor-pointer rounded-lg overflow-hidden border border-secondary-700 hover:border-accent-400 transition-all duration-200 bg-secondary-800/50 hover:shadow-lg hover:-translate-y-1" 
+                          data-release-screenshot 
+                          data-release-index={releaseIndex} 
+                          data-image-index={imageIndex}
+                          style="aspect-ratio: 1; position: relative;"
+                        >
+                          <img 
+                            src={image.url} 
+                            alt={image.alt} 
+                            class="w-full h-full object-cover transition-transform duration-200 hover:scale-105" 
+                            loading="lazy"
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
 
@@ -375,16 +378,16 @@ releases.forEach((release, releaseIndex) => {
     </div>
   </section>
 
-  <!-- Image Viewer Component -->
+  <!-- Image Viewer Component for Releases -->
   {allReleaseImages.length > 0 && (
-    <ImageViewer images={allReleaseImages} />
+    <ImageViewerReleases images={allReleaseImages} />
   )}
 
   <!-- JavaScript for handling image clicks -->
   <script define:vars={{ allReleaseImages, releaseImageMap: Object.fromEntries(releaseImageMap) }}>
     document.addEventListener('DOMContentLoaded', function() {
       // Handle clicks on release images
-      document.querySelectorAll('.release-image').forEach(img => {
+      document.querySelectorAll('[data-release-screenshot]').forEach(img => {
         img.addEventListener('click', function() {
           const releaseIndex = parseInt(this.getAttribute('data-release-index'));
           const imageIndex = parseInt(this.getAttribute('data-image-index'));
@@ -398,13 +401,10 @@ releases.forEach((release, releaseIndex) => {
           globalIndex += imageIndex;
           
           // Trigger the image viewer
-          const viewer = document.getElementById('imageViewer');
+          const viewer = document.getElementById('imageViewerReleases');
           if (viewer) {
-            // Set the current index and show the viewer
-            window.currentIndex = globalIndex;
-            
             // Dispatch a custom event to open the viewer
-            const event = new CustomEvent('openImageViewer', { 
+            const event = new CustomEvent('openImageViewerReleases', { 
               detail: { index: globalIndex } 
             });
             document.dispatchEvent(event);
