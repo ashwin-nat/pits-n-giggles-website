@@ -1,0 +1,335 @@
+---
+import { wikiPages, wikiCategories } from '../data/wiki';
+
+interface Props {
+  currentSlug?: string;
+}
+
+const { currentSlug } = Astro.props;
+
+// Group pages by category
+const pagesByCategory = wikiPages.reduce((acc, page) => {
+  if (!acc[page.category]) {
+    acc[page.category] = [];
+  }
+  acc[page.category].push(page);
+  return acc;
+}, {} as Record<string, typeof wikiPages>);
+
+// Sort pages within each category by title
+Object.keys(pagesByCategory).forEach(category => {
+  pagesByCategory[category].sort((a, b) => a.title.localeCompare(b.title));
+});
+---
+
+<aside class="wiki-sidebar w-80 flex-shrink-0 bg-secondary-950/50 backdrop-blur-sm border-r border-secondary-800 h-screen sticky top-0 overflow-y-auto">
+  <div class="p-6">
+    <!-- Wiki Header -->
+    <div class="mb-8">
+      <h2 class="text-xl font-bold text-white mb-2">Wiki</h2>
+      <p class="text-secondary-400 text-sm">Documentation & Guides</p>
+    </div>
+
+    <!-- Search -->
+    <div class="mb-6">
+      <div class="relative">
+        <input
+          type="text"
+          id="sidebar-search"
+          placeholder="Search pages..."
+          class="w-full bg-secondary-900/50 border border-secondary-800 rounded-lg px-3 py-2 pl-9 text-sm text-white placeholder-secondary-400 focus:outline-none focus:border-accent-500 transition-colors"
+        />
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary-400">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="wiki-nav">
+      {wikiCategories.map(category => {
+        const categoryPages = pagesByCategory[category.name] || [];
+        if (categoryPages.length === 0) return null;
+        
+        return (
+          <div class="category-group mb-4" data-category={category.name}>
+            <button 
+              class="category-toggle w-full flex items-center justify-between p-2 text-left hover:bg-secondary-800/50 rounded-lg transition-colors group"
+              data-category={category.name}
+            >
+              <div class="flex items-center gap-2">
+                <span class={`${category.color} transition-transform duration-200`} set:html={category.icon}></span>
+                <span class="font-medium text-white group-hover:text-accent-400 transition-colors">
+                  {category.name}
+                </span>
+                <span class="text-xs text-secondary-400 ml-1">
+                  ({categoryPages.length})
+                </span>
+              </div>
+              <svg 
+                class="category-chevron w-4 h-4 text-secondary-400 transition-transform duration-200" 
+                xmlns="http://www.w3.org/2000/svg" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                stroke-width="2" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            
+            <div class="category-pages ml-6 mt-2 space-y-1 max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+              {categoryPages.map(page => (
+                <a 
+                  href={`/wiki/${page.slug}`}
+                  class={`page-link block p-2 text-sm rounded-lg transition-all duration-200 hover:bg-secondary-800/50 hover:text-accent-400 ${
+                    currentSlug === page.slug 
+                      ? 'bg-accent-500/20 text-accent-400 border-l-2 border-accent-500' 
+                      : 'text-secondary-300'
+                  }`}
+                  data-page-title={page.title.toLowerCase()}
+                  data-page-tags={page.tags.join(' ').toLowerCase()}
+                >
+                  <div class="flex items-center justify-between">
+                    <span class="truncate">{page.title}</span>
+                    {page.featured && (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="text-accent-500 flex-shrink-0 ml-1">
+                        <polygon points="12 2 15.09 8.26 22 9 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9 8.91 8.26 12 2"></polygon>
+                      </svg>
+                    )}
+                  </div>
+                  {page.difficulty && (
+                    <div class="mt-1">
+                      <span class={`text-xs px-1.5 py-0.5 rounded ${
+                        page.difficulty === 'beginner' ? 'bg-green-500/20 text-green-400' :
+                        page.difficulty === 'intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
+                        'bg-red-500/20 text-red-400'
+                      }`}>
+                        {page.difficulty}
+                      </span>
+                    </div>
+                  )}
+                </a>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </nav>
+
+    <!-- No Results Message -->
+    <div id="no-sidebar-results" class="hidden text-center py-8">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-3 text-secondary-600">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <p class="text-secondary-400 text-sm">No pages found</p>
+    </div>
+  </div>
+</aside>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('sidebar-search');
+    const categoryGroups = document.querySelectorAll('.category-group');
+    const noResultsMessage = document.getElementById('no-sidebar-results');
+    const categoryToggles = document.querySelectorAll('.category-toggle');
+
+    // Initialize category states (all expanded by default)
+    function initializeCategoryStates() {
+      categoryGroups.forEach(group => {
+        const categoryPages = group.querySelector('.category-pages');
+        const chevron = group.querySelector('.category-chevron');
+        
+        if (categoryPages && chevron) {
+          // Expand all categories by default
+          categoryPages.style.maxHeight = categoryPages.scrollHeight + 'px';
+          chevron.style.transform = 'rotate(180deg)';
+          group.setAttribute('data-expanded', 'true');
+        }
+      });
+    }
+
+    // Toggle category expansion
+    function setupCategoryToggles() {
+      categoryToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+          const group = this.closest('.category-group');
+          const categoryPages = group?.querySelector('.category-pages');
+          const chevron = group?.querySelector('.category-chevron');
+          
+          if (!group || !categoryPages || !chevron) return;
+          
+          const isExpanded = group.getAttribute('data-expanded') === 'true';
+          
+          if (isExpanded) {
+            // Collapse
+            categoryPages.style.maxHeight = '0px';
+            chevron.style.transform = 'rotate(0deg)';
+            group.setAttribute('data-expanded', 'false');
+          } else {
+            // Expand
+            categoryPages.style.maxHeight = categoryPages.scrollHeight + 'px';
+            chevron.style.transform = 'rotate(180deg)';
+            group.setAttribute('data-expanded', 'true');
+          }
+        });
+      });
+    }
+
+    // Search functionality
+    function setupSearch() {
+      if (!searchInput) return;
+
+      function performSearch(query) {
+        const searchTerm = query.toLowerCase().trim();
+        let hasVisibleResults = false;
+
+        if (searchTerm === '') {
+          // Show all categories and pages
+          categoryGroups.forEach(group => {
+            group.style.display = 'block';
+            const pages = group.querySelectorAll('.page-link');
+            pages.forEach(page => {
+              page.style.display = 'block';
+            });
+            
+            // Restore expanded state
+            const categoryPages = group.querySelector('.category-pages');
+            const chevron = group.querySelector('.category-chevron');
+            if (categoryPages && chevron) {
+              categoryPages.style.maxHeight = categoryPages.scrollHeight + 'px';
+              chevron.style.transform = 'rotate(180deg)';
+              group.setAttribute('data-expanded', 'true');
+            }
+          });
+          hasVisibleResults = true;
+        } else {
+          // Filter pages based on search term
+          categoryGroups.forEach(group => {
+            const pages = group.querySelectorAll('.page-link');
+            let categoryHasVisiblePages = false;
+
+            pages.forEach(page => {
+              const title = page.getAttribute('data-page-title') || '';
+              const tags = page.getAttribute('data-page-tags') || '';
+              
+              const isMatch = title.includes(searchTerm) || tags.includes(searchTerm);
+
+              if (isMatch) {
+                page.style.display = 'block';
+                categoryHasVisiblePages = true;
+                hasVisibleResults = true;
+              } else {
+                page.style.display = 'none';
+              }
+            });
+
+            if (categoryHasVisiblePages) {
+              group.style.display = 'block';
+              // Expand category to show matching pages
+              const categoryPages = group.querySelector('.category-pages');
+              const chevron = group.querySelector('.category-chevron');
+              if (categoryPages && chevron) {
+                categoryPages.style.maxHeight = categoryPages.scrollHeight + 'px';
+                chevron.style.transform = 'rotate(180deg)';
+                group.setAttribute('data-expanded', 'true');
+              }
+            } else {
+              group.style.display = 'none';
+            }
+          });
+        }
+
+        // Show/hide no results message
+        if (noResultsMessage) {
+          noResultsMessage.style.display = hasVisibleResults ? 'none' : 'block';
+        }
+      }
+
+      // Debounce search
+      let searchTimeout;
+      searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          performSearch(this.value);
+        }, 200);
+      });
+
+      // Clear search on escape
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          this.value = '';
+          performSearch('');
+          this.blur();
+        }
+      });
+    }
+
+    // Initialize everything
+    initializeCategoryStates();
+    setupCategoryToggles();
+    setupSearch();
+  });
+</script>
+
+<style>
+  .wiki-sidebar {
+    /* Custom scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.secondary.700') theme('colors.secondary.900');
+  }
+
+  .wiki-sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .wiki-sidebar::-webkit-scrollbar-track {
+    background: theme('colors.secondary.900');
+  }
+
+  .wiki-sidebar::-webkit-scrollbar-thumb {
+    background: theme('colors.secondary.700');
+    border-radius: 3px;
+  }
+
+  .wiki-sidebar::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.secondary.600');
+  }
+
+  /* Smooth transitions for category expansion */
+  .category-pages {
+    transition: max-height 0.3s ease-in-out;
+  }
+
+  /* Active page styling */
+  .page-link.active {
+    background-color: rgba(0, 144, 255, 0.2);
+    color: theme('colors.accent.400');
+    border-left: 2px solid theme('colors.accent.500');
+  }
+
+  /* Hover effects */
+  .category-toggle:hover .category-chevron {
+    color: theme('colors.accent.400');
+  }
+
+  /* Focus styles */
+  #sidebar-search:focus {
+    box-shadow: 0 0 0 2px rgba(0, 144, 255, 0.2);
+  }
+
+  .category-toggle:focus {
+    outline: 2px solid theme('colors.accent.500');
+    outline-offset: 2px;
+  }
+
+  .page-link:focus {
+    outline: 2px solid theme('colors.accent.500');
+    outline-offset: 2px;
+  }
+</style>
+</aside>
