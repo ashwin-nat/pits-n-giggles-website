@@ -6,7 +6,6 @@ const navLinks = [
   { text: 'About', href: '/about' },
   { text: 'Features', href: '/features' },
   { text: 'Screenshots', href: '/screenshots' },
-  { text: 'Releases', href: '/releases' },
   { text: 'Blog', href: '/blog' },
 ];
 ---
@@ -44,8 +43,8 @@ const navLinks = [
             {link.text}
           </a>
         ))}
-        <a 
-          href="/releases" 
+        <a
+          href="/releases"
           class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-md transition-colors duration-200 font-semibold flex items-center gap-2"
         >
           Download
@@ -69,8 +68,8 @@ const navLinks = [
                 {link.text}
               </a>
             ))}
-            <a 
-              href="/releases" 
+            <a
+              href="/releases"
               class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-md transition-colors duration-200 font-semibold flex items-center justify-center gap-2 mt-2"
             >
               Download
@@ -97,7 +96,7 @@ const navLinks = [
   mobileMenuBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
     const isHidden = mobileMenu?.classList.contains('hidden');
-    
+
     if (isHidden) {
       mobileMenu?.classList.remove('hidden');
       // Small delay to ensure the display: block has taken effect
