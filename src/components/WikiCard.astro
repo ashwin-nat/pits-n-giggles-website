@@ -1,0 +1,84 @@
+---
+import dayjs from 'dayjs';
+
+interface Props {
+  page: {
+    slug: string;
+    title: string;
+    description: string;
+    category: string;
+    tags: string[];
+    lastUpdated: Date;
+    featured?: boolean;
+    difficulty?: 'beginner' | 'intermediate' | 'advanced';
+  };
+}
+
+const { page } = Astro.props;
+const formattedDate = dayjs(page.lastUpdated).format('MMM D, YYYY');
+
+const difficultyColors = {
+  beginner: 'bg-green-500/20 text-green-400 border-green-500/30',
+  intermediate: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+  advanced: 'bg-red-500/20 text-red-400 border-red-500/30'
+};
+
+const difficultyColor = page.difficulty ? difficultyColors[page.difficulty] : '';
+---
+
+<article class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-card hover:border-secondary-700 group relative">
+  {page.featured && (
+    <div class="absolute top-3 right-3 z-10">
+      <span class="bg-accent-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+        Featured
+      </span>
+    </div>
+  )}
+  
+  <a href={`/wiki/${page.slug}`} class="block no-underline">
+    <div class="p-6">
+      <div class="flex items-start justify-between mb-3">
+        <div class="flex-1">
+          <span class="text-xs px-2 py-1 bg-secondary-800 text-secondary-300 rounded mb-2 inline-block">
+            {page.category}
+          </span>
+          {page.difficulty && (
+            <span class={`text-xs px-2 py-1 rounded border ml-2 ${difficultyColor}`}>
+              {page.difficulty}
+            </span>
+          )}
+        </div>
+      </div>
+      
+      <h2 class="text-xl font-semibold text-white mb-2 group-hover:text-accent-400 transition-colors">
+        {page.title}
+      </h2>
+      
+      <p class="text-secondary-300 font-body mb-4 line-clamp-2">
+        {page.description}
+      </p>
+      
+      <div class="flex flex-wrap gap-2 mb-4">
+        {page.tags.slice(0, 3).map((tag: string) => (
+          <span class="text-xs px-2 py-1 bg-secondary-800/50 text-secondary-400 rounded">
+            {tag}
+          </span>
+        ))}
+        {page.tags.length > 3 && (
+          <span class="text-xs px-2 py-1 bg-secondary-800/50 text-secondary-400 rounded">
+            +{page.tags.length - 3} more
+          </span>
+        )}
+      </div>
+      
+      <div class="flex items-center justify-between">
+        <span class="text-secondary-400 text-sm font-body">
+          Updated {formattedDate}
+        </span>
+        <span class="text-accent-500 font-semibold text-sm group-hover:translate-x-1 transition-transform">
+          Read more →
+        </span>
+      </div>
+    </div>
+  </a>
+</article>

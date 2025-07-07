@@ -1,0 +1,278 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import WikiCard from '../../components/WikiCard.astro';
+import WikiCategoryCard from '../../components/WikiCategoryCard.astro';
+import { wikiPages, wikiCategories } from '../../data/wiki';
+
+// Group pages by category
+const pagesByCategory = wikiPages.reduce((acc, page) => {
+  if (!acc[page.category]) {
+    acc[page.category] = [];
+  }
+  acc[page.category].push(page);
+  return acc;
+}, {} as Record<string, typeof wikiPages>);
+
+// Get featured pages
+const featuredPages = wikiPages.filter(page => page.featured);
+
+// Sort pages by last updated (newest first)
+const recentPages = [...wikiPages]
+  .sort((a, b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime())
+  .slice(0, 6);
+
+// Get page count for each category
+const categoryCounts = wikiCategories.map(category => ({
+  ...category,
+  count: pagesByCategory[category.name]?.length || 0
+}));
+---
+
+<Layout 
+  title="Wiki" 
+  description="Comprehensive documentation and guides for Pits n' Giggles F1 telemetry application."
+>
+  <section class="pt-32 pb-12">
+    <div class="container mx-auto px-4">
+      <!-- Header -->
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h1 class="text-4xl font-bold mb-4">Wiki</h1>
+        <div class="w-20 h-1 bg-primary-500 mx-auto mb-6"></div>
+        <p class="text-secondary-300 font-body text-lg">
+          Comprehensive documentation, guides, and tutorials for getting the most out of Pits n' Giggles.
+        </p>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="max-w-2xl mx-auto mb-12">
+        <div class="relative">
+          <input
+            type="text"
+            id="wiki-search"
+            placeholder="Search wiki pages..."
+            class="w-full bg-secondary-900/50 border border-secondary-800 rounded-lg px-4 py-3 pl-12 text-white placeholder-secondary-400 focus:outline-none focus:border-accent-500 transition-colors"
+          />
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-secondary-400">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Featured Pages -->
+      {featuredPages.length > 0 && (
+        <section class="mb-16">
+          <h2 class="text-2xl font-bold mb-8 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent-500">
+              <polygon points="12 2 15.09 8.26 22 9 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9 8.91 8.26 12 2"></polygon>
+            </svg>
+            Featured Guides
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredPages.map(page => (
+              <WikiCard page={page} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- Categories Overview -->
+      <section class="mb-16">
+        <h2 class="text-2xl font-bold mb-8 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent-500">
+            <path d="M3 6h18"></path>
+            <path d="M3 12h18"></path>
+            <path d="M3 18h18"></path>
+          </svg>
+          Browse by Category
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categoryCounts.map(category => (
+            <a href={`#category-${category.name.toLowerCase().replace(/\s+/g, '-')}`} class="no-underline">
+              <WikiCategoryCard category={category} pageCount={category.count} />
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- All Pages by Category -->
+      <section>
+        <h2 class="text-2xl font-bold mb-8 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent-500">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          All Pages
+        </h2>
+
+        <div id="wiki-results" class="space-y-12">
+          {wikiCategories.map(category => {
+            const categoryPages = pagesByCategory[category.name] || [];
+            if (categoryPages.length === 0) return null;
+            
+            return (
+              <div id={`category-${category.name.toLowerCase().replace(/\s+/g, '-')}`} class="category-section">
+                <h3 class="text-xl font-semibold mb-6 flex items-center gap-3">
+                  <span class={`${category.color}`} set:html={category.icon}></span>
+                  {category.name}
+                  <span class="text-secondary-400 text-sm font-normal">
+                    ({categoryPages.length} {categoryPages.length === 1 ? 'page' : 'pages'})
+                  </span>
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {categoryPages.map(page => (
+                    <WikiCard page={page} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <!-- No Results Message -->
+        <div id="no-results" class="hidden text-center py-12">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-secondary-600">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <h3 class="text-xl font-semibold mb-2">No pages found</h3>
+          <p class="text-secondary-400">Try adjusting your search terms or browse by category above.</p>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- Search Functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.getElementById('wiki-search');
+      const resultsContainer = document.getElementById('wiki-results');
+      const noResultsMessage = document.getElementById('no-results');
+      const categoryLinks = document.querySelectorAll('a[href^="#category-"]');
+
+      if (!searchInput || !resultsContainer || !noResultsMessage) return;
+
+      // Add click handlers for category links
+      categoryLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href')?.substring(1);
+          if (targetId) {
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+              const headerOffset = 120;
+              const elementPosition = targetElement.getBoundingClientRect().top;
+              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+              });
+            }
+          }
+        });
+      });
+
+      function performSearch(query) {
+        const searchTerm = query.toLowerCase().trim();
+        const categoryElements = resultsContainer.querySelectorAll('.category-section');
+        let hasVisibleResults = false;
+
+        if (searchTerm === '') {
+          // Show all categories and pages
+          categoryElements.forEach(category => {
+            category.style.display = 'block';
+            const pages = category.querySelectorAll('article');
+            pages.forEach(page => {
+              page.style.display = 'block';
+            });
+          });
+          hasVisibleResults = true;
+        } else {
+          // Filter pages based on search term
+          categoryElements.forEach(category => {
+            const pages = category.querySelectorAll('article');
+            let categoryHasVisiblePages = false;
+
+            pages.forEach(page => {
+              const title = page.querySelector('h2')?.textContent?.toLowerCase() || '';
+              const description = page.querySelector('p')?.textContent?.toLowerCase() || '';
+              const tags = Array.from(page.querySelectorAll('.text-xs')).map(tag => tag.textContent?.toLowerCase() || '').join(' ');
+              
+              const isMatch = title.includes(searchTerm) || 
+                            description.includes(searchTerm) || 
+                            tags.includes(searchTerm);
+
+              if (isMatch) {
+                page.style.display = 'block';
+                categoryHasVisiblePages = true;
+                hasVisibleResults = true;
+              } else {
+                page.style.display = 'none';
+              }
+            });
+
+            // Show/hide category based on whether it has visible pages
+            category.style.display = categoryHasVisiblePages ? 'block' : 'none';
+          });
+        }
+
+        // Show/hide no results message
+        if (hasVisibleResults) {
+          resultsContainer.style.display = 'block';
+          noResultsMessage.style.display = 'none';
+        } else {
+          resultsContainer.style.display = 'none';
+          noResultsMessage.style.display = 'block';
+        }
+      }
+
+      // Debounce search to avoid excessive filtering
+      let searchTimeout;
+      searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          performSearch(this.value);
+        }, 300);
+      });
+
+      // Clear search on escape
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          this.value = '';
+          performSearch('');
+          this.blur();
+        }
+      });
+    });
+  </script>
+</Layout>
+
+<style>
+  /* Line clamp utility for consistent card heights */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Smooth transitions for search results */
+  .category-section {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  /* Focus styles for search input */
+  #wiki-search:focus {
+    box-shadow: 0 0 0 3px rgba(0, 144, 255, 0.1);
+  }
+
+  /* Scroll margin for category anchors */
+  .category-section {
+    scroll-margin-top: 120px;
+  }
+</style>
+</Layout>
