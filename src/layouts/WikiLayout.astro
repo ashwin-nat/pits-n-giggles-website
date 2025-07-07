@@ -1,0 +1,37 @@
+---
+import Layout from './Layout.astro';
+import WikiSidebar from '../components/WikiSidebar.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  currentSlug?: string;
+}
+
+const { title, description, currentSlug } = Astro.props;
+---
+
+<Layout title={title} description={description}>
+  <div class="pt-16 min-h-screen flex">
+    <!-- Fixed Sidebar -->
+    <WikiSidebar currentSlug={currentSlug} />
+    
+    <!-- Main Content Area -->
+    <main class="flex-1 min-w-0">
+      <slot />
+    </main>
+  </div>
+</Layout>
+
+<style>
+  /* Ensure the layout takes full height */
+  .min-h-screen {
+    min-height: 100vh;
+  }
+  
+  /* Make sure the sidebar is always visible */
+  @media (max-width: 1024px) {
+    /* On smaller screens, we might want to make the sidebar toggleable */
+    /* For now, keeping it always visible as requested */
+  }
+</style>
