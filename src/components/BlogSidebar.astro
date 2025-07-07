@@ -7,35 +7,38 @@ interface Props {
 
 const { currentSlug } = Astro.props;
 
-// Get all wiki pages from content collection
-const allWikiPages = await getCollection('wiki');
+// Get all blog posts from content collection
+const allBlogPosts = await getCollection('blog');
 
-// Group pages by category
-const pagesByCategory = allWikiPages.reduce((acc, page) => {
-  const category = page.data.category;
+// Sort posts by date (newest first)
+const sortedPosts = allBlogPosts.sort((a, b) => 
+  new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+
+// Group posts by category (using tags as categories)
+const postsByCategory = sortedPosts.reduce((acc, post) => {
+  // Use the first tag as the primary category, or 'General' if no tags
+  const category = post.data.tags[0] || 'General';
   if (!acc[category]) {
     acc[category] = [];
   }
-  acc[category].push(page);
+  acc[category].push(post);
   return acc;
-}, {} as Record<string, typeof allWikiPages>);
+}, {} as Record<string, typeof allBlogPosts>);
 
-// Sort pages within each category by title
-Object.keys(pagesByCategory).forEach(category => {
-  pagesByCategory[category].sort((a, b) => a.data.title.localeCompare(b.data.title));
-});
+// Get all unique categories and sort them
+const categories = Object.keys(postsByCategory).sort();
 
-// Define category order
-const categoryOrder = ['Getting Started', 'Configuration', 'Features', 'Troubleshooting', 'Advanced'];
-const sortedCategories = categoryOrder.filter(cat => pagesByCategory[cat]);
+// Get recent posts (last 5)
+const recentPosts = sortedPosts.slice(0, 5);
 ---
 
-<aside class="wiki-sidebar w-80 flex-shrink-0 bg-secondary-950/50 backdrop-blur-sm border-r border-secondary-800 h-screen sticky top-0 overflow-y-auto">
+<aside class="blog-sidebar w-80 flex-shrink-0 bg-secondary-950/50 backdrop-blur-sm border-r border-secondary-800 h-screen sticky top-0 overflow-y-auto">
   <div class="p-6">
-    <!-- Wiki Header -->
+    <!-- Blog Header -->
     <div class="mb-8">
-      <h2 class="text-xl font-bold text-white mb-2">Wiki</h2>
-      <p class="text-secondary-400 text-sm">Documentation & Guides</p>
+      <h2 class="text-xl font-bold text-white mb-2">Blog</h2>
+      <p class="text-secondary-400 text-sm">Latest posts and updates</p>
     </div>
 
     <!-- Search -->
@@ -44,7 +47,7 @@ const sortedCategories = categoryOrder.filter(cat => pagesByCategory[cat]);
         <input
           type="text"
           id="sidebar-search"
-          placeholder="Search pages..."
+          placeholder="Search posts..."
           class="w-full bg-secondary-900/50 border border-secondary-800 rounded-lg px-3 py-2 pl-9 text-sm text-white placeholder-secondary-400 focus:outline-none focus:border-accent-500 transition-colors"
         />
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-secondary-400">
@@ -54,11 +57,41 @@ const sortedCategories = categoryOrder.filter(cat => pagesByCategory[cat]);
       </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="wiki-nav">
-      {sortedCategories.map(category => {
-        const categoryPages = pagesByCategory[category] || [];
-        if (categoryPages.length === 0) return null;
+    <!-- Recent Posts Section -->
+    <div class="mb-8">
+      <h3 class="text-lg font-semibold text-white mb-4">Recent Posts</h3>
+      <div class="space-y-2">
+        {recentPosts.map(post => (
+          <a 
+            href={`/blog/${post.slug}`}
+            class={`recent-post-link block p-3 text-sm rounded-lg transition-all duration-200 hover:bg-secondary-800/50 hover:text-accent-400 ${
+              currentSlug === post.slug 
+                ? 'bg-accent-500/20 text-accent-400 border-l-2 border-accent-500' 
+                : 'text-secondary-300'
+            }`}
+            data-post-title={post.data.title.toLowerCase()}
+            data-post-tags={post.data.tags.join(' ').toLowerCase()}
+            data-post-description={post.data.description.toLowerCase()}
+          >
+            <div class="font-medium truncate">{post.data.title}</div>
+            <div class="text-xs text-secondary-400 mt-1">
+              {new Date(post.data.pubDate).toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                year: 'numeric'
+              })}
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- Categories Navigation -->
+    <nav class="blog-nav">
+      <h3 class="text-lg font-semibold text-white mb-4">Categories</h3>
+      {categories.map(category => {
+        const categoryPosts = postsByCategory[category] || [];
+        if (categoryPosts.length === 0) return null;
         
         return (
           <div class="category-group mb-4" data-category={category}>
@@ -71,7 +104,7 @@ const sortedCategories = categoryOrder.filter(cat => pagesByCategory[cat]);
                   {category}
                 </span>
                 <span class="text-xs text-secondary-400 ml-1">
-                  ({categoryPages.length})
+                  ({categoryPosts.length})
                 </span>
               </div>
               <svg 
@@ -88,19 +121,26 @@ const sortedCategories = categoryOrder.filter(cat => pagesByCategory[cat]);
               </svg>
             </button>
             
-            <div class="category-pages ml-4 mt-2 space-y-1 max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-              {categoryPages.map(page => (
+            <div class="category-posts ml-4 mt-2 space-y-1 max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+              {categoryPosts.map(post => (
                 <a 
-                  href={`/wiki/${page.slug}`}
-                  class={`page-link block p-2 text-sm rounded-lg transition-all duration-200 hover:bg-secondary-800/50 hover:text-accent-400 ${
-                    currentSlug === page.slug 
+                  href={`/blog/${post.slug}`}
+                  class={`post-link block p-2 text-sm rounded-lg transition-all duration-200 hover:bg-secondary-800/50 hover:text-accent-400 ${
+                    currentSlug === post.slug 
                       ? 'bg-accent-500/20 text-accent-400 border-l-2 border-accent-500' 
                       : 'text-secondary-300'
                   }`}
-                  data-page-title={page.data.title.toLowerCase()}
-                  data-page-tags={page.data.tags.join(' ').toLowerCase()}
+                  data-post-title={post.data.title.toLowerCase()}
+                  data-post-tags={post.data.tags.join(' ').toLowerCase()}
+                  data-post-description={post.data.description.toLowerCase()}
                 >
-                  <span class="truncate">{page.data.title}</span>
+                  <div class="truncate font-medium">{post.data.title}</div>
+                  <div class="text-xs text-secondary-400 mt-1">
+                    {new Date(post.data.pubDate).toLocaleDateString('en-US', { 
+                      month: 'short', 
+                      day: 'numeric'
+                    })}
+                  </div>
                 </a>
               ))}
             </div>
@@ -115,7 +155,15 @@ const sortedCategories = categoryOrder.filter(cat => pagesByCategory[cat]);
         <circle cx="11" cy="11" r="8"></circle>
         <path d="m21 21-4.35-4.35"></path>
       </svg>
-      <p class="text-secondary-400 text-sm">No pages found</p>
+      <p class="text-secondary-400 text-sm">No posts found</p>
+    </div>
+
+    <!-- Blog Stats -->
+    <div class="mt-8 pt-6 border-t border-secondary-800">
+      <div class="text-center">
+        <div class="text-2xl font-bold text-white">{allBlogPosts.length}</div>
+        <div class="text-sm text-secondary-400">Total Posts</div>
+      </div>
     </div>
   </div>
 </aside>
@@ -124,18 +172,19 @@ const sortedCategories = categoryOrder.filter(cat => pagesByCategory[cat]);
   document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('sidebar-search');
     const categoryGroups = document.querySelectorAll('.category-group');
+    const recentPosts = document.querySelectorAll('.recent-post-link');
     const noResultsMessage = document.getElementById('no-sidebar-results');
     const categoryToggles = document.querySelectorAll('.category-toggle');
 
     // Initialize category states (all expanded by default)
     function initializeCategoryStates() {
       categoryGroups.forEach(group => {
-        const categoryPages = group.querySelector('.category-pages');
+        const categoryPosts = group.querySelector('.category-posts');
         const chevron = group.querySelector('.category-chevron');
         
-        if (categoryPages && chevron) {
+        if (categoryPosts && chevron) {
           // Expand all categories by default
-          categoryPages.style.maxHeight = categoryPages.scrollHeight + 'px';
+          categoryPosts.style.maxHeight = categoryPosts.scrollHeight + 'px';
           chevron.style.transform = 'rotate(180deg)';
           group.setAttribute('data-expanded', 'true');
         }
@@ -147,21 +196,21 @@ const sortedCategories = categoryOrder.filter(cat => pagesByCategory[cat]);
       categoryToggles.forEach(toggle => {
         toggle.addEventListener('click', function() {
           const group = this.closest('.category-group');
-          const categoryPages = group?.querySelector('.category-pages');
+          const categoryPosts = group?.querySelector('.category-posts');
           const chevron = group?.querySelector('.category-chevron');
           
-          if (!group || !categoryPages || !chevron) return;
+          if (!group || !categoryPosts || !chevron) return;
           
           const isExpanded = group.getAttribute('data-expanded') === 'true';
           
           if (isExpanded) {
             // Collapse
-            categoryPages.style.maxHeight = '0px';
+            categoryPosts.style.maxHeight = '0px';
             chevron.style.transform = 'rotate(0deg)';
             group.setAttribute('data-expanded', 'false');
           } else {
             // Expand
-            categoryPages.style.maxHeight = categoryPages.scrollHeight + 'px';
+            categoryPosts.style.maxHeight = categoryPosts.scrollHeight + 'px';
             chevron.style.transform = 'rotate(180deg)';
             group.setAttribute('data-expanded', 'true');
           }
@@ -178,57 +227,84 @@ const sortedCategories = categoryOrder.filter(cat => pagesByCategory[cat]);
         let hasVisibleResults = false;
 
         if (searchTerm === '') {
-          // Show all categories and pages
+          // Show all categories and posts
           categoryGroups.forEach(group => {
             group.style.display = 'block';
-            const pages = group.querySelectorAll('.page-link');
-            pages.forEach(page => {
-              page.style.display = 'block';
+            const posts = group.querySelectorAll('.post-link');
+            posts.forEach(post => {
+              post.style.display = 'block';
             });
             
             // Restore expanded state
-            const categoryPages = group.querySelector('.category-pages');
+            const categoryPosts = group.querySelector('.category-posts');
             const chevron = group.querySelector('.category-chevron');
-            if (categoryPages && chevron) {
-              categoryPages.style.maxHeight = categoryPages.scrollHeight + 'px';
+            if (categoryPosts && chevron) {
+              categoryPosts.style.maxHeight = categoryPosts.scrollHeight + 'px';
               chevron.style.transform = 'rotate(180deg)';
               group.setAttribute('data-expanded', 'true');
             }
           });
+
+          // Show all recent posts
+          recentPosts.forEach(post => {
+            post.style.display = 'block';
+          });
+
           hasVisibleResults = true;
         } else {
-          // Filter pages based on search term
+          // Filter posts based on search term
           categoryGroups.forEach(group => {
-            const pages = group.querySelectorAll('.page-link');
-            let categoryHasVisiblePages = false;
+            const posts = group.querySelectorAll('.post-link');
+            let categoryHasVisiblePosts = false;
 
-            pages.forEach(page => {
-              const title = page.getAttribute('data-page-title') || '';
-              const tags = page.getAttribute('data-page-tags') || '';
+            posts.forEach(post => {
+              const title = post.getAttribute('data-post-title') || '';
+              const tags = post.getAttribute('data-post-tags') || '';
+              const description = post.getAttribute('data-post-description') || '';
               
-              const isMatch = title.includes(searchTerm) || tags.includes(searchTerm);
+              const isMatch = title.includes(searchTerm) || 
+                             tags.includes(searchTerm) || 
+                             description.includes(searchTerm);
 
               if (isMatch) {
-                page.style.display = 'block';
-                categoryHasVisiblePages = true;
+                post.style.display = 'block';
+                categoryHasVisiblePosts = true;
                 hasVisibleResults = true;
               } else {
-                page.style.display = 'none';
+                post.style.display = 'none';
               }
             });
 
-            if (categoryHasVisiblePages) {
+            if (categoryHasVisiblePosts) {
               group.style.display = 'block';
-              // Expand category to show matching pages
-              const categoryPages = group.querySelector('.category-pages');
+              // Expand category to show matching posts
+              const categoryPosts = group.querySelector('.category-posts');
               const chevron = group.querySelector('.category-chevron');
-              if (categoryPages && chevron) {
-                categoryPages.style.maxHeight = categoryPages.scrollHeight + 'px';
+              if (categoryPosts && chevron) {
+                categoryPosts.style.maxHeight = categoryPosts.scrollHeight + 'px';
                 chevron.style.transform = 'rotate(180deg)';
                 group.setAttribute('data-expanded', 'true');
               }
             } else {
               group.style.display = 'none';
+            }
+          });
+
+          // Filter recent posts
+          recentPosts.forEach(post => {
+            const title = post.getAttribute('data-post-title') || '';
+            const tags = post.getAttribute('data-post-tags') || '';
+            const description = post.getAttribute('data-post-description') || '';
+            
+            const isMatch = title.includes(searchTerm) || 
+                           tags.includes(searchTerm) || 
+                           description.includes(searchTerm);
+
+            if (isMatch) {
+              post.style.display = 'block';
+              hasVisibleResults = true;
+            } else {
+              post.style.display = 'none';
             }
           });
         }
@@ -266,31 +342,31 @@ const sortedCategories = categoryOrder.filter(cat => pagesByCategory[cat]);
 </script>
 
 <style>
-  .wiki-sidebar {
+  .blog-sidebar {
     /* Custom scrollbar */
     scrollbar-width: thin;
     scrollbar-color: theme('colors.secondary.700') theme('colors.secondary.900');
   }
 
-  .wiki-sidebar::-webkit-scrollbar {
+  .blog-sidebar::-webkit-scrollbar {
     width: 6px;
   }
 
-  .wiki-sidebar::-webkit-scrollbar-track {
+  .blog-sidebar::-webkit-scrollbar-track {
     background: theme('colors.secondary.900');
   }
 
-  .wiki-sidebar::-webkit-scrollbar-thumb {
+  .blog-sidebar::-webkit-scrollbar-thumb {
     background: theme('colors.secondary.700');
     border-radius: 3px;
   }
 
-  .wiki-sidebar::-webkit-scrollbar-thumb:hover {
+  .blog-sidebar::-webkit-scrollbar-thumb:hover {
     background: theme('colors.secondary.600');
   }
 
   /* Smooth transitions for category expansion */
-  .category-pages {
+  .category-posts {
     transition: max-height 0.3s ease-in-out;
   }
 
@@ -309,7 +385,8 @@ const sortedCategories = categoryOrder.filter(cat => pagesByCategory[cat]);
     outline-offset: 2px;
   }
 
-  .page-link:focus {
+  .post-link:focus,
+  .recent-post-link:focus {
     outline: 2px solid theme('colors.accent.500');
     outline-offset: 2px;
   }

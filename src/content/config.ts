@@ -31,23 +31,8 @@ const aboutCollection = defineCollection({
   }),
 });
 
-// Define the schema for wiki content
-const wikiCollection = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    category: z.string(),
-    tags: z.array(z.string()),
-    lastUpdated: z.date(),
-    featured: z.boolean().default(false),
-    difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
-  }),
-});
-
 // Export the collections
 export const collections = {
   'blog': blogCollection,
   'about': aboutCollection,
-  'wiki': wikiCollection,
 };
