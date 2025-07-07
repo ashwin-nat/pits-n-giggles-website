@@ -7,7 +7,7 @@ authorDescription: 'Sim racer'
 image:
   url: '/blog_assets/f1-telemetry-setup/thumbnail.png'
   alt: 'Racing sim setup with telemetry on screen'
-tags: ['pits-n-giggles', 'telemetry', 'udp', 'setup', 'f1-25']
+tags: ['setup', 'telemetry', 'udp', 'pits-n-giggles', 'f1-25']
 ---
 
 # Setting Up *Pits n' Giggles*

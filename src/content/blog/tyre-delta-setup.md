@@ -7,7 +7,7 @@ authorDescription: 'Sim racer'
 image:
   url: '/blog_assets/tyre-delta-feature/thumbnail.png'
   alt: 'F1 telemetry dashboard showing tyre delta data'
-tags: ['pits-n-giggles', 'telemetry', 'udp', 'f1-25', 'f1-telemetry', 'tyre-strategy', 'pit-stop', 'sim-racing']
+tags: ['features', 'telemetry', 'udp', 'f1-25', 'f1-telemetry', 'tyre-strategy', 'pit-stop', 'sim-racing']
 ---
 
 # Smart Pit Stops with Tyre Delta in **Pits n' Giggles**

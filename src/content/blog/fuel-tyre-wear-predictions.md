@@ -7,7 +7,7 @@ authorDescription: 'Developer'
 image:
   url: '/blog_assets/fuel-tyre-prediction/thumbnail.png'
   alt: 'Racing sim setup with telemetry on screen'
-tags: ['pits-n-giggles', 'telemetry', 'udp', 'f1-25', 'f1-telemetry', 'tyre-strategy', 'pit-stop', 'sim-racing']
+tags: ['features', 'telemetry', 'udp', 'f1-25', 'f1-telemetry', 'tyre-strategy', 'pit-stop', 'sim-racing']
 ---
 
 
