@@ -1,18 +1,29 @@
 ---
 import WikiLayout from '../../layouts/WikiLayout.astro';
-import { wikiPages, wikiCategories } from '../../data/wiki';
+import { getCollection } from 'astro:content';
+
+// Get all wiki pages from content collection
+const allWikiPages = await getCollection('wiki');
 
 // Get some stats for the intro page
-const totalPages = wikiPages.length;
-const featuredPages = wikiPages.filter(page => page.featured);
-const recentPages = [...wikiPages]
-  .sort((a, b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime())
+const totalPages = allWikiPages.length;
+const featuredPages = allWikiPages.filter(page => page.data.featured);
+const recentPages = [...allWikiPages]
+  .sort((a, b) => new Date(b.data.lastUpdated).getTime() - new Date(a.data.lastUpdated).getTime())
   .slice(0, 3);
 
-// Get page count for each category
-const categoryCounts = wikiCategories.map(category => ({
+// Define categories and get counts
+const categories = [
+  { name: 'Getting Started', description: 'Essential guides for new users' },
+  { name: 'Configuration', description: 'Setup and configuration guides' },
+  { name: 'Features', description: 'Detailed feature explanations' },
+  { name: 'Troubleshooting', description: 'Common issues and solutions' },
+  { name: 'Advanced', description: 'Advanced topics and techniques' }
+];
+
+const categoryCounts = categories.map(category => ({
   ...category,
-  count: wikiPages.filter(page => page.category === category.name).length
+  count: allWikiPages.filter(page => page.data.category === category.name).length
 }));
 ---
 
@@ -44,7 +55,7 @@ const categoryCounts = wikiCategories.map(category => ({
             <path d="M3 12h18"></path>
             <path d="M3 18h18"></path>
           </svg>
-          <span>{wikiCategories.length} categories</span>
+          <span>{categories.length} categories</span>
         </div>
         <div class="flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-accent-500">
@@ -113,17 +124,17 @@ const categoryCounts = wikiCategories.map(category => ({
             <a href={`/wiki/${page.slug}`} class="block p-6 bg-secondary-900/50 border border-secondary-800 rounded-lg hover:border-secondary-700 transition-all duration-200 group no-underline">
               <div class="flex items-start justify-between mb-3">
                 <span class="text-xs px-2 py-1 bg-secondary-800 text-secondary-300 rounded">
-                  {page.category}
+                  {page.data.category}
                 </span>
                 <span class="bg-accent-500 text-white text-xs px-2 py-1 rounded">
                   Featured
                 </span>
               </div>
               <h3 class="text-lg font-semibold text-white mb-2 group-hover:text-accent-400 transition-colors">
-                {page.title}
+                {page.data.title}
               </h3>
               <p class="text-secondary-300 text-sm">
-                {page.description}
+                {page.data.description}
               </p>
             </a>
           ))}
@@ -144,10 +155,7 @@ const categoryCounts = wikiCategories.map(category => ({
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {categoryCounts.map(category => (
           <div class="p-4 bg-secondary-900/50 border border-secondary-800 rounded-lg">
-            <div class="flex items-center gap-3 mb-2">
-              <span class={category.color} set:html={category.icon}></span>
-              <h3 class="font-semibold text-white">{category.name}</h3>
-            </div>
+            <h3 class="font-semibold text-white mb-2">{category.name}</h3>
             <p class="text-sm text-secondary-300 mb-2">{category.description}</p>
             <p class="text-xs text-secondary-400">
               {category.count} {category.count === 1 ? 'page' : 'pages'}
@@ -171,12 +179,12 @@ const categoryCounts = wikiCategories.map(category => ({
           <a href={`/wiki/${page.slug}`} class="flex items-center justify-between p-4 bg-secondary-900/50 border border-secondary-800 rounded-lg hover:border-secondary-700 transition-colors group no-underline">
             <div>
               <h3 class="font-medium text-white group-hover:text-accent-400 transition-colors">
-                {page.title}
+                {page.data.title}
               </h3>
-              <p class="text-sm text-secondary-400">{page.category}</p>
+              <p class="text-sm text-secondary-400">{page.data.category}</p>
             </div>
             <span class="text-xs text-secondary-400">
-              {new Date(page.lastUpdated).toLocaleDateString()}
+              {new Date(page.data.lastUpdated).toLocaleDateString()}
             </span>
           </a>
         ))}

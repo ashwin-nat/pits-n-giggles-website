@@ -1,5 +1,5 @@
 ---
-import { wikiPages, wikiCategories } from '../data/wiki';
+import { getCollection } from 'astro:content';
 
 interface Props {
   currentSlug?: string;
@@ -7,19 +7,27 @@ interface Props {
 
 const { currentSlug } = Astro.props;
 
+// Get all wiki pages from content collection
+const allWikiPages = await getCollection('wiki');
+
 // Group pages by category
-const pagesByCategory = wikiPages.reduce((acc, page) => {
-  if (!acc[page.category]) {
-    acc[page.category] = [];
+const pagesByCategory = allWikiPages.reduce((acc, page) => {
+  const category = page.data.category;
+  if (!acc[category]) {
+    acc[category] = [];
   }
-  acc[page.category].push(page);
+  acc[category].push(page);
   return acc;
-}, {} as Record<string, typeof wikiPages>);
+}, {} as Record<string, typeof allWikiPages>);
 
 // Sort pages within each category by title
 Object.keys(pagesByCategory).forEach(category => {
-  pagesByCategory[category].sort((a, b) => a.title.localeCompare(b.title));
+  pagesByCategory[category].sort((a, b) => a.data.title.localeCompare(b.data.title));
 });
+
+// Define category order
+const categoryOrder = ['Getting Started', 'Configuration', 'Features', 'Troubleshooting', 'Advanced'];
+const sortedCategories = categoryOrder.filter(cat => pagesByCategory[cat]);
 ---
 
 <aside class="wiki-sidebar w-80 flex-shrink-0 bg-secondary-950/50 backdrop-blur-sm border-r border-secondary-800 h-screen sticky top-0 overflow-y-auto">
@@ -48,20 +56,19 @@ Object.keys(pagesByCategory).forEach(category => {
 
     <!-- Navigation -->
     <nav class="wiki-nav">
-      {wikiCategories.map(category => {
-        const categoryPages = pagesByCategory[category.name] || [];
+      {sortedCategories.map(category => {
+        const categoryPages = pagesByCategory[category] || [];
         if (categoryPages.length === 0) return null;
         
         return (
-          <div class="category-group mb-4" data-category={category.name}>
+          <div class="category-group mb-4" data-category={category}>
             <button 
               class="category-toggle w-full flex items-center justify-between p-2 text-left hover:bg-secondary-800/50 rounded-lg transition-colors group"
-              data-category={category.name}
+              data-category={category}
             >
               <div class="flex items-center gap-2">
-                <span class={`${category.color} transition-transform duration-200`} set:html={category.icon}></span>
                 <span class="font-medium text-white group-hover:text-accent-400 transition-colors">
-                  {category.name}
+                  {category}
                 </span>
                 <span class="text-xs text-secondary-400 ml-1">
                   ({categoryPages.length})
@@ -81,7 +88,7 @@ Object.keys(pagesByCategory).forEach(category => {
               </svg>
             </button>
             
-            <div class="category-pages ml-6 mt-2 space-y-1 max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+            <div class="category-pages ml-4 mt-2 space-y-1 max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
               {categoryPages.map(page => (
                 <a 
                   href={`/wiki/${page.slug}`}
@@ -90,28 +97,10 @@ Object.keys(pagesByCategory).forEach(category => {
                       ? 'bg-accent-500/20 text-accent-400 border-l-2 border-accent-500' 
                       : 'text-secondary-300'
                   }`}
-                  data-page-title={page.title.toLowerCase()}
-                  data-page-tags={page.tags.join(' ').toLowerCase()}
+                  data-page-title={page.data.title.toLowerCase()}
+                  data-page-tags={page.data.tags.join(' ').toLowerCase()}
                 >
-                  <div class="flex items-center justify-between">
-                    <span class="truncate">{page.title}</span>
-                    {page.featured && (
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="text-accent-500 flex-shrink-0 ml-1">
-                        <polygon points="12 2 15.09 8.26 22 9 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9 8.91 8.26 12 2"></polygon>
-                      </svg>
-                    )}
-                  </div>
-                  {page.difficulty && (
-                    <div class="mt-1">
-                      <span class={`text-xs px-1.5 py-0.5 rounded ${
-                        page.difficulty === 'beginner' ? 'bg-green-500/20 text-green-400' :
-                        page.difficulty === 'intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
-                        'bg-red-500/20 text-red-400'
-                      }`}>
-                        {page.difficulty}
-                      </span>
-                    </div>
-                  )}
+                  <span class="truncate">{page.data.title}</span>
                 </a>
               ))}
             </div>
@@ -303,13 +292,6 @@ Object.keys(pagesByCategory).forEach(category => {
   /* Smooth transitions for category expansion */
   .category-pages {
     transition: max-height 0.3s ease-in-out;
-  }
-
-  /* Active page styling */
-  .page-link.active {
-    background-color: rgba(0, 144, 255, 0.2);
-    color: theme('colors.accent.400');
-    border-left: 2px solid theme('colors.accent.500');
   }
 
   /* Hover effects */
