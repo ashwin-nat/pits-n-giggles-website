@@ -15,10 +15,10 @@ const sortedPosts = allBlogPosts.sort((a, b) =>
   new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
 );
 
-// Group posts by category (using tags as categories)
+// Group posts by category (using the category field)
 const postsByCategory = sortedPosts.reduce((acc, post) => {
-  // Use the first tag as the primary category, or 'General' if no tags
-  const category = post.data.tags[0] || 'General';
+  // Use the category field, or 'General' if not specified
+  const category = post.data.category || 'General';
   if (!acc[category]) {
     acc[category] = [];
   }
