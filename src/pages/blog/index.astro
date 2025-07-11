@@ -29,16 +29,42 @@ const sortedPosts = allPosts.sort((a, b) =>
       <div class="lg:hidden mb-8">
         <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
           <h3 class="text-lg font-semibold text-white mb-4">Categories</h3>
+          <div class="mb-4">
+            <button 
+              id="show-all-posts" 
+              class="category-filter-btn active px-3 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 transition-colors text-sm font-medium"
+              data-category="all"
+            >
+              All Posts
+            </button>
+          </div>
           <div id="mobile-categories" class="space-y-2">
             <!-- Categories will be populated by JavaScript -->
           </div>
         </div>
       </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {sortedPosts.map(post => (
-          <BlogPostCard post={post} />
+          <div class="blog-post-item" data-category={post.data.category}>
+            <BlogPostCard post={post} />
+          </div>
         ))}
+      </div>
+      
+      <!-- No posts message -->
+      <div id="no-posts-message" class="hidden bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-8 text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-secondary-600">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <h3 class="text-xl font-semibold mb-2">No Posts Found</h3>
+        <p class="text-secondary-400 font-body">
+          No posts found in this category.
+        </p>
       </div>
       
       {sortedPosts.length === 0 && (
@@ -62,12 +88,12 @@ const sortedPosts = allPosts.sort((a, b) =>
   <!-- Mobile Categories Script -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Get all blog posts and extract categories
-      const posts = Array.from(document.querySelectorAll('[data-category]'));
+      // Get all blog post items and extract categories
+      const postItems = Array.from(document.querySelectorAll('.blog-post-item[data-category]'));
       const categories = {};
       
-      posts.forEach(post => {
-        const category = post.getAttribute('data-category');
+      postItems.forEach(postItem => {
+        const category = postItem.getAttribute('data-category');
         if (category) {
           if (!categories[category]) {
             categories[category] = 0;
@@ -83,14 +109,80 @@ const sortedPosts = allPosts.sort((a, b) =>
       const mobileContainer = document.getElementById('mobile-categories');
       if (mobileContainer && sortedCategories.length > 0) {
         mobileContainer.innerHTML = sortedCategories.map(category => `
-          <div class="category-item p-3 bg-secondary-800/50 rounded-lg hover:bg-secondary-700/50 transition-colors">
+          <button class="category-filter-btn w-full text-left p-3 bg-secondary-800/50 rounded-lg hover:bg-secondary-700/50 transition-colors" data-category="${category}">
             <div class="flex items-center justify-between">
               <span class="font-medium text-white">${category}</span>
               <span class="text-xs text-secondary-400">(${categories[category]})</span>
             </div>
-          </div>
+          </button>
         `).join('');
+        
+        // Add click handlers to category buttons
+        setupCategoryFiltering();
+      }
+      
+      // Setup filtering functionality
+      function setupCategoryFiltering() {
+        const categoryButtons = document.querySelectorAll('.category-filter-btn');
+        const postsGrid = document.getElementById('posts-grid');
+        const noPostsMessage = document.getElementById('no-posts-message');
+        
+        categoryButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const selectedCategory = this.getAttribute('data-category');
+            
+            // Update active button
+            categoryButtons.forEach(btn => {
+              btn.classList.remove('active', 'bg-accent-500', 'text-white');
+              btn.classList.add('bg-secondary-800/50', 'text-white');
+            });
+            
+            this.classList.add('active', 'bg-accent-500');
+            this.classList.remove('bg-secondary-800/50');
+            
+            // Filter posts
+            filterPosts(selectedCategory);
+          });
+        });
+      }
+      
+      function filterPosts(category) {
+        const postItems = document.querySelectorAll('.blog-post-item');
+        const postsGrid = document.getElementById('posts-grid');
+        const noPostsMessage = document.getElementById('no-posts-message');
+        let visibleCount = 0;
+        
+        postItems.forEach(postItem => {
+          const postCategory = postItem.getAttribute('data-category');
+          
+          if (category === 'all' || postCategory === category) {
+            postItem.style.display = 'block';
+            visibleCount++;
+          } else {
+            postItem.style.display = 'none';
+          }
+        });
+        
+        // Show/hide no posts message
+        if (visibleCount === 0) {
+          postsGrid.style.display = 'none';
+          noPostsMessage.style.display = 'block';
+        } else {
+          postsGrid.style.display = 'grid';
+          noPostsMessage.style.display = 'none';
+        }
       }
     });
   </script>
+  
+  <style>
+    .category-filter-btn.active {
+      background-color: theme('colors.accent.500') !important;
+      color: white !important;
+    }
+    
+    .category-filter-btn:hover:not(.active) {
+      background-color: theme('colors.secondary.700') !important;
+    }
+  </style>
 </BlogLayout>
