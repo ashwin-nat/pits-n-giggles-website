@@ -33,7 +33,7 @@ const categories = Object.keys(postsByCategory).sort();
 const recentPosts = sortedPosts.slice(0, 5);
 ---
 
-<aside class="blog-sidebar w-80 flex-shrink-0 bg-secondary-950/50 backdrop-blur-sm border-r border-secondary-800 h-screen sticky top-0 overflow-y-auto">
+<aside class="blog-sidebar w-80 flex-shrink-0 bg-secondary-950/50 backdrop-blur-sm border-r border-secondary-800 h-screen sticky top-0 overflow-y-auto lg:block hidden">
   <div class="p-6">
     <!-- Blog Header -->
     <div class="mb-8">
@@ -42,7 +42,7 @@ const recentPosts = sortedPosts.slice(0, 5);
     </div>
 
     <!-- Search -->
-    <div class="mb-6">
+    <div class="mb-6 hidden lg:block">
       <div class="relative">
         <input
           type="text"
@@ -58,7 +58,7 @@ const recentPosts = sortedPosts.slice(0, 5);
     </div>
 
     <!-- Recent Posts Section -->
-    <div class="mb-8">
+    <div class="mb-8 hidden lg:block">
       <h3 class="text-lg font-semibold text-white mb-4">Recent Posts</h3>
       <div class="space-y-2">
         {recentPosts.map(post => (
@@ -87,7 +87,7 @@ const recentPosts = sortedPosts.slice(0, 5);
     </div>
 
     <!-- Categories Navigation -->
-    <nav class="blog-nav">
+    <nav class="blog-nav lg:block hidden">
       <h3 class="text-lg font-semibold text-white mb-4">Categories</h3>
       {categories.map(category => {
         const categoryPosts = postsByCategory[category] || [];
@@ -150,7 +150,7 @@ const recentPosts = sortedPosts.slice(0, 5);
     </nav>
 
     <!-- No Results Message -->
-    <div id="no-sidebar-results" class="hidden text-center py-8">
+    <div id="no-sidebar-results" class="hidden text-center py-8 lg:block">
       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-3 text-secondary-600">
         <circle cx="11" cy="11" r="8"></circle>
         <path d="m21 21-4.35-4.35"></path>
@@ -159,7 +159,7 @@ const recentPosts = sortedPosts.slice(0, 5);
     </div>
 
     <!-- Blog Stats -->
-    <div class="mt-8 pt-6 border-t border-secondary-800">
+    <div class="mt-8 pt-6 border-t border-secondary-800 hidden lg:block">
       <div class="text-center">
         <div class="text-2xl font-bold text-white">{allBlogPosts.length}</div>
         <div class="text-sm text-secondary-400">Total Posts</div>

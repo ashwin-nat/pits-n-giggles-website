@@ -13,6 +13,7 @@ const sortedPosts = allPosts.sort((a, b) =>
 <BlogLayout 
   title="Blog" 
   description="Read the latest news, tutorials, and insights about sim racing telemetry and Pits n' Giggles."
+  showMobileCategories={true}
 >
   <section class="pt-16 pb-12">
     <div class="container mx-auto px-4">
@@ -22,6 +23,16 @@ const sortedPosts = allPosts.sort((a, b) =>
         <p class="text-secondary-300 font-body">
           Stay up to date with the latest news, tutorials, and insights about sim racing telemetry and how to get the most out of Pits n' Giggles.
         </p>
+      </div>
+      
+      <!-- Mobile Categories (only on blog index) -->
+      <div class="lg:hidden mb-8">
+        <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-white mb-4">Categories</h3>
+          <div id="mobile-categories" class="space-y-2">
+            <!-- Categories will be populated by JavaScript -->
+          </div>
+        </div>
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -47,4 +58,39 @@ const sortedPosts = allPosts.sort((a, b) =>
       )}
     </div>
   </section>
+  
+  <!-- Mobile Categories Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get all blog posts and extract categories
+      const posts = Array.from(document.querySelectorAll('[data-category]'));
+      const categories = {};
+      
+      posts.forEach(post => {
+        const category = post.getAttribute('data-category');
+        if (category) {
+          if (!categories[category]) {
+            categories[category] = 0;
+          }
+          categories[category]++;
+        }
+      });
+      
+      // Sort categories alphabetically
+      const sortedCategories = Object.keys(categories).sort();
+      
+      // Populate mobile categories
+      const mobileContainer = document.getElementById('mobile-categories');
+      if (mobileContainer && sortedCategories.length > 0) {
+        mobileContainer.innerHTML = sortedCategories.map(category => `
+          <div class="category-item p-3 bg-secondary-800/50 rounded-lg hover:bg-secondary-700/50 transition-colors">
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-white">${category}</span>
+              <span class="text-xs text-secondary-400">(${categories[category]})</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    });
+  </script>
 </BlogLayout>

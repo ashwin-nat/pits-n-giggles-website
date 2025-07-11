@@ -6,9 +6,10 @@ interface Props {
   title: string;
   description?: string;
   currentSlug?: string;
+  showMobileCategories?: boolean;
 }
 
-const { title, description, currentSlug } = Astro.props;
+const { title, description, currentSlug, showMobileCategories = false } = Astro.props;
 ---
 
 <Layout title={title} description={description}>
