@@ -4,7 +4,7 @@ description: "Use real-time F1 25 telemetry to make better pit decisions with th
 pubDate: 2025-06-01
 author: 'Ashwin Natarajan'
 authorDescription: 'Sim racer'
-category: 'Feature Guide'
+category: 'Features'
 image:
   url: '/blog_assets/tyre-delta-feature/thumbnail.png'
   alt: 'F1 telemetry dashboard showing tyre delta data'
