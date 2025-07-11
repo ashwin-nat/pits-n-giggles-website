@@ -4,10 +4,11 @@ description: "Use real-time F1 25 telemetry to make better pit decisions with th
 pubDate: 2025-06-01
 author: 'Ashwin Natarajan'
 authorDescription: 'Sim racer'
+category: 'Features'
 image:
   url: '/blog_assets/tyre-delta-feature/thumbnail.png'
   alt: 'F1 telemetry dashboard showing tyre delta data'
-tags: ['pits-n-giggles', 'telemetry', 'udp', 'f1-25', 'f1-telemetry', 'tyre-strategy', 'pit-stop', 'sim-racing']
+tags: ['features', 'telemetry', 'udp', 'f1-25', 'f1-telemetry', 'tyre-strategy', 'pit-stop', 'sim-racing']
 ---
 
 # Smart Pit Stops with Tyre Delta in **Pits n' Giggles**

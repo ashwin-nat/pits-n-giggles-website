@@ -4,10 +4,11 @@ description: 'Learn how to interpret telemetry data and use it to improve your l
 pubDate: 2025-05-05
 author: 'Ashwin Natarajan'
 authorDescription: 'Developer'
+category: 'Development'
 image:
   url: '/blog_assets/capturing-replaying-data/thumbnail.png'
   alt: 'Racing sim setup with telemetry on screen'
-tags: ['pits-n-giggles', 'telemetry', 'tech', 'udp', 'binary']
+tags: ['development', 'telemetry', 'tech', 'udp', 'binary']
 ---
 
 # Smarter Telemetry Debugging for *Pits n' Giggles*

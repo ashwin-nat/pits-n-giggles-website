@@ -4,10 +4,11 @@ description: "Learn how to setup Pits n' Giggles with any F1 game."
 pubDate: 2025-06-01
 author: 'Ashwin Natarajan'
 authorDescription: 'Sim racer'
+category: 'App Setup'
 image:
   url: '/blog_assets/f1-telemetry-setup/thumbnail.png'
   alt: 'Racing sim setup with telemetry on screen'
-tags: ['pits-n-giggles', 'telemetry', 'udp', 'setup', 'f1-25']
+tags: ['setup', 'telemetry', 'udp', 'pits-n-giggles', 'f1-25']
 ---
 
 # Setting Up *Pits n' Giggles*

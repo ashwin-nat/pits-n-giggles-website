@@ -4,10 +4,11 @@ description: "How Pits n' Giggles predicts tyre wear and fuel in real-time"
 pubDate: 2025-07-03
 author: 'Ashwin Natarajan'
 authorDescription: 'Developer'
+category: 'Features'
 image:
   url: '/blog_assets/fuel-tyre-prediction/thumbnail.png'
   alt: 'Racing sim setup with telemetry on screen'
-tags: ['pits-n-giggles', 'telemetry', 'udp', 'f1-25', 'f1-telemetry', 'tyre-strategy', 'pit-stop', 'sim-racing']
+tags: ['features', 'telemetry', 'udp', 'f1-25', 'f1-telemetry', 'tyre-strategy', 'pit-stop', 'sim-racing']
 ---
 
 

@@ -22,7 +22,7 @@ const { post } = Astro.props;
 const formattedDate = dayjs(post.data.pubDate).format('MMMM D, YYYY');
 ---
 
-<article class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-card hover:border-secondary-700 group prose prose-slate dark:prose-invert max-w-none">
+<article class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-card hover:border-secondary-700 group prose prose-slate dark:prose-invert max-w-none" data-category={post.data.category}>
   <a href={`/blog/${post.slug}`} class="block no-underline">
     <div class="relative h-48 overflow-hidden">
       <img
