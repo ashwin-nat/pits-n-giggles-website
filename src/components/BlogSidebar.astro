@@ -72,6 +72,7 @@ const recentPosts = sortedPosts.slice(0, 5);
             data-post-title={post.data.title.toLowerCase()}
             data-post-tags={post.data.tags.join(' ').toLowerCase()}
             data-post-description={post.data.description.toLowerCase()}
+            data-tooltip={post.data.title}
           >
             <div class="font-medium truncate">{post.data.title}</div>
             <div class="text-xs text-secondary-400 mt-1">
@@ -108,7 +109,7 @@ const recentPosts = sortedPosts.slice(0, 5);
                 </span>
               </div>
               <svg 
-                class="category-chevron w-4 h-4 text-secondary-400 transition-transform duration-200" 
+                class="category-chevron w-4 h-4 text-secondary-400 transition-transform duration-200"
                 xmlns="http://www.w3.org/2000/svg" 
                 viewBox="0 0 24 24" 
                 fill="none" 
@@ -125,7 +126,7 @@ const recentPosts = sortedPosts.slice(0, 5);
               {categoryPosts.map(post => (
                 <a 
                   href={`/blog/${post.slug}`}
-                  class={`post-link block p-2 text-sm rounded-lg transition-all duration-200 hover:bg-secondary-800/50 hover:text-accent-400 ${
+                  class={`post-link block p-2 text-sm rounded-lg transition-all duration-200 hover:bg-secondary-800/50 hover:text-accent-400 relative ${
                     currentSlug === post.slug 
                       ? 'bg-accent-500/20 text-accent-400 border-l-2 border-accent-500' 
                       : 'text-secondary-300'
@@ -133,6 +134,7 @@ const recentPosts = sortedPosts.slice(0, 5);
                   data-post-title={post.data.title.toLowerCase()}
                   data-post-tags={post.data.tags.join(' ').toLowerCase()}
                   data-post-description={post.data.description.toLowerCase()}
+                  data-tooltip={post.data.title}
                 >
                   <div class="truncate font-medium">{post.data.title}</div>
                   <div class="text-xs text-secondary-400 mt-1">
@@ -183,10 +185,10 @@ const recentPosts = sortedPosts.slice(0, 5);
         const chevron = group.querySelector('.category-chevron');
         
         if (categoryPosts && chevron) {
-          // Expand all categories by default
-          categoryPosts.style.maxHeight = categoryPosts.scrollHeight + 'px';
-          chevron.style.transform = 'rotate(180deg)';
-          group.setAttribute('data-expanded', 'true');
+          // Collapse all categories by default
+          categoryPosts.style.maxHeight = '0px';
+          chevron.style.transform = 'rotate(0deg)';
+          group.setAttribute('data-expanded', 'false');
         }
       });
     }
@@ -362,7 +364,7 @@ const recentPosts = sortedPosts.slice(0, 5);
   }
 
   .blog-sidebar::-webkit-scrollbar-thumb:hover {
-    background: theme('colors.secondary.600');
+    background: #4d4d4d;
   }
 
   /* Smooth transitions for category expansion */
@@ -372,23 +374,103 @@ const recentPosts = sortedPosts.slice(0, 5);
 
   /* Hover effects */
   .category-toggle:hover .category-chevron {
-    color: theme('colors.accent.400');
+    color: #33abff;
   }
 
   /* Focus styles */
   #sidebar-search:focus {
-    box-shadow: 0 0 0 2px rgba(0, 144, 255, 0.2);
+    box-shadow: 0 0 0 2px rgb(0 144 255 / 0.2);
   }
 
   .category-toggle:focus {
-    outline: 2px solid theme('colors.accent.500');
+    outline: 2px solid #0090FF;
     outline-offset: 2px;
   }
 
   .post-link:focus,
   .recent-post-link:focus {
-    outline: 2px solid theme('colors.accent.500');
+    outline: 2px solid #0090FF;
     outline-offset: 2px;
+  }
+
+  /* Shared tooltip utility styles */
+  .tooltip-trigger {
+    position: relative;
+  }
+
+  .tooltip-trigger[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 0;
+    left: 100%;
+    transform: translateX(12px);
+    background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+    color: #ffffff;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    z-index: 1000;
+    border: 1px solid #666666;
+    box-shadow: 
+      0 10px 25px -5px rgba(0, 0, 0, 0.4),
+      0 10px 10px -5px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    pointer-events: none;
+    max-width: 320px;
+    white-space: normal;
+    text-align: left;
+    line-height: 1.4;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    opacity: 0;
+    transform: translateX(8px) scale(0.95);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: tooltipFadeIn 0.2s ease-out forwards;
+  }
+
+  .tooltip-trigger[data-tooltip]:hover::before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 100%;
+    transform: translateX(8px);
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-right: 6px solid #666666;
+    z-index: 1001;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-out 0.1s;
+    animation: tooltipArrowFadeIn 0.2s ease-out 0.1s forwards;
+  }
+
+  /* Apply tooltip styles to specific elements */
+  .post-link,
+  .recent-post-link {
+    @apply tooltip-trigger;
+  }
+
+  @keyframes tooltipFadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(8px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(12px) scale(1);
+    }
+  }
+
+  @keyframes tooltipArrowFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 </style>
 </aside>
