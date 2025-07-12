@@ -72,7 +72,7 @@ const recentPosts = sortedPosts.slice(0, 5);
             data-post-title={post.data.title.toLowerCase()}
             data-post-tags={post.data.tags.join(' ').toLowerCase()}
             data-post-description={post.data.description.toLowerCase()}
-            title={post.data.title}
+            data-tooltip={post.data.title}
           >
             <div class="font-medium truncate">{post.data.title}</div>
             <div class="text-xs text-secondary-400 mt-1">
@@ -134,7 +134,7 @@ const recentPosts = sortedPosts.slice(0, 5);
                   data-post-title={post.data.title.toLowerCase()}
                   data-post-tags={post.data.tags.join(' ').toLowerCase()}
                   data-post-description={post.data.description.toLowerCase()}
-                  title={post.data.title}
+                  data-tooltip={post.data.title}
                 >
                   <div class="truncate font-medium">{post.data.title}</div>
                   <div class="text-xs text-secondary-400 mt-1">
@@ -364,7 +364,7 @@ const recentPosts = sortedPosts.slice(0, 5);
   }
 
   .blog-sidebar::-webkit-scrollbar-thumb:hover {
-    background: theme('colors.secondary.600');
+    background: #4d4d4d;
   }
 
   /* Smooth transitions for category expansion */
@@ -374,41 +374,44 @@ const recentPosts = sortedPosts.slice(0, 5);
 
   /* Hover effects */
   .category-toggle:hover .category-chevron {
-    color: theme('colors.accent.400');
+    color: #33abff;
   }
 
   /* Focus styles */
   #sidebar-search:focus {
-    box-shadow: 0 0 0 2px rgba(0, 144, 255, 0.2);
+    box-shadow: 0 0 0 2px rgb(0 144 255 / 0.2);
   }
 
   .category-toggle:focus {
-    outline: 2px solid theme('colors.accent.500');
+    outline: 2px solid #0090FF;
     outline-offset: 2px;
   }
 
   .post-link:focus,
   .recent-post-link:focus {
-    outline: 2px solid theme('colors.accent.500');
+    outline: 2px solid #0090FF;
     outline-offset: 2px;
   }
 
-  /* Enhanced tooltip styles */
-  .post-link[title]:hover::after,
-  .recent-post-link[title]:hover::after {
-    content: attr(title);
+  /* Shared tooltip utility styles */
+  .tooltip-trigger {
+    position: relative;
+  }
+
+  .tooltip-trigger[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
     position: absolute;
     top: 0;
     left: 100%;
     transform: translateX(12px);
-    background: linear-gradient(135deg, theme('colors.secondary.900'), theme('colors.secondary.950'));
-    color: theme('colors.white');
+    background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+    color: #ffffff;
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
     font-size: 0.875rem;
     font-weight: 500;
     z-index: 1000;
-    border: 1px solid theme('colors.secondary.600');
+    border: 1px solid #666666;
     box-shadow: 
       0 10px 25px -5px rgba(0, 0, 0, 0.4),
       0 10px 10px -5px rgba(0, 0, 0, 0.2),
@@ -426,8 +429,7 @@ const recentPosts = sortedPosts.slice(0, 5);
     animation: tooltipFadeIn 0.2s ease-out forwards;
   }
 
-  .post-link[title]:hover::before,
-  .recent-post-link[title]:hover::before {
+  .tooltip-trigger[data-tooltip]:hover::before {
     content: '';
     position: absolute;
     top: 12px;
@@ -437,12 +439,18 @@ const recentPosts = sortedPosts.slice(0, 5);
     height: 0;
     border-top: 4px solid transparent;
     border-bottom: 4px solid transparent;
-    border-right: 6px solid theme('colors.secondary.600');
+    border-right: 6px solid #666666;
     z-index: 1001;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.2s ease-out 0.1s;
     animation: tooltipArrowFadeIn 0.2s ease-out 0.1s forwards;
+  }
+
+  /* Apply tooltip styles to specific elements */
+  .post-link,
+  .recent-post-link {
+    @apply tooltip-trigger;
   }
 
   @keyframes tooltipFadeIn {
