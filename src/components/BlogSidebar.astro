@@ -108,7 +108,7 @@ const recentPosts = sortedPosts.slice(0, 5);
                 </span>
               </div>
               <svg 
-                class="category-chevron w-4 h-4 text-secondary-400 transition-transform duration-200" 
+                class={`recent-post-link block p-3 text-sm rounded-lg transition-all duration-200 hover:bg-secondary-800/50 hover:text-accent-400 relative ${
                 xmlns="http://www.w3.org/2000/svg" 
                 viewBox="0 0 24 24" 
                 fill="none" 
@@ -116,6 +116,7 @@ const recentPosts = sortedPosts.slice(0, 5);
                 stroke-width="2" 
                 stroke-linecap="round" 
                 stroke-linejoin="round"
+                title={post.data.title}
               >
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
@@ -125,7 +126,7 @@ const recentPosts = sortedPosts.slice(0, 5);
               {categoryPosts.map(post => (
                 <a 
                   href={`/blog/${post.slug}`}
-                  class={`post-link block p-2 text-sm rounded-lg transition-all duration-200 hover:bg-secondary-800/50 hover:text-accent-400 ${
+                  class={`post-link block p-2 text-sm rounded-lg transition-all duration-200 hover:bg-secondary-800/50 hover:text-accent-400 relative ${
                     currentSlug === post.slug 
                       ? 'bg-accent-500/20 text-accent-400 border-l-2 border-accent-500' 
                       : 'text-secondary-300'
@@ -133,6 +134,7 @@ const recentPosts = sortedPosts.slice(0, 5);
                   data-post-title={post.data.title.toLowerCase()}
                   data-post-tags={post.data.tags.join(' ').toLowerCase()}
                   data-post-description={post.data.description.toLowerCase()}
+                  title={post.data.title}
                 >
                   <div class="truncate font-medium">{post.data.title}</div>
                   <div class="text-xs text-secondary-400 mt-1">
@@ -183,10 +185,10 @@ const recentPosts = sortedPosts.slice(0, 5);
         const chevron = group.querySelector('.category-chevron');
         
         if (categoryPosts && chevron) {
-          // Expand all categories by default
-          categoryPosts.style.maxHeight = categoryPosts.scrollHeight + 'px';
-          chevron.style.transform = 'rotate(180deg)';
-          group.setAttribute('data-expanded', 'true');
+          // Collapse all categories by default
+          categoryPosts.style.maxHeight = '0px';
+          chevron.style.transform = 'rotate(0deg)';
+          group.setAttribute('data-expanded', 'false');
         }
       });
     }
@@ -389,6 +391,46 @@ const recentPosts = sortedPosts.slice(0, 5);
   .recent-post-link:focus {
     outline: 2px solid theme('colors.accent.500');
     outline-offset: 2px;
+  }
+
+  /* Enhanced tooltip styles */
+  .recent-post-link[title]:hover::after,
+  .post-link[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: theme('colors.secondary.950');
+    color: theme('colors.white');
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 1000;
+    border: 1px solid theme('colors.secondary.700');
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    max-width: 200px;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .recent-post-link[title]:hover::before,
+  .post-link[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(1px);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid theme('colors.secondary.700');
+    z-index: 1001;
+    pointer-events: none;
   }
 </style>
 </aside>
