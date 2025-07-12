@@ -108,7 +108,7 @@ const recentPosts = sortedPosts.slice(0, 5);
                 </span>
               </div>
               <svg 
-                class={`recent-post-link block p-3 text-sm rounded-lg transition-all duration-200 hover:bg-secondary-800/50 hover:text-accent-400 relative ${
+                class="category-chevron w-4 h-4 text-secondary-400 transition-transform duration-200"
                 xmlns="http://www.w3.org/2000/svg" 
                 viewBox="0 0 24 24" 
                 fill="none" 
@@ -116,7 +116,6 @@ const recentPosts = sortedPosts.slice(0, 5);
                 stroke-width="2" 
                 stroke-linecap="round" 
                 stroke-linejoin="round"
-                title={post.data.title}
               >
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
