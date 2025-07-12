@@ -1,7 +1,7 @@
 ---
 title: "How to Use Pits n' Giggles with Playit.gg for a Remote Race Engineer"
 description: "Stream F1 25 telemetry live to a remote race engineer using Pits n' Giggles and Playit.gg - no port forwarding required, works even with full 22-player lobbies."
-pubDate: 2025-06-01
+pubDate: 2025-07-12
 author: 'Ashwin Natarajan'
 authorDescription: 'Sim racer'
 category: 'Race Engineering'
