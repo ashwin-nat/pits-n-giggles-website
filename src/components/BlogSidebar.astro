@@ -7,6 +7,9 @@ interface Props {
 
 const { currentSlug } = Astro.props;
 
+// Configuration constants
+const RECENT_POSTS_LIMIT = 3;
+
 // Get all blog posts from content collection
 const allBlogPosts = await getCollection('blog');
 
@@ -29,8 +32,8 @@ const postsByCategory = sortedPosts.reduce((acc, post) => {
 // Get all unique categories and sort them
 const categories = Object.keys(postsByCategory).sort();
 
-// Get recent posts (last 5)
-const recentPosts = sortedPosts.slice(0, 5);
+// Get recent posts (configurable limit)
+const recentPosts = sortedPosts.slice(0, RECENT_POSTS_LIMIT);
 ---
 
 <aside class="blog-sidebar w-80 flex-shrink-0 bg-secondary-950/50 backdrop-blur-sm border-r border-secondary-800 h-screen sticky top-0 overflow-y-auto lg:block hidden">
@@ -68,7 +71,7 @@ const recentPosts = sortedPosts.slice(0, 5);
               currentSlug === post.slug 
                 ? 'bg-accent-500/20 text-accent-400 border-l-2 border-accent-500' 
                 : 'text-secondary-300'
-            }`}
+            } tooltip-trigger`}
             data-post-title={post.data.title.toLowerCase()}
             data-post-tags={post.data.tags.join(' ').toLowerCase()}
             data-post-description={post.data.description.toLowerCase()}
@@ -125,7 +128,7 @@ const recentPosts = sortedPosts.slice(0, 5);
               {categoryPosts.map(post => (
                 <a 
                   href={`/blog/${post.slug}`}
-                  class={`post-link block p-2 text-sm rounded-lg transition-all duration-200 hover:bg-secondary-800/50 hover:text-accent-400 relative ${
+                  class={`post-link block p-2 text-sm rounded-lg transition-all duration-200 hover:bg-secondary-800/50 hover:text-accent-400 relative tooltip-trigger ${
                     currentSlug === post.slug 
                       ? 'bg-accent-500/20 text-accent-400 border-l-2 border-accent-500' 
                       : 'text-secondary-300'
@@ -133,7 +136,7 @@ const recentPosts = sortedPosts.slice(0, 5);
                   data-post-title={post.data.title.toLowerCase()}
                   data-post-tags={post.data.tags.join(' ').toLowerCase()}
                   data-post-description={post.data.description.toLowerCase()}
-                  title={post.data.title}
+                  data-tooltip={post.data.title}
                 >
                   <div class="truncate font-medium">{post.data.title}</div>
                   <div class="text-xs text-secondary-400 mt-1">
@@ -405,9 +408,9 @@ const recentPosts = sortedPosts.slice(0, 5);
     transform: translateX(12px);
     background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
     color: #ffffff;
-    padding: 0.75rem 1rem;
+    padding: 1rem 1.25rem;
     border-radius: 0.5rem;
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 500;
     z-index: 1000;
     border: 1px solid #666666;
@@ -416,7 +419,7 @@ const recentPosts = sortedPosts.slice(0, 5);
       0 10px 10px -5px rgba(0, 0, 0, 0.2),
       0 0 0 1px rgba(255, 255, 255, 0.05) inset;
     pointer-events: none;
-    max-width: 320px;
+    max-width: 400px;
     white-space: normal;
     text-align: left;
     line-height: 1.4;
