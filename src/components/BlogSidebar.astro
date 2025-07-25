@@ -116,7 +116,7 @@ const recentPosts = sortedPosts.slice(0, 5);
                 stroke="currentColor" 
                 stroke-width="2" 
                 stroke-linecap="round" 
-                stroke-linejoin="round"
+                title={post.data.title}
               >
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
@@ -134,7 +134,7 @@ const recentPosts = sortedPosts.slice(0, 5);
                   data-post-title={post.data.title.toLowerCase()}
                   data-post-tags={post.data.tags.join(' ').toLowerCase()}
                   data-post-description={post.data.description.toLowerCase()}
-                  data-tooltip={post.data.title}
+                  title={post.data.title}
                 >
                   <div class="truncate font-medium">{post.data.title}</div>
                   <div class="text-xs text-secondary-400 mt-1">
@@ -450,7 +450,7 @@ const recentPosts = sortedPosts.slice(0, 5);
   /* Apply tooltip styles to specific elements */
   .post-link,
   .recent-post-link {
-    @apply tooltip-trigger;
+    position: relative;
   }
 
   @keyframes tooltipFadeIn {
