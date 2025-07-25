@@ -19,6 +19,8 @@ interface GitHubRelease {
   html_url: string;
   body?: string;
   assets?: GitHubAsset[];
+  prerelease: boolean;
+  draft: boolean;
 }
 
 // Fetch GitHub releases from the actual repository
@@ -39,7 +41,9 @@ async function getGitHubReleases(): Promise<GitHubRelease[]> {
     }
 
     const allReleases = await response.json();
-    return allReleases.slice(0, numberOfReleases);
+    // Filter out pre-releases and drafts, then take the specified number
+    const stableReleases = allReleases.filter((release: any) => !release.prerelease && !release.draft);
+    return stableReleases.slice(0, numberOfReleases);
   } catch (error) {
     console.error('Error fetching GitHub releases:', error);
     return [];
