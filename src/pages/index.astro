@@ -47,7 +47,7 @@ const platforms = [
   },
   {
     name: "macOS",
-    status: "Coming Soon",
+    status: "Available",
     icon: "bi-apple",
     color: "text-gray-300",
     bgColor: "bg-gray-300/10",
@@ -115,15 +115,15 @@ const platforms = [
     <div class="container mx-auto px-4">
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h2 class="text-3xl md:text-4xl font-bold mb-4">Supported Platforms</h2>
-        <p class="text-secondary-300">Available now on Windows, with macOS and Linux support coming soon.</p>
+        <p class="text-secondary-300">Available now on Windows and macOS with Linux support coming soon.</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
         {platforms.map(platform => {
           const isAvailable = platform.status === "Available";
-          
+
           if (isAvailable) {
             return (
-              <a 
+              <a
                 href="/releases"
                 class={`platform-tile block relative bg-secondary-900/50 backdrop-blur-sm border ${platform.borderColor} rounded-lg p-6 text-center transition-all duration-300 cursor-pointer hover:shadow-card hover:border-opacity-40 no-underline`}
                 data-platform={platform.name.toLowerCase()}
@@ -140,7 +140,7 @@ const platforms = [
             );
           } else {
             return (
-              <div 
+              <div
                 class={`platform-tile relative bg-secondary-900/50 backdrop-blur-sm border ${platform.borderColor} rounded-lg p-6 text-center transition-all duration-300 cursor-default`}
                 data-platform={platform.name.toLowerCase()}
               >
@@ -206,46 +206,46 @@ const platforms = [
     box-shadow: 0 4px 20px rgba(96, 165, 250, 0.15);
     text-decoration: none;
   }
-  
+
   /* Windows platform specific hover effects */
   a.platform-tile[data-platform="windows"]:hover .platform-icon {
     background: rgba(96, 165, 250, 0.2);
     box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
   }
-  
+
   a.platform-tile[data-platform="windows"]:hover .bi-windows {
     color: rgb(147, 197, 253);
     text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
   }
-  
+
   a.platform-tile[data-platform="windows"]:hover .status-text {
     color: rgb(74, 222, 128);
   }
-  
+
   a.platform-tile[data-platform="windows"]:hover .status-dot {
     background-color: rgb(74, 222, 128);
     box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
   }
-  
+
   /* Focus styles for accessibility - only for anchor tags */
   a.platform-tile:focus {
     outline: 2px solid theme('colors.accent.500');
     outline-offset: 2px;
   }
-  
+
   /* Ensure smooth transitions */
   .platform-tile {
     transition: all 0.3s ease;
   }
-  
+
   .platform-icon {
     transition: all 0.3s ease;
   }
-  
+
   .status-dot {
     transition: all 0.3s ease;
   }
-  
+
   .status-text {
     transition: all 0.3s ease;
   }
