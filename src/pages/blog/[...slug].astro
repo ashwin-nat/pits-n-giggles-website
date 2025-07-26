@@ -30,7 +30,7 @@ const siteName = "Pits n' Giggles";
 // Prepare OG meta data
 const ogTitle = `${entry.data.title} | Pits n' Giggles`;
 const ogDescription = entry.data.description;
-const ogImage = entry.data.image.url;
+const ogImage = entry.data.image?.url || 'https://www.pitsngiggles.com/logo.png';
 const ogUrl = `https://www.pitsngiggles.com/blog/${entry.slug}`;
 ---
 
