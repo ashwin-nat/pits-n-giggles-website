@@ -26,9 +26,28 @@ const tocHeadings = headings.filter(heading => heading.depth >= 2 && heading.dep
 const socialImage = entry.data.socialImage || entry.data.image;
 const postUrl = `${Astro.site}blog/${entry.slug}`;
 const siteName = "Pits n' Giggles";
+
+// Prepare OG meta data
+const ogTitle = `${entry.data.title} | Pits n' Giggles`;
+const ogDescription = entry.data.description;
+const ogImage = entry.data.image?.url || 'https://www.pitsngiggles.com/logo.png';
+const ogUrl = `https://www.pitsngiggles.com/blog/${entry.slug}`;
 ---
 
-<BlogLayout title={entry.data.title} description={entry.data.description} currentSlug={entry.slug} showMobileCategories={false}>
+<BlogLayout 
+  title={entry.data.title} 
+  description={entry.data.description} 
+  currentSlug={entry.slug} 
+  showMobileCategories={false}
+  ogTitle={ogTitle}
+  ogDescription={ogDescription}
+  ogImage={ogImage}
+  ogUrl={ogUrl}
+  ogType="article"
+  twitterTitle={ogTitle}
+  twitterDescription={ogDescription}
+  twitterImage={ogImage}
+>
   <!-- Additional meta tags for blog posts -->
   <Fragment slot="head">
     <meta property="article:published_time" content={entry.data.pubDate.toISOString()} />
@@ -39,19 +58,6 @@ const siteName = "Pits n' Giggles";
       <meta property="article:tag" content={tag} />
     ))}
     <meta property="article:author" content={entry.data.author} />
-
-    <!-- Twitter Card specific for blog posts -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={entry.data.title} />
-    <meta name="twitter:description" content={entry.data.description} />
-    <meta name="twitter:image" content={entry.data.image.url} />
-
-    <!-- OpenGraph specific for blog posts -->
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content={entry.data.title} />
-    <meta property="og:description" content={entry.data.description} />
-    <meta property="og:image" content={entry.data.image.url} />
-    <meta property="og:url" content={`https://www.pitsngiggles.com/blog/${entry.slug}`} />
   </Fragment>
 
   <article class="pt-16 pb-20">
