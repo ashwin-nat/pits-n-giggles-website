@@ -51,7 +51,7 @@ Then, go out and drive **7–8 clean, consistent laps**:
 
 This is the type of prep real engineers do for **F1 esports and sim racing championships**-and now, so can you.
 
-![placeholder for screenshot of telemetry session setup](/blog_assets/fuel-strategy/fuel-dashboard.png)
+![placeholder for screenshot of telemetry session setup](/blog_assets/fuel-strategy/fp-dashboard.png)
 
 ---
 
