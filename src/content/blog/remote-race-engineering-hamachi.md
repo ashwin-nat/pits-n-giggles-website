@@ -7,9 +7,9 @@ authorDescription: 'Sim racer'
 category: 'Race Engineering'
 image:
   url: '/blog_assets/remote-race-engineer/thumbnail.png'
-  alt: 'F1 25 telemetry dashboard exposed via Playit.gg for a remote engineer'
-  credits: 'Photo by Simon Galloway / Motorsport Images'
-tags: ['features', 'f1-25', 'f1-telemetry', 'sim-racing', 'race-engineer', 'remote-strategy', 'playit-gg', 'telemetry-dashboard', 'lobby-limit-bypass']
+  alt: 'F1 25 remote race engineering using VPN'
+  credits: 'AMS2 photo mode'
+tags: ['features', 'f1-25', 'f1-telemetry', 'sim-racing', 'race-engineer', 'remote-strategy', 'vpn', 'telemetry-dashboard', 'lobby-limit-bypass']
 ---
 
 # How to Use *Pits n' Giggles* for a Remote Race Engineer Setup (No Lobby Slot Needed!)
@@ -24,7 +24,7 @@ This is a game-changer: the **F1 series limits online lobbies to 22 slots**, whi
 
 - **Driver PC (You):**
   - Sim game like F1 25, F1 24, F1 23, with **UDP telemetry output** enabled.
-  - *Pits n' Giggles* installed and running ([get it here](https://github.com/ashwin-nat/pits-n-giggles)).
+  - *Pits n' Giggles* installed and running ([get it here](/releases)).
 - **Engineer PC (Them):**
   - Any modern web browser (Chrome, Firefox, Edge, etc.).
 - **VPN software:**

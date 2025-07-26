@@ -7,7 +7,7 @@ authorDescription: 'Sim racer'
 category: 'Race Engineering'
 image:
   url: 'https://cdn-8.motorsport.com/images/mgl/YEQ1qNqY/s1200/team-members-of-the-visa-cash-.webp'
-  alt: 'F1 25 telemetry dashboard exposed via Playit.gg for a remote engineer'
+  alt: 'F1 25 remote race engineering using Playit.gg'
   credits: 'Photo by Simon Galloway / Motorsport Images'
 tags: ['features', 'f1-25', 'f1-telemetry', 'sim-racing', 'race-engineer', 'remote-strategy', 'playit-gg', 'telemetry-dashboard', 'lobby-limit-bypass']
 ---
