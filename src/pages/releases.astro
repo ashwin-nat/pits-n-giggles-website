@@ -130,7 +130,7 @@ const latestRelease = releases[0];
 
 // Extract all images from all releases for the ImageViewer
 const allReleaseImages: Array<{url: string, alt: string, description?: string}> = [];
-const releaseImageMap: Map<number, Array<{url: string, alt: string, description?: string}>> = new Map();
+const releaseImageMap = new Map<number, Array<{url: string, alt: string, description?: string}>>();
 
 releases.forEach((release, releaseIndex) => {
   const images = extractImagesFromMarkdown(release.body);
@@ -413,7 +413,7 @@ releases.forEach((release, releaseIndex) => {
       if (!downloadBtn || !modal) return;
       
       // Get platform info function
-      function getPlatformInfo(filename) {
+      function getPlatformInfo(filename: string) {
         const lowerName = filename.toLowerCase();
         
         if (lowerName.includes('.exe') || lowerName.includes('windows') || lowerName.includes('win')) {
@@ -450,7 +450,7 @@ releases.forEach((release, releaseIndex) => {
           const release = await response.json();
           
           if (release.assets && release.assets.length > 0) {
-            downloadOptions.innerHTML = release.assets.map(asset => {
+            downloadOptions!.innerHTML = release.assets.map((asset: any) => {
               const platformInfo = getPlatformInfo(asset.name);
               return `
                 <a
@@ -481,7 +481,7 @@ releases.forEach((release, releaseIndex) => {
           }
         } catch (error) {
           console.error('Error fetching release data:', error);
-          downloadOptions.innerHTML = '<p class="text-secondary-400 text-center">Error loading download options</p>';
+          downloadOptions!.innerHTML = '<p class="text-secondary-400 text-center">Error loading download options</p>';
         }
       }
       
@@ -493,7 +493,7 @@ releases.forEach((release, releaseIndex) => {
       });
       
       // Hide modal when close button is clicked
-      closeModal.addEventListener('click', function() {
+      closeModal?.addEventListener('click', function() {
         modal.classList.add('hidden');
         document.body.style.overflow = '';
       });
@@ -515,7 +515,7 @@ releases.forEach((release, releaseIndex) => {
       });
       
       // Close modal when a download link is clicked
-      downloadOptions.addEventListener('click', function(e) {
+      downloadOptions?.addEventListener('click', function(e) {
         if (e.target.closest('a')) {
           setTimeout(() => {
             modal.classList.add('hidden');
@@ -533,7 +533,7 @@ releases.forEach((release, releaseIndex) => {
           // Calculate the global index for this image
           let globalIndex = 0;
           for (let i = 0; i < releaseIndex; i++) {
-            const releaseImages = releaseImageMap[i] || [];
+            const releaseImages = releaseImageMap.get(i) || [];
             globalIndex += releaseImages.length;
           }
           globalIndex += imageIndex;
