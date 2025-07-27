@@ -155,10 +155,10 @@ releases.forEach((release, releaseIndex) => {
         
         {latestAsset && (
           <button
-            id="smartDownloadBtn"
+            id="downloadBtn"
             class="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 rounded-md transition-colors duration-200 font-semibold text-lg inline-flex items-center gap-2"
           >
-            <span id="downloadText">Download Latest Version</span>
+            <span>Download Latest Version</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
@@ -379,6 +379,26 @@ releases.forEach((release, releaseIndex) => {
     </div>
   </section>
 
+  <!-- Download Options Modal -->
+  <div id="downloadModal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="bg-secondary-900 border border-secondary-700 rounded-lg p-6 max-w-md w-full">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-white">Choose Your Platform</h3>
+          <button id="closeModal" class="text-secondary-400 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div id="downloadOptions" class="space-y-3">
+          <!-- Download options will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Image Viewer Component for Releases -->
   {allReleaseImages.length > 0 && (
     <ImageViewerReleases images={allReleaseImages} />
@@ -387,84 +407,121 @@ releases.forEach((release, releaseIndex) => {
   <!-- JavaScript for handling image clicks -->
   <script define:vars={{ allReleaseImages, releaseImageMap: Object.fromEntries(releaseImageMap), releases }}>
     document.addEventListener('DOMContentLoaded', function() {
-      // OS Detection and Smart Download
-      function detectOS() {
-        const userAgent = navigator.userAgent.toLowerCase();
-        const platform = navigator.platform.toLowerCase();
+      // Download Modal Setup
+      function setupDownloadModal() {
+        const downloadBtn = document.getElementById('downloadBtn');
+        const modal = document.getElementById('downloadModal');
+        const closeModal = document.getElementById('closeModal');
+        const downloadOptions = document.getElementById('downloadOptions');
         
-        if (userAgent.includes('win') || platform.includes('win')) {
-          return 'windows';
-        } else if (userAgent.includes('mac') || platform.includes('mac')) {
-          return 'macos';
-        } else if (userAgent.includes('linux') || platform.includes('linux')) {
-          return 'linux';
-        }
-        
-        return 'windows'; // Default fallback
-      }
-      
-      function setupSmartDownload() {
-        const downloadBtn = document.getElementById('smartDownloadBtn');
-        const downloadText = document.getElementById('downloadText');
-        
-        if (!downloadBtn || !releases || releases.length === 0) return;
+        if (!downloadBtn || !modal || !releases || releases.length === 0) return;
         
         const latestRelease = releases[0];
         if (!latestRelease || !latestRelease.assets) return;
         
-        const userOS = detectOS();
-        let selectedAsset = null;
-        let osDisplayName = '';
-        
-        // Find the appropriate asset based on OS
-        for (const asset of latestRelease.assets) {
-          const fileName = asset.name.toLowerCase();
+        // Function to get platform info from filename
+        function getPlatformInfo(filename) {
+          const lowerName = filename.toLowerCase();
           
-          if (userOS === 'windows' && (fileName.includes('.exe') || fileName.includes('windows') || fileName.includes('win'))) {
-            selectedAsset = asset;
-            osDisplayName = 'Windows';
-            break;
-          } else if (userOS === 'macos' && (fileName.includes('.dmg') || fileName.includes('mac') || fileName.includes('darwin'))) {
-            selectedAsset = asset;
-            osDisplayName = 'macOS';
-            break;
-          } else if (userOS === 'linux' && (fileName.includes('.appimage') || fileName.includes('linux') || fileName.includes('.deb') || fileName.includes('.rpm'))) {
-            selectedAsset = asset;
-            osDisplayName = 'Linux';
-            break;
+          if (lowerName.includes('.exe') || lowerName.includes('windows') || lowerName.includes('win')) {
+            return {
+              platform: 'Windows',
+              icon: 'bi-windows',
+              color: 'text-blue-400'
+            };
+          } else if (lowerName.includes('.dmg') || lowerName.includes('mac') || lowerName.includes('darwin')) {
+            return {
+              platform: 'macOS',
+              icon: 'bi-apple',
+              color: 'text-gray-300'
+            };
+          } else if (lowerName.includes('.appimage') || lowerName.includes('linux') || lowerName.includes('.deb') || lowerName.includes('.rpm')) {
+            return {
+              platform: 'Linux',
+              icon: 'bi-ubuntu',
+              color: 'text-orange-400'
+            };
+          } else {
+            return {
+              platform: 'Other',
+              icon: 'bi-download',
+              color: 'text-secondary-400'
+            };
           }
         }
         
-        // Fallback to first available asset if no OS-specific match found
-        if (!selectedAsset && latestRelease.assets.length > 0) {
-          selectedAsset = latestRelease.assets[0];
-          osDisplayName = '';
-        }
+        // Populate download options
+        downloadOptions.innerHTML = latestRelease.assets.map(asset => {
+          const platformInfo = getPlatformInfo(asset.name);
+          return `
+            <a
+              href="${asset.browser_download_url}"
+              class="flex items-center justify-between bg-secondary-800 hover:bg-secondary-700 transition-colors p-4 rounded-lg group"
+              download="${asset.name}"
+            >
+              <div class="flex items-center gap-3">
+                <div class="${platformInfo.color}">
+                  <i class="${platformInfo.icon} text-2xl"></i>
+                </div>
+                <div>
+                  <div class="font-semibold text-white">${platformInfo.platform}</div>
+                  <div class="text-sm text-secondary-400">${asset.name}</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 text-secondary-400">
+                <span class="text-xs">${asset.download_count.toLocaleString()} downloads</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform duration-200">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+              </div>
+            </a>
+          `;
+        }).join('');
         
-        if (selectedAsset) {
-          // Update button text to show detected OS
-          if (osDisplayName) {
-            downloadText.textContent = `Download for ${osDisplayName}`;
+        // Show modal when download button is clicked
+        downloadBtn.addEventListener('click', function() {
+          modal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+        });
+        
+        // Hide modal when close button is clicked
+        closeModal.addEventListener('click', function() {
+          modal.classList.add('hidden');
+          document.body.style.overflow = '';
+        });
+        
+        // Hide modal when clicking outside
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
           }
-          
-          // Set up click handler
-          downloadBtn.addEventListener('click', function() {
-            // Create a temporary link and click it to trigger download
-            const link = document.createElement('a');
-            link.href = selectedAsset.browser_download_url;
-            link.download = selectedAsset.name;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          });
-          
-          // Add hover effect to show file name
-          downloadBtn.title = `Download ${selectedAsset.name}`;
+        });
+        
+        // Hide modal on escape key
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+          }
+        });
+        
+        // Close modal when a download link is clicked
+        downloadOptions.addEventListener('click', function(e) {
+          if (e.target.closest('a')) {
+            setTimeout(() => {
+              modal.classList.add('hidden');
+              document.body.style.overflow = '';
+            }, 100);
+          }
+        });
         }
       }
       
-      // Initialize smart download
-      setupSmartDownload();
+      // Initialize download modal
+      setupDownloadModal();
       
       // Handle clicks on release images
       document.querySelectorAll('[data-release-screenshot]').forEach(img => {
