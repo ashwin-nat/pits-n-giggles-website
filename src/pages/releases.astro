@@ -530,13 +530,15 @@ releases.forEach((release, releaseIndex) => {
           const releaseIndex = parseInt(this.getAttribute('data-release-index') || '0');
           const imageIndex = parseInt(this.getAttribute('data-image-index') || '0');
           
-          // Calculate the global index for this image
-          let globalIndex = 0;
-          for (let i = 0; i < releaseIndex; i++) {
-            const images = releaseImageMap.get(i) || [];
-            globalIndex += images.length;
-          }
-          globalIndex += imageIndex;
+          // Calculate the global index by finding all previous images
+          let globalIndex = imageIndex;
+          const allPreviousImages = document.querySelectorAll(`[data-release-screenshot][data-release-index]`);
+          Array.from(allPreviousImages).forEach(prevImg => {
+            const prevReleaseIndex = parseInt((prevImg as HTMLElement).getAttribute('data-release-index') || '0');
+            if (prevReleaseIndex < releaseIndex) {
+              globalIndex++;
+            }
+          });
           
           // Trigger the image viewer
           const viewer = document.getElementById('imageViewerReleases');
