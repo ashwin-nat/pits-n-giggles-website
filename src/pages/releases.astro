@@ -154,20 +154,17 @@ releases.forEach((release, releaseIndex) => {
         </p>
         
         {latestAsset && (
-          <Button 
-            href={latestAsset.browser_download_url}
-            variant="primary"
-            size="lg"
-            download
-            class="inline-flex items-center gap-2"
+          <button
+            id="smartDownloadBtn"
+            class="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 rounded-md transition-colors duration-200 font-semibold text-lg inline-flex items-center gap-2"
           >
-            Download Latest Version
+            <span id="downloadText">Download Latest Version</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
               <line x1="12" y1="15" x2="12" y2="3"></line>
             </svg>
-          </Button>
+          </button>
         )}
       </div>
 
@@ -388,8 +385,87 @@ releases.forEach((release, releaseIndex) => {
   )}
 
   <!-- JavaScript for handling image clicks -->
-  <script define:vars={{ allReleaseImages, releaseImageMap: Object.fromEntries(releaseImageMap) }}>
+  <script define:vars={{ allReleaseImages, releaseImageMap: Object.fromEntries(releaseImageMap), releases }}>
     document.addEventListener('DOMContentLoaded', function() {
+      // OS Detection and Smart Download
+      function detectOS() {
+        const userAgent = navigator.userAgent.toLowerCase();
+        const platform = navigator.platform.toLowerCase();
+        
+        if (userAgent.includes('win') || platform.includes('win')) {
+          return 'windows';
+        } else if (userAgent.includes('mac') || platform.includes('mac')) {
+          return 'macos';
+        } else if (userAgent.includes('linux') || platform.includes('linux')) {
+          return 'linux';
+        }
+        
+        return 'windows'; // Default fallback
+      }
+      
+      function setupSmartDownload() {
+        const downloadBtn = document.getElementById('smartDownloadBtn');
+        const downloadText = document.getElementById('downloadText');
+        
+        if (!downloadBtn || !releases || releases.length === 0) return;
+        
+        const latestRelease = releases[0];
+        if (!latestRelease || !latestRelease.assets) return;
+        
+        const userOS = detectOS();
+        let selectedAsset = null;
+        let osDisplayName = '';
+        
+        // Find the appropriate asset based on OS
+        for (const asset of latestRelease.assets) {
+          const fileName = asset.name.toLowerCase();
+          
+          if (userOS === 'windows' && (fileName.includes('.exe') || fileName.includes('windows') || fileName.includes('win'))) {
+            selectedAsset = asset;
+            osDisplayName = 'Windows';
+            break;
+          } else if (userOS === 'macos' && (fileName.includes('.dmg') || fileName.includes('mac') || fileName.includes('darwin'))) {
+            selectedAsset = asset;
+            osDisplayName = 'macOS';
+            break;
+          } else if (userOS === 'linux' && (fileName.includes('.appimage') || fileName.includes('linux') || fileName.includes('.deb') || fileName.includes('.rpm'))) {
+            selectedAsset = asset;
+            osDisplayName = 'Linux';
+            break;
+          }
+        }
+        
+        // Fallback to first available asset if no OS-specific match found
+        if (!selectedAsset && latestRelease.assets.length > 0) {
+          selectedAsset = latestRelease.assets[0];
+          osDisplayName = '';
+        }
+        
+        if (selectedAsset) {
+          // Update button text to show detected OS
+          if (osDisplayName) {
+            downloadText.textContent = `Download for ${osDisplayName}`;
+          }
+          
+          // Set up click handler
+          downloadBtn.addEventListener('click', function() {
+            // Create a temporary link and click it to trigger download
+            const link = document.createElement('a');
+            link.href = selectedAsset.browser_download_url;
+            link.download = selectedAsset.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          });
+          
+          // Add hover effect to show file name
+          downloadBtn.title = `Download ${selectedAsset.name}`;
+        }
+      }
+      
+      // Initialize smart download
+      setupSmartDownload();
+      
       // Handle clicks on release images
       document.querySelectorAll('[data-release-screenshot]').forEach(img => {
         img.addEventListener('click', function() {
