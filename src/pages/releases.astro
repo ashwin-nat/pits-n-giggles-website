@@ -533,8 +533,8 @@ releases.forEach((release, releaseIndex) => {
           // Calculate the global index for this image
           let globalIndex = 0;
           for (let i = 0; i < releaseIndex; i++) {
-            const releaseImages = releaseImageMap.get(i) || [];
-            globalIndex += releaseImages.length;
+            const images = releaseImageMap.get(i) || [];
+            globalIndex += images.length;
           }
           globalIndex += imageIndex;
           
