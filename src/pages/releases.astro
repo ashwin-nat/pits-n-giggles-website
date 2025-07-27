@@ -515,8 +515,8 @@ releases.forEach((release, releaseIndex) => {
       });
       
       // Close modal when a download link is clicked
-      downloadOptions?.addEventListener('click', function(e) {
-        if (e.target.closest('a')) {
+      downloadOptions?.addEventListener('click', function(e: Event) {
+        if (e.target && (e.target as HTMLElement).closest('a')) {
           setTimeout(() => {
             modal.classList.add('hidden');
             document.body.style.overflow = '';
@@ -533,8 +533,8 @@ releases.forEach((release, releaseIndex) => {
           // Calculate the global index for this image
           let globalIndex = 0;
           for (let i = 0; i < releaseIndex; i++) {
-            const images = releaseImageMap.get(i) || [];
-            globalIndex += images.length;
+            const releaseImages = releaseImageMap.get(i) || [];
+            globalIndex += releaseImages.length;
           }
           globalIndex += imageIndex;
           
