@@ -107,10 +107,8 @@ These features make it easy to provide deeper insight into race strategy, driver
 
 Pits n' Giggles makes it straightforward to add professional telemetry overlays to any **sim racing** stream. Whether you’re discussing **race engineering** topics, showing **F1 25 telemetry** numbers, or creating esports content, the browser-based approach integrates cleanly into OBS and keeps CPU usage low.
 
-If you need custom overlay layouts or help with a multi-PC streaming setup, drop a message at the site or check the docs on [Pits n' Giggles](https://www.pitsngiggles.com).
+If you need any help, join the [discord server](https://discord.gg/RK5Z76h6dX) and drop a message!
 
-<!-- ADD SCREENSHOT: Final stream example with overlays in place -->
+![Final Screenshot](https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/png-stream-overlay.png?raw=true)
 
 ---
-
-*If you want, I can also provide a short copy-pasteable Markdown snippet for your blog sidebar (download link + quick setup checklist).*
