@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import dayjs from 'dayjs';
+import { Image } from 'astro:assets';
 
 // Generate static paths for all blog posts
 export async function getStaticPaths() {
@@ -30,14 +31,14 @@ const siteName = "Pits n' Giggles";
 // Prepare OG meta data
 const ogTitle = `${entry.data.title} | Pits n' Giggles`;
 const ogDescription = entry.data.description;
-const ogImage = entry.data.image?.url || 'https://www.pitsngiggles.com/logo.png';
+const ogImage = entry.data.image?.src || 'https://www.pitsngiggles.com/logo.png';
 const ogUrl = `https://www.pitsngiggles.com/blog/${entry.slug}`;
 ---
 
-<BlogLayout 
-  title={entry.data.title} 
-  description={entry.data.description} 
-  currentSlug={entry.slug} 
+<BlogLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  currentSlug={entry.slug}
   showMobileCategories={false}
   ogTitle={ogTitle}
   ogDescription={ogDescription}
@@ -162,9 +163,12 @@ const ogUrl = `https://www.pitsngiggles.com/blog/${entry.slug}`;
 
             <!-- Featured Image -->
             <div class="rounded-lg overflow-hidden mb-8">
-              <img
-                src={entry.data.image.url}
-                alt={entry.data.image.alt}
+              <Image
+                src={entry.data.image}
+                alt={entry.data.description}
+                format="webp"
+                quality={80}
+                loading="eager"
                 class="w-full h-auto"
               />
             </div>
@@ -410,9 +414,12 @@ const ogUrl = `https://www.pitsngiggles.com/blog/${entry.slug}`;
       const tocLinks = document.querySelectorAll('.toc-nav a[href^="#"], .floating-toc-link[href^="#"], .floating-desktop-toc-link[href^="#"]');
 
       tocLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', (e) => {
           e.preventDefault();
-          const targetId = this.getAttribute('href').substring(1);
+          const target = e.currentTarget as HTMLAnchorElement;
+          const targetId = target.getAttribute('href')?.substring(1);
+          if (!targetId) return;
+
           const targetElement = document.getElementById(targetId);
 
           if (targetElement) {

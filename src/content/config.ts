@@ -2,24 +2,18 @@ import { z, defineCollection } from 'astro:content';
 
 // Define the schema for blog posts
 const blogCollection = defineCollection({
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     description: z.string(),
     pubDate: z.date(),
     updatedDate: z.date().optional(),
     author: z.string(),
     category: z.string(),
-    image: z.object({
-      url: z.string(),
-      alt: z.string()
-    }),
+    image: image(),
     tags: z.array(z.string()),
     draft: z.boolean().default(false),
     // Add optional social sharing image (falls back to main image if not provided)
-    socialImage: z.object({
-      url: z.string(),
-      alt: z.string()
-    }).optional(),
+    socialImage: image().optional(),
   }),
 });
 

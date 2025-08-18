@@ -5,12 +5,16 @@ pubDate: 2025-07-12
 author: 'Ashwin Natarajan'
 authorDescription: 'Sim racer'
 category: 'Race Engineering'
-image:
-  url: 'https://cdn-8.motorsport.com/images/mgl/YEQ1qNqY/s1200/team-members-of-the-visa-cash-.webp'
-  alt: 'F1 25 remote race engineering using Playit.gg'
-  credits: 'Photo by Simon Galloway / Motorsport Images'
+image: '../../blog_assets/remote-race-engineer/thumbnail.webp'
 tags: ['features', 'f1-25', 'f1-telemetry', 'sim-racing', 'race-engineer', 'remote-strategy', 'playit-gg', 'telemetry-dashboard', 'lobby-limit-bypass']
 ---
+
+import { Image } from 'astro:assets';
+import liveTelemetry from '../../assets/common/main-ui.png';
+import playitSetupStatus from '../../blog_assets/remote-race-engineer/playit-setup-steps.png';
+import playitTunnelSetup from '../../blog_assets/remote-race-engineer/playit-setup-tunnel.png';
+import playitTunnelRename from '../../blog_assets/remote-race-engineer/playit-tunnel-rename.png';
+import playitTunnelStatus from '../../blog_assets/remote-race-engineer/playit-tunnel-status.png';
 
 # How to Use Pits n' Giggles for Remote Race Engineering
 
@@ -32,12 +36,12 @@ However, by using *Pits n' Giggles* with **Playit.gg**, your race engineer doesn
 
 ---
 
-## 🧰 What You’ll Need
+## 🧰 What You'll Need
 
 - F1 23/24/25 running on PC or console with UDP telemetry enabled
 - [Pits n' Giggles](/releases) installed and running on your PC
 - A **Playit.gg** account
-- Your friend’s browser - they don’t need to install anything
+- Your friend's browser - they don't need to install anything
 
 ---
 
@@ -49,7 +53,11 @@ However, by using *Pits n' Giggles* with **Playit.gg**, your race engineer doesn
    `http://localhost:4768` (or similar if you've changed the *Pits n' Giggles HTTP Server Port* setting).
    Click the Dashboard button for the *server* subsystem to open it locally and test
 
-![Live telemetry](https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true)
+<Image
+  src={liveTelemetry}
+  alt="Live telemetry"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 ### Optional, but recommended
 
@@ -80,7 +88,11 @@ I'd recommend a value of around 500ms, since the network could be lossy.
 3. Wait for the Playit.gg app on your PC to authenticate with their servers
 4. Once it's done, you should see the first 3 steps completed on the website like the below screenshot
 
-![Playit.gg setup status](/blog_assets/remote-race-engineer/playit-setup-steps.png)
+<Image
+  src={playitSetupStatus}
+  alt="Playit.gg setup status"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 5. Don't click on step 4 yet. Our use case requires a verified account.
 6. Add and verify your email address (at the Playit.gg dashboard)[https://playit.gg/account/settings/account]
@@ -98,14 +110,22 @@ I'd recommend a value of around 500ms, since the network could be lossy.
    - **Local Port**: `4768` (or the custom HTTP server, if specified)
 4. Click **"Add Tunnel"**.
 
-![Playit.gg tunnel setup](/blog_assets/remote-race-engineer/playit-setup-tunnel.png)
+<Image
+  src={playitSetupStatus}
+  alt="Playit.gg tunnel setup"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 ### Optional:
 
 1. Name your tunnel so that it's easier to manage in the future. Scroll down to the table with the tunnel's attributes
 2. Click the rename button next to the Tunnel Name and give it a custom name (Pits n' Giggles)
 
-![Playit.gg tunnel renaming](/blog_assets/remote-race-engineer/playit-tunnel-rename.png)
+<Image
+  src={playitSetupStatus}
+  alt="Playit.gg tunnel renaming"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 ### 2.3 Copy Your Public Link
 
@@ -119,7 +139,11 @@ NOTE: This port will NOT be the same as what is configured in Pits n' Giggles an
 It will be to the right of the tunnel name (my details are redacted in the screenshot)
 This is the URL that will let others connect to Pits n' Giggles remotely
 
-![Playit.gg tunnel status](/blog_assets/remote-race-engineer/playit-tunnel-status.png)
+<Image
+  src={playitTunnelStatus}
+  alt="Playit.gg tunnel status"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 ---
 

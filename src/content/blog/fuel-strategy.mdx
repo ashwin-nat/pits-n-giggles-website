@@ -5,11 +5,14 @@ pubDate: 2025-07-26
 author: 'Ashwin Natarajan'
 authorDescription: 'Sim racer'
 category: 'Race Engineering'
-image:
-  url: '/blog_assets/fuel-strategy/thumbnail.png'
-  alt: 'F1 25 fuel strategy calculation'
+image: '../../blog_assets/fuel-strategy/thumbnail.png'
 tags: ['features', 'f1-25', 'f1-telemetry', 'sim-racing', 'race-engineer', 'fuel-strategy']
 ---
+
+import { Image } from 'astro:assets';
+import telemetrySessionSetup from '../../blog_assets/fuel-strategy/fp-dashboard.png';
+import fuelCalculator from '../../blog_assets/fuel-strategy/fuel-calc.png';
+import liveTelemetryPanel from '../../blog_assets/fuel-strategy/fuel-live.png';
 
 # 🏎️ Fuel Strategy Planning in F1 Sim Racing Using Pits n' Giggles
 
@@ -51,7 +54,12 @@ Then, go out and drive **7–8 clean, consistent laps**:
 
 This is the type of prep real engineers do for **F1 esports and sim racing championships**-and now, so can you.
 
-![placeholder for screenshot of telemetry session setup](/blog_assets/fuel-strategy/fp-dashboard.png)
+<Image
+  src={telemetrySessionSetup}
+  alt="Main dashboard"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
+
 
 ---
 
@@ -85,7 +93,11 @@ NOTE: Any saving more than 5% through LiCo is probably going to result in signif
 
 This is far more customizable-and **far more accurate**-than the simplistic surplus-lap estimate used by the **in-game F1 25 fuel calculator**.
 
-![placeholder for screenshot of Fuel Usage tab and lap selection](/blog_assets/fuel-strategy/fuel-calc.png)
+<Image
+  src={fuelCalculator}
+  alt="Main dashboard"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 ---
 
@@ -135,7 +147,11 @@ If:
 
 If the **Laps** value turns negative, you’re at risk of not finishing-save aggressively or plan for an early push and late coast.
 
-![placeholder for screenshot of live telemetry panel](/blog_assets/fuel-strategy/fuel-live.png)
+<Image
+  src={liveTelemetryPanel}
+  alt="Live telemetry panel"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 ---
 

@@ -5,11 +5,13 @@ pubDate: 2025-06-01
 author: 'Ashwin Natarajan'
 authorDescription: 'Sim racer'
 category: 'App Setup'
-image:
-  url: '/blog_assets/f1-telemetry-setup/thumbnail.png'
-  alt: 'Racing sim setup with telemetry on screen'
+image: '../../blog_assets/f1-telemetry-setup/thumbnail.png'
 tags: ['setup', 'telemetry', 'udp', 'pits-n-giggles', 'f1-25']
 ---
+
+import { Image } from 'astro:assets';
+import pngSettings from '../../blog_assets/f1-telemetry-setup/png-settings.png';
+import gameSettings from '../../blog_assets/f1-telemetry-setup/f1-game-settings.png';
 
 # Setting Up *Pits n' Giggles*
 
@@ -37,13 +39,17 @@ C:\Users\YourName\Documents\pits_n_giggles\
 Double-click the executable to launch it.
 By default, *Pits n' Giggles* listens on **UDP port 20777**-this is the default port used by most **F1 telemetry tools**, including the official Codemasters F1 games.
 
-If you don’t have anything else using that port, there’s no need to change it.
+If you don't have anything else using that port, there's no need to change it.
 
 If you **do** need to change it, click the **Settings** button on the *Pits n' Giggles* homepage and enter your desired port number:
 
-![Pits n' Giggles settings](/blog_assets/f1-telemetry-setup/png-settings.png)
+<Image
+  src={pngSettings}
+  alt="Pits n' Giggles settings"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
-You should now see the app open in your browser or a message confirming it’s running. It’s now ready to receive live **F1 25 UDP telemetry data**.
+You should now see the app open in your browser or a message confirming it's running. It's now ready to receive live **F1 25 UDP telemetry data**.
 
 ## 🎮 4. Launch Your F1 Game
 
@@ -67,7 +73,11 @@ These settings ensure your game streams real-time **F1 telemetry data** to *Pits
 
 ## 📸 F1 Game Settings Page
 
-![Game settings](/blog_assets/f1-telemetry-setup/f1-game-settings.png)
+<Image
+  src={gameSettings}
+  alt="Game settings"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 
 > NOTE: If you're on console (PS/XBox),
@@ -77,18 +87,22 @@ These settings ensure your game streams real-time **F1 telemetry data** to *Pits
 3. Optional: If you have changed the port number in the F1 game settings
     * Set the same UDP port number in Settings -> Network -> F1 UDP Telemetry Port
 ```
-![Settings page screenshot](/blog_assets/f1-telemetry-setup/png-settings.png)
+<Image
+  src={pngSettings}
+  alt="Settings page screenshot"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 ---
 
-## ✅ That’s it!
+## ✅ That's it!
 
 With telemetry enabled and the app running, *Pits n' Giggles* will start receiving data as soon as you're on track.
 
-Click the **"Dashboard"** button in the UI to open the live dashboard if it doesn’t open automatically.
+Click the **"Dashboard"** button in the UI to open the live dashboard if it doesn't open automatically.
 
 You're now ready to analyze your laps, compare race data, and enjoy all the features of this easy-to-use **F1 25 telemetry tool**.
 
-It’s hammer time. 🏁
+It's hammer time. 🏁
 
 ## For more advanced tips, check out
 1. [The features page](/features)

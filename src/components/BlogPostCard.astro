@@ -1,33 +1,28 @@
 ---
 import dayjs from 'dayjs';
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
 
 interface Props {
-  post: {
-    slug: string;
-    data: {
-      title: string;
-      pubDate: Date;
-      description: string;
-      author: string;
-      image: {
-        url: string;
-        alt: string;
-      };
-      tags: string[];
-    };
-  };
+  post: CollectionEntry<'blog'>;
+  loading?: 'eager' | 'lazy';
 }
 
-const { post } = Astro.props;
+const { post, loading = 'lazy' } = Astro.props;
 const formattedDate = dayjs(post.data.pubDate).format('MMMM D, YYYY');
 ---
 
 <article class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-card hover:border-secondary-700 group prose prose-slate dark:prose-invert max-w-none" data-category={post.data.category}>
   <a href={`/blog/${post.slug}`} class="block no-underline">
     <div class="relative h-48 overflow-hidden">
-      <img
-        src={post.data.image.url}
-        alt={post.data.image.alt}
+      <Image
+        src={post.data.image}
+        alt={post.data.description}
+        width={400}
+        height={(post.data.image.height / post.data.image.width) * 400}
+        format="webp"
+        quality={75}
+        loading={loading}
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
     </div>
