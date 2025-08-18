@@ -6,10 +6,19 @@ author: 'Ashwin Natarajan'
 authorDescription: 'Developer'
 category: 'Development'
 image:
-  url: '/blog_assets/capturing-replaying-data/thumbnail.png'
+  url: '../../blog_assets/capturing-replaying-data/thumbnail.png'
   alt: 'Racing sim setup with telemetry on screen'
 tags: ['development', 'telemetry', 'tech', 'udp', 'binary']
 ---
+
+import { Image } from 'astro:assets';
+import fileHeaderBlockDiagram from '../../blog_assets/capturing-replaying-data/file_header.png';
+import packetDataBlock from '../../blog_assets/capturing-replaying-data/packet_format.png';
+import telemetryRecordingWorkflow from '../../blog_assets/capturing-replaying-data/recording_workflow.png';
+import telemetryReplayWorkflow from '../../blog_assets/capturing-replaying-data/replay_workflow.png';
+import beforeWorkflow from '../../blog_assets/capturing-replaying-data/before_workflow.png';
+import afterWorkflow from '../../blog_assets/capturing-replaying-data/after_workflow.png';
+
 
 # Smarter Telemetry Debugging for *Pits n' Giggles*
 
@@ -25,8 +34,8 @@ This repeated **context switching** between game and code created high **mental 
 
 To solve this, I built two developer tools:
 
-- `telemetry_recorder` – Captures live telemetry from the sim via UDP
-- `telemetry_replayer` – Replays captured telemetry offline over UDP or TCP
+- `telemetry_recorder` - Captures live telemetry from the sim via UDP
+- `telemetry_replayer` - Replays captured telemetry offline over UDP or TCP
 
 Now, I can **record once**, and **debug forever** without ever restarting a race.
 
@@ -43,18 +52,31 @@ Hence, a new custom simpler file format was defined, the .f1pcap file.
 
 ### File Header (12 bytes)
 
-![File header block diagram](/blog_assets/capturing-replaying-data/file_header.png)
+<Image
+  src={fileHeaderBlockDiagram}
+  alt="File header block diagram"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
+
 *File Header Structure (12 bytes)*
 
 ### Packet Data Block
 
-![Packet data block diagram](/blog_assets/capturing-replaying-data/packet_format.png)
+<Image
+  src={packetDataBlock}
+  alt="File header block diagram"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 *Packet Data Block Structure*
 
 ## Telemetry Recording Workflow
 
-![Telemetry recording workflow](/blog_assets/capturing-replaying-data/recording_workflow.png)
+<Image
+  src={telemetryRecordingWorkflow}
+  alt="Telemetry recording workflow"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 *Telemetry Recording Process*
 
@@ -65,7 +87,11 @@ Hence, a new custom simpler file format was defined, the .f1pcap file.
 
 ## Telemetry Replay Workflow
 
-![Telemetry replay workflow](/blog_assets/capturing-replaying-data/replay_workflow.png)
+<Image
+  src={telemetryReplayWorkflow}
+  alt="Telemetry replay workflow"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 *Telemetry Replay Process with UDP and TCP Modes*
 
@@ -78,7 +104,11 @@ Hence, a new custom simpler file format was defined, the .f1pcap file.
 
 Before these tools:
 
-![Before workflow](/blog_assets/capturing-replaying-data/before_workflow.png)
+<Image
+  src={beforeWorkflow}
+  alt="Before workflow"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 * High friction
 * Lost focus
@@ -86,7 +116,11 @@ Before these tools:
 
 Now:
 
-![After workflow](/blog_assets/capturing-replaying-data/after_workflow.png)
+<Image
+  src={beforeWorkflow}
+  alt="After workflow"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 * No sim restarts
 * No context switching
