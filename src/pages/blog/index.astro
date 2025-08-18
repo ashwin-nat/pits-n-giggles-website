@@ -2,16 +2,15 @@
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import BlogPostCard from '../../components/BlogPostCard.astro';
 import { getCollection } from 'astro:content';
-
 // Get all blog posts and sort by date
 const allPosts = await getCollection('blog');
-const sortedPosts = allPosts.sort((a, b) => 
+const sortedPosts = allPosts.sort((a, b) =>
   new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf()
 );
 ---
 
-<BlogLayout 
-  title="Blog" 
+<BlogLayout
+  title="Blog"
   description="Read the latest news, tutorials, and insights about sim racing telemetry and Pits n' Giggles."
   showMobileCategories={true}
 >
@@ -24,14 +23,14 @@ const sortedPosts = allPosts.sort((a, b) =>
           Stay up to date with the latest news, tutorials, and insights about sim racing telemetry and how to get the most out of Pits n' Giggles.
         </p>
       </div>
-      
+
       <!-- Mobile Categories (only on blog index) -->
       <div class="lg:hidden mb-8">
         <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
           <h3 class="text-lg font-semibold text-white mb-4">Categories</h3>
           <div class="mb-4">
-            <button 
-              id="show-all-posts" 
+            <button
+              id="show-all-posts"
               class="category-filter-btn active px-3 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 transition-colors text-sm font-medium"
               data-category="all"
             >
@@ -43,7 +42,7 @@ const sortedPosts = allPosts.sort((a, b) =>
           </div>
         </div>
       </div>
-      
+
       <div id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {sortedPosts.map(post => (
           <div class="blog-post-item" data-category={post.data.category}>
@@ -51,7 +50,7 @@ const sortedPosts = allPosts.sort((a, b) =>
           </div>
         ))}
       </div>
-      
+
       <!-- No posts message -->
       <div id="no-posts-message" class="hidden bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-8 text-center">
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-secondary-600">
@@ -66,7 +65,7 @@ const sortedPosts = allPosts.sort((a, b) =>
           No posts found in this category.
         </p>
       </div>
-      
+
       {sortedPosts.length === 0 && (
         <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-8 text-center">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-secondary-600">
@@ -84,16 +83,16 @@ const sortedPosts = allPosts.sort((a, b) =>
       )}
     </div>
   </section>
-  
+
   <!-- Mobile Categories Script -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Get all blog post items and extract categories
-      const postItems = Array.from(document.querySelectorAll('.blog-post-item[data-category]'));
-      const categories = {};
-      
+      const postItems = Array.from(document.querySelectorAll('.blog-post-item[data-category]')) as HTMLElement[];
+      const categories: Record<string, number> = {};
+
       postItems.forEach(postItem => {
-        const category = postItem.getAttribute('data-category');
+        const category = postItem.dataset.category;
         if (category) {
           if (!categories[category]) {
             categories[category] = 0;
@@ -101,10 +100,10 @@ const sortedPosts = allPosts.sort((a, b) =>
           categories[category]++;
         }
       });
-      
+
       // Sort categories alphabetically
       const sortedCategories = Object.keys(categories).sort();
-      
+
       // Populate mobile categories
       const mobileContainer = document.getElementById('mobile-categories');
       if (mobileContainer && sortedCategories.length > 0) {
@@ -116,45 +115,48 @@ const sortedPosts = allPosts.sort((a, b) =>
             </div>
           </button>
         `).join('');
-        
+
         // Add click handlers to category buttons
         setupCategoryFiltering();
       }
-      
+
       // Setup filtering functionality
       function setupCategoryFiltering() {
         const categoryButtons = document.querySelectorAll('.category-filter-btn');
-        const postsGrid = document.getElementById('posts-grid');
-        const noPostsMessage = document.getElementById('no-posts-message');
-        
+        const postsGrid = document.getElementById('posts-grid') as HTMLElement;
+        const noPostsMessage = document.getElementById('no-posts-message') as HTMLElement;
+
         categoryButtons.forEach(button => {
-          button.addEventListener('click', function() {
-            const selectedCategory = this.getAttribute('data-category');
-            
+          button.addEventListener('click', (e) => {
+            const target = e.currentTarget as HTMLButtonElement;
+            const selectedCategory = target.dataset.category;
+
             // Update active button
             categoryButtons.forEach(btn => {
               btn.classList.remove('active', 'bg-accent-500', 'text-white');
               btn.classList.add('bg-secondary-800/50', 'text-white');
             });
-            
-            this.classList.add('active', 'bg-accent-500');
-            this.classList.remove('bg-secondary-800/50');
-            
+
+            target.classList.add('active', 'bg-accent-500');
+            target.classList.remove('bg-secondary-800/50');
+
             // Filter posts
-            filterPosts(selectedCategory);
+            if (selectedCategory) {
+              filterPosts(selectedCategory);
+            }
           });
         });
       }
-      
-      function filterPosts(category) {
-        const postItems = document.querySelectorAll('.blog-post-item');
-        const postsGrid = document.getElementById('posts-grid');
-        const noPostsMessage = document.getElementById('no-posts-message');
+
+      function filterPosts(category: string) {
+        const postItems = document.querySelectorAll('.blog-post-item') as NodeListOf<HTMLElement>;
+        const postsGrid = document.getElementById('posts-grid') as HTMLElement;
+        const noPostsMessage = document.getElementById('no-posts-message') as HTMLElement;
         let visibleCount = 0;
-        
+
         postItems.forEach(postItem => {
-          const postCategory = postItem.getAttribute('data-category');
-          
+          const postCategory = postItem.dataset.category;
+
           if (category === 'all' || postCategory === category) {
             postItem.style.display = 'block';
             visibleCount++;
@@ -162,25 +164,27 @@ const sortedPosts = allPosts.sort((a, b) =>
             postItem.style.display = 'none';
           }
         });
-        
+
         // Show/hide no posts message
-        if (visibleCount === 0) {
-          postsGrid.style.display = 'none';
-          noPostsMessage.style.display = 'block';
-        } else {
-          postsGrid.style.display = 'grid';
-          noPostsMessage.style.display = 'none';
+        if (postsGrid && noPostsMessage) {
+            if (visibleCount === 0) {
+                postsGrid.style.display = 'none';
+                noPostsMessage.style.display = 'block';
+            } else {
+                postsGrid.style.display = 'grid';
+                noPostsMessage.style.display = 'none';
+            }
         }
       }
     });
   </script>
-  
+
   <style>
     .category-filter-btn.active {
       background-color: #0090FF !important; /* accent-500 */
       color: white !important;
     }
-    
+
     .category-filter-btn:hover:not(.active) {
       background-color: #4d4d4d !important; /* secondary-700 */
     }
