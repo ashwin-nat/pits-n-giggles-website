@@ -11,6 +11,10 @@ image:
 tags: ['features', 'telemetry', 'udp', 'f1-25', 'f1-telemetry', 'tyre-strategy', 'pit-stop', 'sim-racing']
 ---
 
+import { Image } from 'astro:assets';
+import gameSettings from '../../blog_assets/tyre-delta-feature/game-settings.jpg';
+import pngSettings from '../../blog_assets/f1-telemetry-setup/png-settings.png';
+
 # Smart Pit Stops with Tyre Delta in **Pits n' Giggles**
 
 When the weather’s unpredictable, one pit stop can make or break your race. That’s where the **Tyre Delta** feature in **Pits n' Giggles** comes in - your ultimate sidekick for smarter pit strategy in *F1 25*.
@@ -36,14 +40,22 @@ To start using Tyre Delta, you only need to set up a quick custom notification i
 3. Assign **any UDP action code (1–12)** to a button on your wheel or controller.
 4. We recommend **action code 11**, as that's the default used by Pits n' Giggles.
 
-![F1 25 settings](/blog_assets/tyre-delta-feature/game-settings.jpg)
+<Image
+  src={gameSettings}
+  alt="F1 25 settings"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 ### In *Pits n' Giggles*:
 
 1. Open the settings page in the Pits n' Giggles launcher window.
 2. Set the UDP tyre delta action code if you want to use any other custom value (leave it as is on 11 if that's ok)
 
-![Pits n' Giggles settings](/blog_assets/f1-telemetry-setup/png-settings.png)
+<Image
+  src={pngSettings}
+  alt="Pits n' Giggles settings"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
 
 ---
 
