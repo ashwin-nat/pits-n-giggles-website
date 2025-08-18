@@ -5,9 +5,10 @@ import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   post: CollectionEntry<'blog'>;
+  loading?: 'eager' | 'lazy';
 }
 
-const { post } = Astro.props;
+const { post, loading = 'lazy' } = Astro.props;
 const formattedDate = dayjs(post.data.pubDate).format('MMMM D, YYYY');
 ---
 
@@ -21,7 +22,7 @@ const formattedDate = dayjs(post.data.pubDate).format('MMMM D, YYYY');
         height={(post.data.image.height / post.data.image.width) * 400}
         format="webp"
         quality={75}
-        loading="eager"
+        loading={loading}
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
     </div>

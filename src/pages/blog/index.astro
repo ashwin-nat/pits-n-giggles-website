@@ -44,9 +44,9 @@ const sortedPosts = allPosts.sort((a, b) =>
       </div>
 
       <div id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {sortedPosts.map(post => (
+        {sortedPosts.map((post, index) => (
           <div class="blog-post-item" data-category={post.data.category}>
-            <BlogPostCard post={post} />
+            <BlogPostCard post={post} loading={index < 3 ? 'eager' : 'lazy'} />
           </div>
         ))}
       </div>
