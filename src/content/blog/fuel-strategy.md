@@ -153,4 +153,4 @@ Also interested in tyre strategy and pit stop planning? That’s coming next:
 ## 📣 Need Help?
 
 Need assistance interpreting your telemetry or configuring your model?
-Join our Discord: [https://discord.gg/yourserverlink](https://discord.gg/RK5Z76h6dX)
+Join our Discord: [https://discord.gg/RK5Z76h6dX](https://discord.gg/RK5Z76h6dX)
