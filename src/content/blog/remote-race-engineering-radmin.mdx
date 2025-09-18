@@ -1,23 +1,25 @@
 ---
-title: "Remote Race Engineering - Using Hamachi"
-description: "Stream F1 25 telemetry live to a remote race engineer using Pits n' Giggles and Hamachi - no port forwarding required, works even with full 22-player lobbies."
-pubDate: 2025-07-25
+title: "Remote Race Engineering - Using Radmin"
+description: "Stream F1 25 telemetry live to a remote race engineer using Pits n' Giggles and Radmin - no port forwarding required, works even with full 22-player lobbies."
+pubDate: 2025-09-18
 author: 'Ashwin Natarajan'
 authorDescription: 'Sim racer'
 category: 'Race Engineering'
-image: '../../blog_assets/remote-race-engineer/thumbnail.png'
+image: '../../blog_assets/remote-race-engineer/radmin-thumbnail.jpg'
 tags: ['features', 'f1-25', 'f1-telemetry', 'sim-racing', 'race-engineer', 'remote-strategy', 'vpn', 'telemetry-dashboard', 'lobby-limit-bypass']
 ---
 
 import { Image } from 'astro:assets';
-import hamachiMainUI from '../../blog_assets/remote-race-engineer/hamachi-create-network-1.png';
-import hamachiCreateNetwork from '../../blog_assets/remote-race-engineer/hamachi-create-network-2.png';
+import radminMainUI from '../../blog_assets/remote-race-engineer/radmin-main-ui.png';
+import radminCreateNetwork from '../../blog_assets/remote-race-engineer/radmin-create-network.png';
+import radminJoinNetwork from '../../blog_assets/remote-race-engineer/radmin-join-network.png';
+import radminMainUINoMenu from '../../blog_assets/remote-race-engineer/radmin-main-ui-no-menu.png';
 import connectedToRemoteDashboard from '../../blog_assets/remote-race-engineer/connected-to-remote-dashboard.png';
 import pngLauncher from '../../blog_assets/remote-race-engineer/png-launcher-ui-ip-addr.png';
 
 # How to Use *Pits n' Giggles* for a Remote Race Engineer Setup (No Lobby Slot Needed!)
 
-Want to bring a real-time **race engineer** into your sim racing experience-even if they're in a different city or country? With *Pits n' Giggles* and a virtual LAN tool like **Hamachi**, you can stream **UDP telemetry** from your racing game (like **F1 25 telemetry**) to your engineer over the internet-**without them needing to join your game lobby**.
+Want to bring a real-time **race engineer** into your sim racing experience-even if they're in a different city or country? With *Pits n' Giggles* and a virtual LAN tool like **Radmin**, you can stream **UDP telemetry** from your racing game (like **F1 25 telemetry**) to your engineer over the internet-**without them needing to join your game lobby**.
 
 This is a game-changer: the **F1 series limits online lobbies to 22 slots**, which are usually filled by drivers. With this solution, your race engineer can monitor your performance, make strategic calls, and give live feedback **without occupying a player slot or spectating in-game**.
 
@@ -31,8 +33,7 @@ This is a game-changer: the **F1 series limits online lobbies to 22 slots**, whi
 - **Engineer PC (Them):**
   - Any modern web browser (Chrome, Firefox, Edge, etc.).
 - **VPN software:**
-  - Recommended: [LogMeIn Hamachi](https://www.vpn.net/)
-  - Alternatives: [ZeroTier](https://www.zerotier.com/), [Radmin VPN](https://www.radmin-vpn.com/), [Tailscale](https://tailscale.com/).
+  - Recommended: [Radmin](https://www.radmin-vpn.com/)
 
 ---
 
@@ -59,23 +60,38 @@ All via a web-based dashboard powered by *Pits n' Giggles*.
 
 ## 1️⃣ Install VPN on Both PCs
 
-To simulate being on the same local network, install **Hamachi** or another VPN tool on both the **driver** and **engineer** machines.
+To simulate being on the same local network, install **Radmin** or another VPN tool on both the **driver** and **engineer** machines.
+And then click on the giant *ON* button
 
-- The **Driver** creates a new network in Hamachi.
+<Image
+  src={radminMainUI}
+  alt="Radmin Main UI"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
+
+- The **Driver** creates a new network in Radmin. (Network -> Create Network). Choose a unique network name and a password
+<Image
+  src={radminCreateNetwork}
+  alt="Radmin Create Network"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
+
 - The **Engineer** joins that same network using the same network ID and password.
-
 <Image
-  src={hamachiMainUI}
-  alt="Hamachi Main UI"
-  widths={[300, 600, 1200]}
-  sizes="(max-width: 768px) 100vw, 768px"/>
-<Image
-  src={hamachiMainUI}
-  alt="Hamachi Create Network"
+  src={radminJoinNetwork}
+  alt="Radmin Create Network"
   widths={[300, 600, 1200]}
   sizes="(max-width: 768px) 100vw, 768px"/>
 
-[For those who prefer a video tutorial](https://www.youtube.com/watch?v=bWbo0gcFqA8)
+- Now you should be able to see 2 devices in the same network. Share your Radmin IP address with your engineer
+<Image
+  src={radminMainUINoMenu}
+  alt="Radmin Create Network"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"/>
+
+[For those who prefer a video tutorial](https://www.youtube.com/watch?v=Au8emZkprDk)
+**NOTE**: Ignore the part from 2:00 minutes onwards. What we're interested in is covered in the first two minutes of the video
 
 ---
 
@@ -93,11 +109,11 @@ Server running on [http://127.0.0.1:4768](http://127.0.0.1:4768)
 
 ```
 
-This is your **localhost IP**-but for remote access, use your Hamachi IP.
+This is your **localhost IP**-but for remote access, use your Radmin IP address.
 
 ---
 
-## 3️⃣ Engineer Connects to Your Hamachi IP
+## 3️⃣ Engineer Connects to Your Radmin IP
 
 After establishing the network, the engineer can copy the driver's VPN IP address by right clicking their PC name and click "Copy Address"
 
@@ -105,7 +121,7 @@ Have your engineer open this in their browser:
 
 ```
 
-http://<your-hamachi-ip>:4768
+http://<your-radmin-ip-addr>:4768
 
 ```
 
@@ -147,7 +163,7 @@ Alternatively, the driver can share the IP address that will be displayed in the
 
 - Engineer can’t connect?
   - Make sure port **4768** is open in your firewall.
-  - Test by pinging your Hamachi IP.
+  - Test by pinging your Radmin IP.
   - Try disabling antivirus/firewall temporarily (simplest and brute force solution).
 
 - VPN not working?
