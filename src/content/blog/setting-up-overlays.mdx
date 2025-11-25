@@ -44,6 +44,9 @@ These overlays provide clearer visibility, more accurate telemetry, and race-eng
 ## Initial Setup
 
 Before using the HUD, make sure both **F1 25** and **Pits n' Giggles** are configured correctly.
+### IMPORTANT
+
+- **Run the game borderless windows mode!**
 
 ---
 
@@ -66,14 +69,13 @@ Correct telemetry setup ensures the HUD receives accurate data for lap times, ty
 
 If you're installing the app for the first time:
 
-> **Backlink:** [How to Install & Configure Pits n' Giggles](../../docs/setup.md)
+> [How to Install & Configure Pits n' Giggles](../../docs/setup.md)
 
 Then:
 
-1. Open **Settings → HUD**.
-2. Enable **In-Game Overlays**.
-3. Adjust **global opacity** if desired.
-4. Restart the app when prompted.
+1. Open **Settings → Overlays**.
+2. Check **Enable Overlays**.
+3. Click save and close the settings page.
 
 The HUD currently supports **Windows** only.
 
@@ -89,7 +91,7 @@ Every overlay appears as a floating, always-on-top window.
 3. Resize them to your preference.
 
 ### Lock Mode
-Click **Lock** when done.
+Click **Lock** when done to save your preferences
 This activates click-through mode so the HUD never interferes with gameplay.
 
 <Image
@@ -124,14 +126,23 @@ Displays:
 
 - Position
 - Driver & team
-- Tyre compound
-- Max tyre wear %
-- ERS deploy mode & ERS %
+- Delta to car ahead/behind
+- Tyre compound & Max tyre wear %
+- ERS info
+    - The bar represents the ERS deploy models.
+        - Gray = None
+        - Yellow = Medium
+        - Green = Hotlap
+        - Red = overtake
+    - ERS Battery level %
 - DRS state
+    - The bar repesents one of two states
+        - Green = DRS available/activated
+        - Gray  = DRS unavailable/not activated
 - Penalties
+    - Time and DT pens
 
-**Use it to:**
-Track tyre strategy, ERS availability, and traffic situations without using the game's UI.
+ > NOTE: The number of rows to be displayed on the table can be configured from the settings menu
 
 ---
 
