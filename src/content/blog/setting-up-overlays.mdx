@@ -13,6 +13,7 @@ import { Image } from 'astro:assets';
 
 
 import timingTowerImg from '../../blog_assets/hud-setup/timing-tower.png';
+import borderlessWindowImg from '../../blog_assets/hud-setup/borderless-window.png';
 
 import lapTimerImg from '../../blog_assets/hud-setup/lap-timer.png';
 
@@ -43,9 +44,17 @@ These overlays provide clearer visibility, more accurate telemetry, and race-eng
 ## Prerequisites
 
  - F1 23+ installed with telemetry enabled and Pits n' Giggles setup.
-    - [Follow this guide for more instructions on that](../../docs/setup.md)
+    - [Follow this guide for more instructions on that](/blog/setting-up-udp-telemetry-f1)
  - A windows PC. The Overlays are supported only on windows, given that the game is supported only on windows
- - The game running in borderless windowed mode. This is important for any overlay application to work!
+ - The game running in windowed (full screen) mode. This is important for any overlay application to work!
+    - Settings -> Graphics Settings -> Video Mode
+
+ <Image
+  src={borderlessWindowImg}
+  alt="Borderless Window"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
 
 ---
 
@@ -302,8 +311,8 @@ You can tweak the following UDP action codes
   sizes="(max-width: 768px) 100vw, 768px"
 />
 
-## Closing Thoughts
+## Further reading!
 
-It's hammer time!
+[Here's how tyre wear and fuel predictions work in Pits n' Giggles!](/blog/fuel-tyre-wear-predictions)
 
 ---
