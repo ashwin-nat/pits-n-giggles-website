@@ -11,7 +11,6 @@ tags: ['f125', 'simracing', 'telemetry', 'race-engineering', 'overlay', 'hud']
 
 import { Image } from 'astro:assets';
 
-import heroHud from '../../blog_assets/hud-setup/hero-hud.png';
 
 import timingTowerImg from '../../blog_assets/hud-setup/timing-tower.png';
 
@@ -32,56 +31,25 @@ import arrangeHudImg from '../../blog_assets/hud-setup/hud-arrange.png';
 The latest update to **Pits n' Giggles** introduces a full in-game **HUD / overlay system**, built for F1 25 and the wider sim racing community.
 These overlays provide clearer visibility, more accurate telemetry, and race-engineer-grade insights—all directly on top of your game.
 
-<Image
-  src={heroHud}
-  alt="Full HUD Overview"
-  widths={[300, 600, 1200]}
-  sizes="(max-width: 768px) 100vw, 768px"
-/>
+---
+
+- Starting from v3.0.0, Pits n' Giggles now has in game HUD/overlays.
+- These can be used to further enhance the data you receive while racing, on the same screen!
 
 ---
 
-## Initial Setup
+## Prerequisites
 
-Before using the HUD, make sure both **F1 25** and **Pits n' Giggles** are configured correctly.
-### IMPORTANT
-
-- **Run the game borderless windows mode!**
-
----
-
-## F1 25 / Game Telemetry Setup
-
-1. Launch **F1 25**.
-2. Navigate to **Settings → Telemetry Settings**.
-3. Enable:
-   - UDP Telemetry
-   - UDP Broadcast Mode
-   - Send Rate: **60 Hz**
-   - **IP Address** = machine running Pits n' Giggles
-4. Save settings.
-
-Correct telemetry setup ensures the HUD receives accurate data for lap times, tyre wear, ERS, DRS, and fuel calculations.
-
----
-
-## Pits n' Giggles App Setup
-
-If you're installing the app for the first time:
-
-> [How to Install & Configure Pits n' Giggles](../../docs/setup.md)
-
-Then:
-
-1. Open **Settings → Overlays**.
-2. Check **Enable Overlays**.
-3. Click save and close the settings page.
-
-The HUD currently supports **Windows** only.
+ - F1 23+ installed with telemetry enabled and Pits n' Giggles setup.
+    - [Follow this guide for more instructions on that](../../docs/setup.md)
+ - A windows PC. The Overlays are supported only on windows, given that the game is supported only on windows
+ - The game running in borderless windowed mode. This is important for any overlay application to work!
 
 ---
 
 ## Configuring Overlay Position & Size
+
+> The HUD is disabled by default. Enable it in "Settings -> Overlays -> Enable Overlays"
 
 Every overlay appears as a floating, always-on-top window.
 
