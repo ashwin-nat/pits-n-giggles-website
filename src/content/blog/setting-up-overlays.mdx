@@ -155,12 +155,16 @@ Displays:
   sizes="(max-width: 768px) 100vw, 768px"
 />
 
-Displays:
+### Live Delta & Estimated Lap Time
+- The delta is not exported via UDP telemetry by the sim.
+- Pits n' Giggles estimates the live delta based on ongoing lap time and currrent track position.
+- The fastest lap's progress is tracked meticulously and the current lap time's delta is estimated against this reference
 
-- Current lap
-- Last lap
-- Best lap
-- Sector times + colours
+### Sector colour bars
+- Same as what's in the game, but it's Dynamic.
+- This means that the sector colour is constantly being re-evaluated.
+- If you have a purple sector and then someone else sets a faster sector time, your sector will be demoted from Purple to Green
+
 
 ### Dynamic Sector Colour System
 Sectors can change from purple → green or green → yellow based on improvements—mirroring real-world timing behavior.
