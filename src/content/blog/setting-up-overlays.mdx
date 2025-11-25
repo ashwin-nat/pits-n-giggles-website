@@ -23,6 +23,7 @@ import mfdWeatherImg from '../../blog_assets/hud-setup/mfd-weather.png';
 import mfdFuelImg from '../../blog_assets/hud-setup/mfd-fuel.png';
 import mfdTyreWearImg from '../../blog_assets/hud-setup/mfd-tyre-wear.png';
 import mfdPitRejoinImg from '../../blog_assets/hud-setup/mfd-pit-rejoin.png';
+import mfdCustomize from '../../blog_assets/hud-setup/mfd-customization.png';
 
 import arrangeHudImg from '../../blog_assets/hud-setup/hud-arrange.png';
 
@@ -250,16 +251,16 @@ NOTE:
 
 Displays:
 
-- Current tyre ages
+- Current tyre wear, age and wear rate
 - Wear percentages
-- Predicted future wear
-- Trend-based analysis
+- Unused tyre sets available
+- Predicted future wear, based on live/real-time trends
 
 Great for stint planning and avoiding late-race dropoff.
 
 ---
 
-### Pit Rejoin Page
+### Pit Rejoin Prediction
 
 <Image
   src={mfdPitRejoinImg}
@@ -268,12 +269,30 @@ Great for stint planning and avoiding late-race dropoff.
   sizes="(max-width: 768px) 100vw, 768px"
 />
 
-Simulates pitting **this lap**, showing:
+Predicts and displays where you'd rejoin on track if you were to pit right now.
 
 - Predicted rejoin position
 - Gaps to nearby cars
 - Whether you'll exit into traffic or clean air
-- Strategy implications
+
+This is predicted using the Pit Time Loss that can be configured in settings for each track.
+Thanks to adriaN for sharing their findings!
+
+### MFD Customization
+
+- Enable/disable specific HUD overlays
+- Configure number of rows in the timing tower
+- Customize the MFD
+    - enable/disable specific pages
+    - reorder the MFD pages
+- Set the opacity of the overlays
+
+<Image
+  src={mfdCustomize}
+  alt="MFD Customization"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
 
 ---
 
