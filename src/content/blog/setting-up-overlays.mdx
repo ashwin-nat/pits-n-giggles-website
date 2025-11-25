@@ -25,6 +25,8 @@ import mfdPitRejoinImg from '../../blog_assets/hud-setup/mfd-pit-rejoin.png';
 import mfdCustomize from '../../blog_assets/hud-setup/mfd-customization.png';
 
 import arrangeHudImg from '../../blog_assets/hud-setup/hud-arrange.png';
+import udpActionCodeGameImg from '../../blog_assets/tyre-delta-feature/game-settings.jpg';
+import udpActionCodePngImg from '../../blog_assets/hud-setup/mfd-customization.png';
 
 # Setting Up the New In-Game HUD / Overlay for *Pits n' Giggles*
 
@@ -264,12 +266,44 @@ Thanks to adriaN for sharing their findings!
 
 ---
 
-# Final Thoughts
+## Controlling the MFD
 
-The new Pits n' Giggles HUD system gives sim racers and F1 25 drivers access to the kind of real-time telemetry and race-engineering tools normally reserved for professional software suites.
+The MFD can be controlled while in game by using the game's **UDP action code** feature.
+Currently, two actions are supported:
+- Show/Hide all overlays
+- MFD Cycle Page
 
-For full installation instructions:
+### Setup in Pits n' Giggles [OPTIONAL]
 
-> **Backlink:** [Complete Pits n' Giggles Setup Guide](../../docs/setup.md)
+Customize the UDP action codes based on your preferences (or leave it in the defaults - recommended)
+The options can be found in Settings -> Overlays
+You can tweak the following UDP action codes
+- Show/Hide all overlays
+- MFD Cycle Page
 
-If you'd like an SEO-optimized meta description or a short teaser variant for social sharing, I can generate those too.
+**Remember these numbers!**
+<Image
+  src={udpActionCodePngImg}
+  alt="Game Settings"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+### Setup in the game
+
+- In the game, edit the controls for your input device (be it wheel, controller or keyboard)
+- Scroll down to the absolute bottom and edit the corresponding UDP action codes to buttons of your choice.
+- Save the settings and you're done!
+
+<Image
+  src={udpActionCodeGameImg}
+  alt="Game Settings"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+## Closing Thoughts
+
+It's hammer time!
+
+---
