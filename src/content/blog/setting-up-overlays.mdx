@@ -1,194 +1,288 @@
 ---
-title: 'Setting up in the in-game overlays'
-description: 'Placeholder'
+title: 'Setting up the In-Game Overlays'
+description: "How to enable, configure, and use the Pits n' Giggles in-game HUD for F1 25 and sim racing."
 pubDate: 2025-11-17
 author: 'Ashwin Natarajan'
 authorDescription: 'Developer'
 category: 'Development'
-image: '../../blog_assets/capturing-replaying-data/thumbnail.png'
-tags: ['f125', 'simracing', 'leagueracing', 'tryhard']
+image: '../../blog_assets/hud-setup/thumbnail.png'
+tags: ['f125', 'simracing', 'telemetry', 'race-engineering', 'overlay', 'hud']
 ---
 
-# 🎉 Introducing the New In-Game HUD / Overlay for *Pits n' Giggles*
+import { Image } from 'astro:assets';
 
-> *A powerful, customizable, real-time racing HUD — built for immersion, clarity, and performance.*
+import heroHud from '../../blog_assets/hud-setup/hero-hud.png';
 
-> **[PLACEHOLDER: hero image of full HUD]**
+import timingTowerImg from '../../blog_assets/hud-setup/timing-tower.png';
 
-The latest update of **Pits n' Giggles** brings one of the most requested features:
-a fully in-game **HUD / overlay system** designed to give sim racers the information they need *without ever leaving the track*.
+import lapTimerImg from '../../blog_assets/hud-setup/lap-timer.png';
 
-This post walks you through all the new overlay components, how they work, and how you can customise them to your liking.
+import mfdOverviewImg from '../../blog_assets/hud-setup/mfd-overview.png';
+import mfdCollapsedImg from '../../blog_assets/hud-setup/mfd-collapsed.png';
+import mfdLapTimesImg from '../../blog_assets/hud-setup/mfd-lap-times.png';
+import mfdWeatherImg from '../../blog_assets/hud-setup/mfd-weather.png';
+import mfdFuelImg from '../../blog_assets/hud-setup/mfd-fuel.png';
+import mfdTyreWearImg from '../../blog_assets/hud-setup/mfd-tyre-wear.png';
+import mfdPitRejoinImg from '../../blog_assets/hud-setup/mfd-pit-rejoin.png';
 
----
+import arrangeHudImg from '../../blog_assets/hud-setup/hud-arrange.png';
 
-## 🚦 Timing Tower Overlay
+# Setting Up the New In-Game HUD / Overlay for *Pits n' Giggles*
 
-> **[PLACEHOLDER: timing tower screenshot]**
+The latest update to **Pits n' Giggles** introduces a full in-game **HUD / overlay system**, built for F1 25 and the wider sim racing community.
+These overlays provide clearer visibility, more accurate telemetry, and race-engineer-grade insights—all directly on top of your game.
 
-The new **Timing Tower** delivers broadcast-style visibility right inside your race.
-
-It displays:
-
-- **Position**
-- **Team**
-- **Driver name**
-- **Tyre compound**
-- **Max tyre wear %** (the most worn tyre in the set)
-- **ERS mode**
-- **ERS percentage remaining**
-- **DRS availability & activation**
-- **Time penalties**
-
-Everything updates live and remains readable even at racing pace.
+<Image
+  src={heroHud}
+  alt="Full HUD Overview"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
 
 ---
 
-## ⏱️ Lap Timer Overlay
+## Initial Setup
 
-> **[PLACEHOLDER: lap timer screenshot]**
-
-The **Lap Timer** shows:
-
-- **Best lap**
-- **Last lap**
-- **Current lap**
-- **Sector colours for the current lap**
-
-### 💡 Dynamic Sector Colours (New!)
-Unlike the sim’s built-in UI, sector colours here are **dynamic**.
-
-A sector that initially goes purple can later be **demoted to green** if you improve relative to your own best.
-It behaves more like a real-world timing system and makes feedback far more meaningful.
+Before using the HUD, make sure both **F1 25** and **Pits n' Giggles** are configured correctly.
 
 ---
 
-## 📟 Multi-Function Display (MFD)
+## F1 25 / Game Telemetry Setup
 
-> **[PLACEHOLDER: MFD overview screenshot]**
+1. Launch **F1 25**.
+2. Navigate to **Settings → Telemetry Settings**.
+3. Enable:
+   - UDP Telemetry
+   - UDP Broadcast Mode
+   - Send Rate: **60 Hz**
+   - **IP Address** = machine running Pits n' Giggles
+4. Save settings.
 
-Your in-game **MFD** now includes several pages of detailed telemetry and predictive insights, computed live from your data stream.
-
-### ▶️ Collapsed / Default Mode
-Compact view that uses minimal screen space, ideal for when the MFD is “closed.”
-
-> **[PLACEHOLDER: MFD collapsed/default screenshot]**
-
----
-
-### 📝 Lap Times Page
-
-Shows the **5 most recent laps**, including:
-
-- Lap times
-- Sector times
-- Sector colours
-
-Perfect for spotting short-term performance trends.
-
-> **[PLACEHOLDER: MFD lap times screenshot]**
+Correct telemetry setup ensures the HUD receives accurate data for lap times, tyre wear, ERS, DRS, and fuel calculations.
 
 ---
 
-### ☁️ Weather Forecast Page
+## Pits n' Giggles App Setup
 
-Displays upcoming weather changes, including rain windows and track evolution.
+If you're installing the app for the first time:
 
-> **[PLACEHOLDER: MFD weather forecast screenshot]**
+> **Backlink:** [How to Install & Configure Pits n' Giggles](../../docs/setup.md)
 
----
+Then:
 
-### ⛽ Fuel Info Page
+1. Open **Settings → HUD**.
+2. Enable **In-Game Overlays**.
+3. Adjust **global opacity** if desired.
+4. Restart the app when prompted.
 
-Provides rich, live fuel insights:
-
-- Current fuel usage
-- Fuel usage rate
-- Predicted fuel needs
-- **Target fuel for the next lap** for maximum efficiency
-
-All calculations update dynamically at the end of every lap based on your actual consumption trends.
-
-> **[PLACEHOLDER: MFD fuel info screenshot]**
+The HUD currently supports **Windows** only.
 
 ---
 
-### 🛞 Tyre Wear Page
+## Configuring Overlay Position & Size
 
-Live tyre performance and prediction:
+Every overlay appears as a floating, always-on-top window.
 
-- Current tyre age
+### Unlock Mode
+1. Click **Unlock** in the app.
+2. Drag each overlay to position it.
+3. Resize them to your preference.
+
+### Lock Mode
+Click **Lock** when done.
+This activates click-through mode so the HUD never interferes with gameplay.
+
+<Image
+  src={arrangeHudImg}
+  alt="Arranging HUD Windows"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+Your layout automatically saves and loads at startup.
+
+---
+
+# Understanding the Overlays
+
+Below is an overview of each overlay, what it shows, and how to interpret the data during racing.
+
+---
+
+## Timing Tower Overlay
+
+<Image
+  src={timingTowerImg}
+  alt="Timing Tower Overlay"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+A broadcast-style **timing tower** inspired by F1 coverage.
+
+Displays:
+
+- Position
+- Driver & team
+- Tyre compound
+- Max tyre wear %
+- ERS deploy mode & ERS %
+- DRS state
+- Penalties
+
+**Use it to:**
+Track tyre strategy, ERS availability, and traffic situations without using the game's UI.
+
+---
+
+## Lap Timer Overlay
+
+<Image
+  src={lapTimerImg}
+  alt="Lap Timer Overlay"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+Displays:
+
+- Current lap
+- Last lap
+- Best lap
+- Sector times + colours
+
+### Dynamic Sector Colour System
+Sectors can change from purple → green or green → yellow based on improvements—mirroring real-world timing behavior.
+
+**Interpretation:**
+- Green = personal best
+- Purple = session best
+- Mixed colours = inconsistency, traffic, or tyre degradation
+
+---
+
+## Multi-Function Display (MFD)
+
+<Image
+  src={mfdOverviewImg}
+  alt="MFD Overview"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+The MFD is a multi-page telemetry and race engineering display.
+
+---
+
+### Collapsed Mode
+
+<Image
+  src={mfdCollapsedImg}
+  alt="MFD Collapsed Mode"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+A compact minimised view that stays out of the way while keeping critical info accessible.
+
+---
+
+### Lap Times Page
+
+<Image
+  src={mfdLapTimesImg}
+  alt="MFD Lap Times Page"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+Shows the last **five laps** with sector detail.
+
+Useful for:
+- Identifying pace trends
+- Monitoring consistency
+- Evaluating setup changes
+
+---
+
+### Weather Forecast Page
+
+<Image
+  src={mfdWeatherImg}
+  alt="MFD Weather Page"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+Displays upcoming weather predictions and track evolution trends.
+
+---
+
+### Fuel Info Page
+
+<Image
+  src={mfdFuelImg}
+  alt="MFD Fuel Info Page"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+Shows:
+
+- Real-time fuel load
+- Last-lap consumption
+- Average usage
+- Predicted fuel requirement
+- **Target fuel for next lap**
+
+Ideal for race-long fuel management.
+
+---
+
+### Tyre Wear Page
+
+<Image
+  src={mfdTyreWearImg}
+  alt="MFD Tyre Wear Page"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+Displays:
+
+- Current tyre ages
 - Wear percentages
-- Wear predictions for future laps
-- Trend recalculated every lap based on data
+- Predicted future wear
+- Trend-based analysis
 
-> **[PLACEHOLDER: MFD tyre wear screenshot]**
-
----
-
-### 🏁 Pit Rejoin Page
-
-Simulates a pit stop **right now** and predicts:
-
-- Your rejoin position
-- The updated timing tower
-- Expected intervals to nearby cars
-- Whether you’ll come out in traffic or clean air
-
-> **[PLACEHOLDER: MFD pit rejoin screenshot]**
+Great for stint planning and avoiding late-race dropoff.
 
 ---
 
-## 🖥️ Platform Support
+### Pit Rejoin Page
 
-The HUD is:
+<Image
+  src={mfdPitRejoinImg}
+  alt="MFD Pit Rejoin Page"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
 
-- ✔️ **Supported on Windows**
-- ❌ **Not supported on macOS**
-- ⚙️ **Disabled by default**
+Simulates pitting **this lap**, showing:
 
-Enable it via:
-
-**Settings → HUD**
-
----
-
-## 🎛️ Overlay Controls & Customisation
-
-### Enable / Disable Overlays
-Each overlay can be toggled individually.
-
-### UDP Action Code Support
-The F1 sim’s UDP action codes can control the HUD:
-
-- **Hide/show all overlays**
-- **Next MFD page**
-
-### Global Opacity
-Set the transparency for all HUD elements with a simple % slider in Settings.
+- Predicted rejoin position
+- Gaps to nearby cars
+- Whether you'll exit into traffic or clean air
+- Strategy implications
 
 ---
 
-## 🔓 Move, Resize, and Lock Your HUD
+# Final Thoughts
 
-In the main app window:
+The new Pits n' Giggles HUD system gives sim racers and F1 25 drivers access to the kind of real-time telemetry and race-engineering tools normally reserved for professional software suites.
 
-- Press **Unlock** to move and resize any overlay window
-- Arrange them exactly how you like
-- Press **Lock** to freeze the layout
+For full installation instructions:
 
-Your chosen positions and sizes are automatically saved for future sessions.
+> **Backlink:** [Complete Pits n' Giggles Setup Guide](../../docs/setup.md)
 
-> **[PLACEHOLDER: HUD arrange/move/resize screenshot]**
-
----
-
-## 🏁 Final Thoughts
-
-This new HUD system brings clarity, customization, and depth to your racing experience — all without leaving the cockpit.
-
-Try it, tweak it, and make the HUD your own.
-
-Happy racing. 🏎️💨
-
-> **[PLACEHOLDER: final system overview image]**
+If you'd like an SEO-optimized meta description or a short teaser variant for social sharing, I can generate those too.
