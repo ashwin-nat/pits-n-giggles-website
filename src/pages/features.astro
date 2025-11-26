@@ -164,5 +164,5 @@ const features = [
     </div>
   </div>
 
-  <ImageViewer images={features.map(f => ({ url: f.image.url.src, alt: f.image.alt, description: f.description }))} />
+  <ImageViewer images={features.map(f => ({ src: f.image.url, alt: f.image.alt, description: f.description }))} />
 </Layout>
