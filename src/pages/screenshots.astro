@@ -5,67 +5,67 @@ import { Image } from 'astro:assets';
 
 const screenshots = [
   {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
+    src: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/main-ui.png?raw=true",
     alt: "Main Dashboard",
     description: "The main dashboard showing real-time telemetry data during a race"
   },
   {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/eng-view.png?raw=true",
+    src: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/eng-view.png?raw=true",
     alt: "Engineer Mode",
     description: "For dedicated rage engineers, use the advanced engineer view to get extensive live data to compare your driver against the competition"
   },
   {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/launcher.png?raw=true",
+    src: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/launcher.png?raw=true",
     alt: "Launcher",
     description: "Simple launcher app to manage the conveniently configure the app and manage the subsystems."
   },
   {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/png-stream-overlay.png?raw=true",
+    src: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/png-stream-overlay.png?raw=true",
     alt: "OBS Integration",
     description: "Add live real-time data points to your stream/recording for content creation"
   },
   {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/lap-times-modal-ss.png?raw=true",
+    src: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/lap-times-modal-ss.png?raw=true",
     alt: "Lap Times Analysis",
     description: "Detailed lap time analysis with sector comparisons"
   },
   {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-stint-modal-ss.png?raw=true",
+    src: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-stint-modal-ss.png?raw=true",
     alt: "Tyre Management",
     description: "Track your tyre wear and predict optimal pit stop windows"
   },
   {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-sets.png?raw=true",
+    src: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-sets.png?raw=true",
     alt: "Tyre Sets",
     description: "Live available tyre sets for each driver"
   },
   {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-delta.png?raw=true",
+    src: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-delta.png?raw=true",
     alt: "Tyre delta",
     description: "Tyre compound delta during changing conditions"
   },
   {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/ers-modal-ss.png?raw=true",
+    src: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/ers-modal-ss.png?raw=true",
     alt: "ERS usage",
     description: "Track your ERS deployment and harvest trends across laps"
   },
   {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/fuel-modal-ss.png?raw=true",
+    src: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/fuel-modal-ss.png?raw=true",
     alt: "Fuel Management",
     description: "Track your fuel consumption and identify areas for optimization"
   },
   {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/position-history.png?raw=true",
+    src: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/position-history.png?raw=true",
     alt: "Position History",
     description: "Position history for all cars in the race"
   },
   {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-stint-history.png?raw=true",
+    src: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/tyre-stint-history.png?raw=true",
     alt: "Tyre Stint History",
     description: "Tyre stint history for all cars in the race"
   },
   {
-    url: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/speed-trap-records.png?raw=true",
+    src: "https://github.com/ashwin-nat/pits-n-giggles/blob/main/screenshots/speed-trap-records.png?raw=true",
     alt: "Speed Trap Records",
     description: "Best speed trap records for all cars in the race (kmph)"
   }
@@ -88,7 +88,7 @@ const screenshots = [
             <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-secondary-700">
               <div class="aspect-video relative overflow-hidden">
                 <Image
-                  src={screenshot.url}
+                  src={screenshot.src}
                   alt={screenshot.alt}
                   width={640}
                   height={360}
