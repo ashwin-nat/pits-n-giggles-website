@@ -1,0 +1,335 @@
+---
+title: 'Setting up the In-Game Overlays'
+description: "How to enable, configure, and use the Pits n' Giggles in-game HUD for F1 25 and sim racing."
+pubDate: 2025-11-17
+author: 'Ashwin Natarajan'
+authorDescription: 'Developer'
+category: 'App Setup'
+image: '../../blog_assets/hud-setup/thumbnail.png'
+tags: ['f125', 'simracing', 'telemetry', 'race-engineering', 'overlay', 'hud']
+---
+
+import { Image } from 'astro:assets';
+
+
+import timingTowerImg from '../../blog_assets/hud-setup/timing-tower.png';
+import borderlessWindowImg from '../../blog_assets/hud-setup/borderless-window.png';
+
+import lapTimerImg from '../../blog_assets/hud-setup/lap-timer.png';
+
+import mfdCollapsedImg from '../../blog_assets/hud-setup/mfd-collapsed.png';
+import mfdLapTimesImg from '../../blog_assets/hud-setup/mfd-lap-times.png';
+import mfdWeatherImg from '../../blog_assets/hud-setup/mfd-weather.png';
+import mfdFuelImg from '../../blog_assets/hud-setup/mfd-fuel.png';
+import mfdTyreWearImg from '../../blog_assets/hud-setup/mfd-tyre-wear.png';
+import mfdTyreSetsImg from '../../blog_assets/hud-setup/mfd-tyre-sets.png';
+import mfdPitRejoinImg from '../../blog_assets/hud-setup/mfd-pit-rejoin.png';
+import mfdCustomize from '../../blog_assets/hud-setup/mfd-customization.png';
+
+import arrangeHudImg from '../../blog_assets/hud-setup/hud-arrange.png';
+import udpActionCodeGameImg from '../../blog_assets/tyre-delta-feature/game-settings.jpg';
+import udpActionCodePngImg from '../../blog_assets/hud-setup/mfd-customization.png';
+
+# Setting Up the New In-Game HUD / Overlay for *Pits n' Giggles*
+
+The latest update to **Pits n' Giggles** introduces a full in-game **HUD / overlay system**, built for F1 25 and the wider sim racing community.
+These overlays provide clearer visibility, more accurate telemetry, and race-engineer-grade insights-all directly on top of your game.
+
+---
+
+- Starting from v3.0.0, Pits n' Giggles now has in game HUD/overlays.
+- These can be used to further enhance the data you receive while racing, on the same screen!
+
+---
+
+## Prerequisites
+
+ - F1 23+ installed with telemetry enabled and Pits n' Giggles setup.
+    - [Follow this guide for more instructions on that](/blog/setting-up-udp-telemetry-f1)
+ - A windows PC. The Overlays are supported only on windows, given that the game is supported only on windows
+ - The game running in windowed (full screen) mode. This is important for any overlay application to work!
+    - Settings -> Graphics Settings -> Video Mode
+
+ <Image
+  src={borderlessWindowImg}
+  alt="Borderless Window"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+---
+
+## Configuring Overlay Position & Size
+
+> The HUD is disabled by default. Enable it in "Settings -> Overlays -> Enable Overlays"
+
+Every overlay appears as a floating, always-on-top window.
+
+### Unlock Mode
+1. Click **Unlock** in the app.
+2. Drag each overlay to position it.
+3. Resize them to your preference.
+
+### Lock Mode
+Click **Lock** when done to save your preferences
+This activates click-through mode so the HUD never interferes with gameplay.
+
+<Image
+  src={arrangeHudImg}
+  alt="Arranging HUD Windows"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+Your layout automatically saves and loads at startup.
+
+---
+
+# Understanding the Overlays
+
+Below is an overview of each overlay, what it shows, and how to interpret the data during racing.
+
+---
+
+## Timing Tower Overlay
+
+<Image
+  src={timingTowerImg}
+  alt="Timing Tower Overlay"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+A broadcast-style **timing tower** inspired by F1 coverage.
+
+Displays:
+
+- Position
+- Driver & team
+- Delta to car ahead/behind
+- Tyre compound & Max tyre wear %
+- ERS info
+    - The bar represents the ERS deploy models.
+        - Gray = None
+        - Yellow = Medium
+        - Green = Hotlap
+        - Red = overtake
+    - ERS Battery level %
+- DRS state
+    - The bar repesents one of two states
+        - Green = DRS available/activated
+        - Gray  = DRS unavailable/not activated
+- Penalties
+    - Time and DT pens
+
+ > NOTE: The number of rows to be displayed on the table can be configured from the settings menu
+
+---
+
+## Lap Timer Overlay
+
+<Image
+  src={lapTimerImg}
+  alt="Lap Timer Overlay"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+### Live Delta & Estimated Lap Time
+- The delta is not exported via UDP telemetry by the sim.
+- Pits n' Giggles estimates the live delta based on ongoing lap time and currrent track position.
+- The fastest lap's progress is tracked meticulously and the current lap time's delta is estimated against this reference
+
+### Sector colour bars
+- Same as what's in the game, but it's Dynamic.
+- This means that the sector colour is constantly being re-evaluated.
+- If you have a purple sector and then someone else sets a faster sector time, your sector will be demoted from Purple to Green
+
+
+### Dynamic Sector Colour System
+Sectors can change from purple → green or green → yellow based on improvements-mirroring real-world timing behavior.
+
+**Interpretation:**
+- Green = personal best
+- Purple = session best
+- Mixed colours = inconsistency, traffic, or tyre degradation
+
+---
+
+## Multi-Function Display (MFD)
+
+<Image
+  src={mfdCollapsedImg}
+  alt="MFD Collapsed Mode"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+The MFD is a multi-page telemetry and race engineering display that can be cycled through.
+By default, it begins in a compact/collapsed mode, to minimize screen space used
+
+---
+
+### Lap Times Page
+
+<Image
+  src={mfdLapTimesImg}
+  alt="MFD Lap Times Page"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+Shows the last **five laps** with sector detail.
+
+---
+
+### Weather Forecast Page
+
+<Image
+  src={mfdWeatherImg}
+  alt="MFD Weather Page"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+Displays upcoming weather forecast details for upto 1 hour
+
+---
+
+### Fuel Info Page
+
+<Image
+  src={mfdFuelImg}
+  alt="MFD Fuel Info Page"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+Shows:
+
+- Last-lap consumption
+- Average usage rate
+- Target usage rate
+- **Target fuel consumption for next lap to meet target usage rate**
+- Surplus laps
+
+NOTE:
+- All these values are calculated in real time based on live consumption trends.
+- The surplus number displayed here will update at the end of every lap and is NOT the same as the excess laps displayed in the game
+- The game uses flat fuel burn rate and assumes everyone has the same style and consumption trends, regardless of car setup, which is simply not true.
+
+---
+
+### Tyre Wear Page
+
+<Image
+  src={mfdTyreWearImg}
+  alt="MFD Tyre Wear Page"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+Displays:
+
+- Current tyre wear, age and wear rate
+- Wear percentages
+- Unused tyre sets available
+- Predicted future wear, based on live/real-time trends
+
+Great for stint planning and avoiding late-race dropoff.
+
+---
+
+### Pit Rejoin Prediction
+
+<Image
+  src={mfdPitRejoinImg}
+  alt="MFD Pit Rejoin Page"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+Predicts and displays where you'd rejoin on track if you were to pit right now.
+
+- Predicted rejoin position
+- Gaps to nearby cars
+- Whether you'll exit into traffic or clean air
+
+This is predicted using the Pit Time Loss that can be configured in settings for each track.
+Thanks to adriaN for sharing their findings!
+
+---
+
+### Tyre Sets
+
+<Image
+  src={mfdTyreSetsImg}
+  alt="MFD Tyre Sets Page"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+Displays the lap time delta of the freshest tyre set of a given compound against the current fitted tyre set!
+
+### MFD Customization
+
+- Enable/disable specific HUD overlays
+- Configure number of rows in the timing tower
+- Customize the MFD
+    - enable/disable specific pages
+    - reorder the MFD pages
+- Set the opacity of the overlays
+
+<Image
+  src={mfdCustomize}
+  alt="MFD Customization"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+---
+
+## Controlling the overlays
+
+The overlays can be controlled while in game by using the game's **UDP action code** feature.
+Currently, two types of actions are supported:
+- Show/Hide overlays
+- MFD Cycle Page
+
+### Setup in Pits n' Giggles [OPTIONAL]
+
+Customize the UDP action codes based on your preferences (or leave it in the defaults - recommended)
+The options can be found in Settings -> Overlays
+You can tweak the following UDP action codes
+- Show/Hide Lap Timer overlay
+- Show/Hide Timing Tower overlay
+- Show/Hide MFD overlay
+- Show/Hide all overlays
+- MFD Cycle Page
+
+**Remember these numbers!**
+<Image
+  src={udpActionCodePngImg}
+  alt="Game Settings"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+### Setup in the game
+
+- In the game, edit the controls for your input device (be it wheel, controller or keyboard)
+- Scroll down to the absolute bottom and edit the corresponding UDP action codes to buttons of your choice.
+- Save the settings and you're done!
+
+<Image
+  src={udpActionCodeGameImg}
+  alt="Game Settings"
+  widths={[300, 600, 1200]}
+  sizes="(max-width: 768px) 100vw, 768px"
+/>
+
+## Further reading!
+
+[Here's how tyre wear and fuel predictions work in Pits n' Giggles!](/blog/fuel-tyre-wear-predictions)
+
+---

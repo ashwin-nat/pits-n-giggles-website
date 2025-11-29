@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 
 interface Props {
   images: {
-    url: string;
+    src: string | ImageMetadata;
     alt: string;
     description?: string;
   }[];
@@ -45,7 +45,7 @@ const { images, initialIndex = 0 } = Astro.props;
       <div id="mainImageContainer" class="max-w-full max-h-[70vh] mb-4 flex items-center justify-center">
         <!-- Main image will be inserted here by JavaScript -->
       </div>
-      
+
       <div class="text-center">
         <h3 id="imageTitle" class="text-white text-xl font-semibold mb-2"></h3>
         <p id="imageDescription" class="text-secondary-300 max-w-2xl"></p>
@@ -57,14 +57,14 @@ const { images, initialIndex = 0 } = Astro.props;
       <div class="flex items-center justify-center">
         <div id="thumbnailContainer" class="flex gap-2 overflow-x-auto max-w-full px-4 py-2 scrollbar-hide">
           {images.map((image, index) => (
-            <button 
+            <button
               class="thumbnail-btn flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 border-transparent hover:border-accent-400 transition-all duration-200 opacity-60 hover:opacity-100"
               data-index={index}
-              data-src={image.url}
+              data-src={typeof image.src === 'string' ? image.src : image.src.src}
               data-alt={image.alt}
             >
               <img
-                src={image.url}
+                src={typeof image.src === 'string' ? image.src : image.src.src}
                 alt={image.alt}
                 width="80"
                 height="80"
@@ -98,7 +98,7 @@ const { images, initialIndex = 0 } = Astro.props;
 
   function createMainImage(imageData) {
     const img = document.createElement('img');
-    img.src = imageData.url;
+    img.src = typeof imageData.src === 'string' ? imageData.src : imageData.src.src;
     img.alt = imageData.alt;
     img.className = 'max-w-full max-h-full object-contain';
     img.loading = 'eager'; // Load main image immediately when viewer opens
@@ -109,18 +109,18 @@ const { images, initialIndex = 0 } = Astro.props;
 
   function updateImage() {
     const image = images[currentIndex];
-    
+
     // Clear current main image
     mainImageContainer.innerHTML = '';
-    
+
     // Create and add new main image
     const mainImg = createMainImage(image);
     mainImageContainer.appendChild(mainImg);
-    
+
     titleElement.textContent = image.alt;
     descriptionElement.textContent = image.description || '';
     counterElement.textContent = `${currentIndex + 1} / ${images.length}`;
-    
+
     // Update thumbnail active state
     thumbnailBtns.forEach((btn, index) => {
       if (index === currentIndex) {
@@ -234,7 +234,7 @@ const { images, initialIndex = 0 } = Astro.props;
   function handleSwipe() {
     const swipeThreshold = 50;
     const diff = touchStartX - touchEndX;
-    
+
     if (Math.abs(diff) > swipeThreshold) {
       if (diff > 0) {
         goToNext(); // Swipe left - next image
@@ -251,7 +251,7 @@ const { images, initialIndex = 0 } = Astro.props;
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
