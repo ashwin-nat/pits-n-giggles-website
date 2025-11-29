@@ -8,6 +8,7 @@ import lapTimesModal from '../assets/common/lap-times-modal-ss.png';
 import engView from '../assets/common/eng-view.png';
 import streamOverlay from '../assets/common/png-stream-overlay.png';
 import launcher from '../assets/common/launcher.png';
+import hudArrange from '../blog_assets/hud-setup/hud-collage.png';
 
 const features = [
   {
@@ -35,6 +36,19 @@ const features = [
     image: {
       url: lapTimesModal,
       alt: "Advanced Analytics Dashboard"
+    }
+  },
+  {
+    title: "In-game HUD",
+    description: "Heavily customizable in-game HUD to provide all the information you need at a glance.",
+    details: [
+      "Timing tower with live ERS, DRS and tyre wear info",
+      "Lap timer with dynamic sectors, live delta and estimates",
+      "MFD with several predictive data like tyre wear, fuel, weather, etc"
+    ],
+    image: {
+      url: hudArrange,
+      alt: "In-game HUD"
     }
   },
   {
@@ -77,7 +91,7 @@ const features = [
       url: launcher,
       alt: "Save Data Viewer"
     }
-  }
+  },
 ];
 ---
 
@@ -150,5 +164,5 @@ const features = [
     </div>
   </div>
 
-  <ImageViewer images={features.map(f => ({ url: f.image.url.src, alt: f.image.alt, description: f.description }))} />
+  <ImageViewer images={features.map(f => ({ src: f.image.url, alt: f.image.alt, description: f.description }))} />
 </Layout>
