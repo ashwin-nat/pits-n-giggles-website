@@ -94,6 +94,58 @@ These settings ensure your game streams real-time **F1 telemetry data** to *Pits
   sizes="(max-width: 768px) 100vw, 768px"/>
 ---
 
+## UDP Forwarding
+
+UDP forwarding allows **Pits n' Giggles** to receive telemetry and forward it to other apps or devices.
+
+This is useful because most racing sims allow **only one app** to listen on a UDP telemetry port.
+
+---
+
+### When to Use This
+
+Use UDP forwarding if you want to run **Pits n' Giggles** together with other telemetry tools (overlays, dashboards, motion software, etc.).
+
+If you only use **Pits n' Giggles**, you do not need this feature.
+
+---
+
+### ⚠️ Important
+
+Configure UDP forwarding in **one app only**.
+
+Choose **one**:
+- Game → **Pits n' Giggles** → other apps
+- Game → other app → **Pits n' Giggles**
+
+❌ Do **not** forward telemetry back into an app that is already forwarding it. This will create a loop.
+
+The most common causes of port conflicts are **steering wheel software** and **SimHub**.
+
+---
+
+### Setup Example (F1 Games)
+
+By default, F1 games send telemetry to port **20777**.
+
+**Example setup:**
+- Game sends telemetry to **Pits n' Giggles** on port `20777`
+- In **Settings → UDP Forwarding**, add:
+127.0.0.1:20778
+- Configure the other app to listen on port 20778
+
+
+Pits n' Giggles will now forward telemetry to another app listening on port `20778`.
+
+---
+
+### Configuration
+
+- Location: **Settings → UDP Forwarding**
+- Maximum of **3 targets**
+- Format: host_or_ip_addr:port
+
+
 ## ✅ That's it!
 
 With telemetry enabled and the app running, *Pits n' Giggles* will start receiving data as soon as you're on track.
