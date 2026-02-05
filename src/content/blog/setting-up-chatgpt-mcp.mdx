@@ -1,0 +1,105 @@
+---
+title: "Setting up ChatGPT to interact with Pits n' Giggles"
+description: "Stream F1 25 telemetry live to a remote race engineer using Pits n' Giggles and Radmin - no port forwarding required, works even with full 22-player lobbies."
+pubDate: 2026-02-05
+author: 'Ashwin Natarajan'
+authorDescription: 'Sim racer'
+category: 'Race Engineering'
+image: '../../blog_assets/remote-race-engineer/radmin-thumbnail.jpg'
+tags: ['features', 'f1-25', 'f1-telemetry', 'sim-racing', 'race-engineer', 'remote-strategy', 'vpn', 'telemetry-dashboard', 'lobby-limit-bypass']
+---
+
+import { Image } from 'astro:assets';
+import radminMainUI from '../../blog_assets/remote-race-engineer/radmin-main-ui.png';
+import radminCreateNetwork from '../../blog_assets/remote-race-engineer/radmin-create-network.png';
+import radminJoinNetwork from '../../blog_assets/remote-race-engineer/radmin-join-network.png';
+import radminMainUINoMenu from '../../blog_assets/remote-race-engineer/radmin-main-ui-no-menu.png';
+import connectedToRemoteDashboard from '../../blog_assets/remote-race-engineer/connected-to-remote-dashboard.png';
+import pngLauncher from '../../blog_assets/remote-race-engineer/png-launcher-ui-ip-addr.png';
+
+
+# Adding a Local MCP Server to ChatGPT Desktop (via ngrok)
+
+This guide shows how to connect a **locally running MCP server** to **ChatGPT Desktop** by tunneling it over HTTPS with **ngrok**.
+
+---
+
+## Why ngrok is needed
+
+ChatGPT Desktop **requires HTTPS-accessible MCP servers**.
+Local servers usually run on `http://localhost`, which ChatGPT cannot reach directly.
+
+**ngrok solves this by:**
+- Exposing your local server to the internet
+- Automatically providing a secure `https://` URL
+- Requiring no TLS or DNS setup. It takes care of HTTPS
+
+Download: https://ngrok.com/download/windows/
+
+---
+
+## Step 1: Enable MCP server in Pits n' Giggles
+
+Click the check box in the settings menu. The app needs to be running for ChatGPT to be able to fetch live data
+
+```
+MCP Settings → Enable MCP HTTP Server
+````
+
+Change the port number if required
+
+---
+
+## Step 2: Expose the Server with ngrok
+
+Start an HTTPS tunnel to your local server. In the command line
+
+```bash
+ngrok http 4770
+```
+
+ngrok will output something like:
+
+```text
+Forwarding https://violet-penguin-1234.ngrok-free.app → http://localhost:3333
+```
+
+### [Optional] - Verify whether ngrok is working
+Paste the HTTPS URL in your browser and add /test in the end
+You should see a test response containing the string "Pits n' Giggles"
+
+Copy the **HTTPS URL**.
+
+---
+
+## Step 3: Add the MCP Server in ChatGPT Desktop
+
+1. Open **ChatGPT Desktop**
+2. Go to **Settings → Apps → Advanced Settings → Enable Developer Mode **
+3. Go to **Settings → Apps → Create app **
+4. Enter a name (e.g. Pits n' Giggles)
+5. Paste the copied HTTPS URL under MCP URL (add /mcp at the end)
+6. Authentication → No Auth
+7. Accept the disclaimer and create the app
+
+---
+
+## Step 4: Verify
+
+* Under apps, click the newly created app
+* Scroll down and you should see the list of tools (tools are basically standardised HTTP requests that the AI assitant can make to Pits n' Giggles)
+* In the chat window, click the + button, click more and select the newly added app. Now ChatGPT will know that you want it to use this app
+
+---
+
+## Notes
+
+* Free ngrok URLs change on restart → update the MCP URL if needed
+* HTTPS is mandatory; `http://localhost` will not work
+* Your server must correctly implement MCP discovery endpoints
+* ChatGPT makes life hard by requiring HTTPS, even for local server, which doesn't really make sense
+    - Make some noise, register a complaint, especially if you're a paying customer!
+
+---
+
+✅ Your local MCP server is now connected to ChatGPT Desktop.
