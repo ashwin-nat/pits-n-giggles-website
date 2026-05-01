@@ -79,14 +79,18 @@ These settings ensure your game streams real-time **F1 telemetry data** to *Pits
   widths={[300, 600, 1200]}
   sizes="(max-width: 768px) 100vw, 768px"/>
 
+> **NOTE: If you're on console (PlayStation/Xbox):**
 
-> NOTE: If you're on console (PS/XBox),
-```
-1. set UDP Broadcast Mode to On
-2. Run Pits n' Giggles on a windows computer (PC/laptop)
-3. Optional: If you have changed the port number in the F1 game settings
-    * Set the same UDP port number in Settings -> Network -> F1 UDP Telemetry Port
-```
+1. In the F1 game settings:
+   * Set **UDP Broadcast Mode = Off**
+   * Enter your PC's IP address in **UDP IP Address**
+2. Run Pits n' Giggles on your Windows PC/laptop (same network)
+3. Optional: If you changed the UDP port in the F1 game,
+   set the same port in Settings → Network → F1 UDP Telemetry Port
+4. Need help finding your PC's IP address? See:
+    * [Windows](https://www.whatismybrowser.com/detect/what-is-my-local-ip-address/#windows)
+    * [Mac](https://www.whatismybrowser.com/detect/what-is-my-local-ip-address/#macos)
+
 <Image
   src={pngSettings}
   alt="Settings page screenshot"
