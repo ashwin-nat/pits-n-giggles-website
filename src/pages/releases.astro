@@ -9,6 +9,7 @@ interface GitHubAsset {
   name: string;
   browser_download_url: string;
   download_count: number;
+  digest?: string | null;
 }
 
 interface GitHubRelease {
@@ -80,6 +81,10 @@ function getPlatformInfo(filename: string) {
   }
 }
 
+function isChecksumAsset(filename: string): boolean {
+  return filename.trim().toLowerCase() === 'checksums.txt';
+}
+
 // Function to extract images from markdown content
 function extractImagesFromMarkdown(content: string | undefined): Array<{url: string, alt: string, description?: string}> {
   if (!content) return [];
@@ -126,6 +131,7 @@ function parseMarkdownWithoutImages(content: string | undefined): string {
 // Get the releases data
 const releases: GitHubRelease[] = await getGitHubReleases();
 const latestRelease = releases[0];
+const latestReleaseAssets = (latestRelease?.assets ?? []).filter((asset) => !isChecksumAsset(asset.name));
 
 // Extract all images from all releases for the ImageViewer
 const allReleaseImages: Array<{url: string, alt: string, description?: string}> = [];
@@ -151,7 +157,7 @@ releases.forEach((release, releaseIndex) => {
           Stay up to date with the latest versions and improvements to Pits n' Giggles. Each release brings new features, bug fixes, and performance enhancements.
         </p>
 
-        {latestRelease && latestRelease.assets && latestRelease.assets.length > 0 && (
+        {latestRelease && latestReleaseAssets.length > 0 && (
           <div class="flex flex-wrap justify-center gap-4">
             <button
               id="downloadBtn"
@@ -201,6 +207,7 @@ releases.forEach((release, releaseIndex) => {
         <div class="space-y-8">
           {releases.map((release: GitHubRelease, releaseIndex: number) => {
             const releaseImages = releaseImageMap.get(releaseIndex) || [];
+            const visibleAssets = (release.assets ?? []).filter((asset) => !isChecksumAsset(asset.name));
             return (
               <div class="bg-secondary-800 rounded-lg p-6 shadow-lg border border-secondary-700">
                 <div class="flex justify-between items-start mb-4">
@@ -322,11 +329,11 @@ releases.forEach((release, releaseIndex) => {
                   </div>
                 )}
 
-                {release.assets && release.assets.length > 0 && (
+                {visibleAssets.length > 0 && (
                   <div>
                     <h4 class="text-lg font-semibold mb-2 text-primary-200">Downloads</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {release.assets.map((asset, assetIndex) => {
+                      {visibleAssets.map((asset, assetIndex) => {
                         const platformInfo = getPlatformInfo(asset.name);
                         return (
                           <a
@@ -346,7 +353,11 @@ releases.forEach((release, releaseIndex) => {
                               </div>
                               <span class="text-sm truncate">{asset.name}</span>
                             </div>
-                            <span class="text-xs text-secondary-400 ml-2 flex-shrink-0" data-release-index={releaseIndex} data-asset-index={assetIndex}>{asset.download_count.toLocaleString()} downloads</span>
+                            <div class="text-right ml-2 flex-shrink-0">
+                              <span class="text-xs text-secondary-400 block" data-release-index={releaseIndex} data-asset-index={assetIndex}>
+                                {asset.download_count.toLocaleString()} downloads
+                              </span>
+                            </div>
                           </a>
                         );
                       })}
@@ -457,6 +468,10 @@ releases.forEach((release, releaseIndex) => {
         }
       }
 
+      function isChecksumAsset(filename: string) {
+        return filename.trim().toLowerCase() === 'checksums.txt';
+      }
+
       // Fetch latest release data and populate modal
       // Cache for release data
       let cachedReleaseData: any = null;
@@ -472,8 +487,10 @@ releases.forEach((release, releaseIndex) => {
 
           const release = await response.json();
 
-          if (release.assets && release.assets.length > 0) {
-            const modalContent = release.assets.map((asset: any) => {
+          const visibleAssets = (release.assets || []).filter((asset: any) => !isChecksumAsset(asset.name));
+
+          if (visibleAssets.length > 0) {
+            const modalContent = visibleAssets.map((asset: any) => {
               const platformInfo = getPlatformInfo(asset.name);
               const downloadCount = asset.download_count || 0;
               return `
@@ -492,7 +509,7 @@ releases.forEach((release, releaseIndex) => {
                     </div>
                   </div>
                   <div class="flex items-center gap-2 text-secondary-400">
-                    <span class="text-xs">${downloadCount.toLocaleString()} downloads</span>
+                    <div class="text-right text-xs">${downloadCount.toLocaleString()} downloads</div>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform duration-200">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                       <polyline points="7 10 12 15 17 10"></polyline>
@@ -515,8 +532,10 @@ releases.forEach((release, releaseIndex) => {
 
       // Helper to populate modal with cached data
       function populateModalWithReleaseData(release: any) {
-        if (release && release.assets && release.assets.length > 0) {
-          const modalContent = release.assets.map((asset: any) => {
+        const visibleAssets = (release?.assets || []).filter((asset: any) => !isChecksumAsset(asset.name));
+
+        if (visibleAssets.length > 0) {
+          const modalContent = visibleAssets.map((asset: any) => {
             const platformInfo = getPlatformInfo(asset.name);
             const downloadCount = asset.download_count || 0;
             return `
@@ -535,7 +554,7 @@ releases.forEach((release, releaseIndex) => {
                   </div>
                 </div>
                 <div class="flex items-center gap-2 text-secondary-400">
-                  <span class="text-xs">${downloadCount.toLocaleString()} downloads</span>
+                  <div class="text-right text-xs">${downloadCount.toLocaleString()} downloads</div>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform duration-200">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7 10 12 15 17 10"></polyline>
@@ -633,6 +652,7 @@ releases.forEach((release, releaseIndex) => {
     document.addEventListener('DOMContentLoaded', async function() {
       const GITHUB_API_RELEASES = "https://api.github.com/repos/ashwin-nat/pits-n-giggles/releases";
       const numberOfReleasesToFetch = 5; // Should match the server-side fetch
+      const isChecksumAsset = (filename) => filename.trim().toLowerCase() === 'checksums.txt';
 
       try {
         const response = await fetch(GITHUB_API_RELEASES, {
@@ -650,7 +670,8 @@ releases.forEach((release, releaseIndex) => {
         const releasesData = stableReleases.slice(0, numberOfReleasesToFetch);
 
         releasesData.forEach((release, releaseIndex) => {
-          release.assets.forEach((asset, assetIndex) => {
+          const visibleAssets = (release.assets || []).filter((asset) => !isChecksumAsset(asset.name));
+          visibleAssets.forEach((asset, assetIndex) => {
             const span = document.querySelector(`span[data-release-index="${releaseIndex}"][data-asset-index="${assetIndex}"]`);
             if (span) {
               span.textContent = `${asset.download_count.toLocaleString()} downloads`;
