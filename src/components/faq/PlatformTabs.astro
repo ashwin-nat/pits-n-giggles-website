@@ -1,0 +1,105 @@
+---
+interface Props {
+  platforms: ('windows' | 'macos' | 'linux')[];
+}
+
+const { platforms } = Astro.props;
+
+const labels: Record<string, string> = {
+  windows: 'Windows',
+  macos: 'macOS',
+  linux: 'Linux',
+};
+
+const icons: Record<string, string> = {
+  windows: 'bi-windows',
+  macos: 'bi-apple',
+  linux: 'bi-ubuntu',
+};
+---
+
+<div
+  class="platform-tabs-container my-5 rounded-xl border border-secondary-800 bg-secondary-950/60 overflow-hidden"
+  data-platforms={platforms.join(',')}
+>
+  <div class="platform-tabs-nav flex border-b border-secondary-800" role="tablist">
+    {platforms.map((p, i) => (
+      <button
+        role="tab"
+        class="platform-tab-btn flex items-center gap-2 px-5 py-3 text-sm font-medium transition-colors border-b-2 border-transparent text-secondary-400 hover:text-white"
+        data-platform={p}
+        aria-selected="false"
+        aria-controls={`panel-${p}`}
+      >
+        <i class={`bi ${icons[p] ?? 'bi-display'}`}></i>
+        {labels[p] ?? p}
+      </button>
+    ))}
+  </div>
+
+  <div class="platform-tabs-content p-5">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .platform-tab-btn[aria-selected="true"] {
+    color: #0090FF;
+    border-bottom-color: #0090FF;
+    background: transparent;
+  }
+</style>
+
+<script>
+  // Runs once per page; handles all .platform-tabs-container elements.
+  // Platform state is stored in localStorage and shared globally so switching
+  // one tab updates every PlatformTabs on the page.
+
+  const STORAGE_KEY = 'png-faq-platform';
+
+  function detectOsPlatform(): string {
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.includes('win')) return 'windows';
+    if (ua.includes('mac')) return 'macos';
+    if (ua.includes('linux')) return 'linux';
+    return 'windows';
+  }
+
+  function getActivePlatform(): string {
+    return localStorage.getItem(STORAGE_KEY) || detectOsPlatform();
+  }
+
+  function applyPlatform(platform: string) {
+    localStorage.setItem(STORAGE_KEY, platform);
+
+    // Update all panels on the page
+    document.querySelectorAll<HTMLElement>('.platform-panel').forEach(panel => {
+      panel.hidden = panel.dataset.platform !== platform;
+    });
+
+    // Update all tab buttons on the page
+    document.querySelectorAll<HTMLButtonElement>('.platform-tab-btn').forEach(btn => {
+      const isActive = btn.dataset.platform === platform;
+      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+  }
+
+  function initPlatformTabs() {
+    const platform = getActivePlatform();
+
+    // Attach click handlers to all tab buttons
+    document.querySelectorAll<HTMLButtonElement>('.platform-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        applyPlatform(btn.dataset.platform!);
+      });
+    });
+
+    // Check URL param override: /faq#entry?platform=windows
+    const urlParam = new URLSearchParams(location.search).get('platform');
+    applyPlatform(urlParam ?? platform);
+  }
+
+  // Re-initialise after any Astro view transitions
+  document.addEventListener('astro:page-load', initPlatformTabs);
+  initPlatformTabs();
+</script>
