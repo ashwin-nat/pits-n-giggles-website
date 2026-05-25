@@ -1,0 +1,170 @@
+---
+import Layout from '../layouts/Layout.astro';
+import FAQCategory from '../components/faq/FAQCategory.astro';
+import FAQSearch from '../components/faq/FAQSearch.astro';
+import type { FAQSearchEntry } from '../components/faq/FAQSearch.astro';
+import { getCollection } from 'astro:content';
+
+// Load and sort all FAQ entries
+const allEntries = await getCollection('faq');
+allEntries.sort((a, b) => a.data.order - b.data.order);
+
+// Group by category, preserving insertion order (entries sorted by order within each category)
+const categoryMap = new Map<string, typeof allEntries>();
+for (const entry of allEntries) {
+  const cat = entry.data.category;
+  if (!categoryMap.has(cat)) categoryMap.set(cat, []);
+  categoryMap.get(cat)!.push(entry);
+}
+
+// Build a flat list of category names sorted alphabetically for the sidebar
+const categoryNames = [...categoryMap.keys()].sort();
+
+// Build search index payload
+const searchEntries: FAQSearchEntry[] = allEntries.map(e => ({
+  id: e.slug.split('/').pop() || e.slug,
+  title: e.data.title,
+  category: e.data.category,
+  tags: e.data.tags ?? [],
+  searchTerms: e.data.searchTerms ?? [],
+}));
+---
+
+<Layout
+  title="FAQ"
+  description="Frequently asked questions about Pits n' Giggles — installation, setup, troubleshooting, and OBS integration."
+>
+  <!-- FAQ Schema markup for SEO -->
+  <script
+    slot="head"
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": allEntries.map(e => ({
+        "@type": "Question",
+        "name": e.data.title,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": e.data.searchTerms?.join('. ') || e.data.title,
+        },
+      })),
+    })}
+  />
+
+  <div class="min-h-screen pt-20">
+    <!-- Hero -->
+    <section class="border-b border-secondary-800 pb-10 pt-12">
+      <div class="container mx-auto px-4">
+        <div class="max-w-2xl">
+          <h1 class="mb-3 text-4xl font-bold text-white">
+            Frequently Asked Questions
+          </h1>
+          <div class="mb-5 h-1 w-16 rounded bg-primary-500"></div>
+          <p class="font-body text-secondary-300">
+            Everything you need to get Pits n' Giggles up and running. Can't find what you're looking for?
+            <a href="/blog" class="text-accent-400 hover:underline">Check the blog</a> for in-depth guides.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main content -->
+    <section class="py-10">
+      <div class="container mx-auto px-4">
+        <div class="flex gap-10 lg:items-start">
+
+          <!-- Category sidebar (desktop) -->
+          <aside class="hidden lg:block w-52 shrink-0 sticky top-24">
+            <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-secondary-500">
+              Categories
+            </p>
+            <nav class="flex flex-col gap-1">
+              {categoryNames.map(cat => {
+                const catId = cat.toLowerCase().replace(/[\s/]+/g, '-');
+                return (
+                  <a
+                    href={`#${catId}`}
+                    class="rounded-lg px-3 py-2 text-sm text-secondary-300 transition hover:bg-secondary-800 hover:text-white"
+                  >
+                    {cat}
+                    <span class="ml-1 text-xs text-secondary-500">
+                      ({categoryMap.get(cat)?.length})
+                    </span>
+                  </a>
+                );
+              })}
+            </nav>
+          </aside>
+
+          <!-- FAQ list -->
+          <div class="min-w-0 flex-1">
+            <FAQSearch entries={searchEntries} />
+
+            {categoryNames.map(cat => (
+              <FAQCategory category={cat} entries={categoryMap.get(cat)!} />
+            ))}
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script>
+  // Accordion toggle logic (global, handles all .faq-trigger buttons)
+  function initAccordions() {
+    document.querySelectorAll<HTMLButtonElement>('.faq-trigger').forEach(trigger => {
+      // Avoid double-binding on re-init
+      if (trigger.dataset.bound) return;
+      trigger.dataset.bound = 'true';
+
+      trigger.addEventListener('click', () => {
+        const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+        const answerId = trigger.getAttribute('aria-controls');
+        const answer = answerId ? document.getElementById(answerId) : null;
+
+        trigger.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+        if (answer) answer.dataset.expanded = isOpen ? 'false' : 'true';
+      });
+
+      // Keyboard: Space/Enter already handled by button, but ensure Enter works on divs too
+      trigger.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          trigger.click();
+        }
+      });
+    });
+  }
+
+  // Auto-open item from URL hash on page load
+  function openFromHash() {
+    const hash = location.hash.slice(1);
+    if (!hash) return;
+
+    const target = document.getElementById(hash);
+    if (!target?.classList.contains('faq-item')) return;
+
+    const trigger = target.querySelector<HTMLButtonElement>('.faq-trigger');
+    const answer  = target.querySelector<HTMLElement>('.faq-answer');
+    if (trigger && answer) {
+      trigger.setAttribute('aria-expanded', 'true');
+      answer.dataset.expanded = 'true';
+      // Scroll after a tick so the layout has settled
+      setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    initAccordions();
+    openFromHash();
+  });
+
+  initAccordions();
+  openFromHash();
+
+  // Deep-link when hash changes without a reload
+  window.addEventListener('hashchange', openFromHash);
+</script>
