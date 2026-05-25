@@ -1,0 +1,56 @@
+---
+title: Why is telemetry not detected?
+category: Troubleshooting
+order: 1
+tags:
+  - telemetry
+  - udp
+  - not working
+  - no data
+searchTerms:
+  - telemetry not working
+  - no data showing
+  - app not receiving data
+  - udp not detected
+  - connection failed
+platforms:
+  - windows
+  - macos
+difficulty: beginner
+featured: true
+---
+
+Usually this happens because UDP telemetry output is disabled in the game, or the connection is blocked by a firewall.
+
+**First, check the game settings:**
+- Open F1 game settings → Telemetry Settings
+- Set **UDP Telemetry** to `On`
+- Set **UDP Broadcast Mode** to `Off`
+- Set the **UDP IP Address** to the IP of the machine running Pits n' Giggles
+- Set **UDP Port** to `20777` (default)
+
+<PlatformTabs platforms={["windows", "macos"]}>
+  <PlatformPanel platform="windows">
+
+**Windows Firewall:**
+
+1. Open Windows Security → Firewall & network protection → Allow an app through firewall
+2. Click **Change settings** → **Allow another app**
+3. Browse to the Pits n' Giggles executable and add it
+4. Ensure both **Private** and **Public** network checkboxes are ticked
+
+Alternatively, you can temporarily disable the firewall to test if it's the cause.
+
+  </PlatformPanel>
+  <PlatformPanel platform="macos">
+
+**macOS Network Permissions:**
+
+1. Open **System Settings** → **Privacy & Security** → **Local Network**
+2. Ensure Pits n' Giggles has permission to access the local network
+3. If the app doesn't appear, launch it first and then check again
+
+  </PlatformPanel>
+</PlatformTabs>
+
+After making changes, **restart the game** and relaunch Pits n' Giggles.

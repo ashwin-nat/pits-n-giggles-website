@@ -26,8 +26,26 @@ const aboutCollection = defineCollection({
   }),
 });
 
+// Define the schema for FAQ entries
+const faqCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    category: z.string(),
+    order: z.number(),
+    tags: z.array(z.string()).optional(),
+    platforms: z.array(z.enum(['windows', 'macos', 'linux'])).optional(),
+    searchTerms: z.array(z.string()).optional(),
+    related: z.array(z.string()).optional(),
+    updated: z.string().optional(),
+    featured: z.boolean().optional(),
+    difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
+  }),
+});
+
 // Export the collections
 export const collections = {
   'blog': blogCollection,
   'about': aboutCollection,
+  'faq': faqCollection,
 };
