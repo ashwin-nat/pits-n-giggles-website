@@ -1,0 +1,16 @@
+---
+title: Why is my wheel rev lights/display not working when I use Pits n' Giggles?
+category: Getting Started
+order: 3
+featured: true
+---
+
+- The F1 games send out telemetry data over UDP. Modern operating systems allow only one application to receive data at a time on a given port.
+- When Pits n' Giggles is running and listening for telemetry, it takes exclusive access to the UDP data stream.
+- In order to use Pits n' Giggles along with other applications that read telemetry (like wheel software), you need to set up UDP forwarding to share the data stream.
+
+<Callout type="info" title="UDP Forwarding">
+  When this feature is configured, Pits n' Giggles will receive the telemetry data and then forward it to another port that your wheel software can listen to.
+  This allows both Pits n' Giggles and your wheel software to receive the same telemetry data simultaneously.
+  [Learn how to set up UDP forwarding in the Getting Started Guide](/blog/setting-up-udp-telemetry-f1#udp-forwarding).
+</Callout>
