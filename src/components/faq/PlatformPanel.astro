@@ -1,0 +1,11 @@
+---
+interface Props {
+  platform: 'windows' | 'macos' | 'linux';
+}
+
+const { platform } = Astro.props;
+---
+
+<div class="platform-panel" data-platform={platform} hidden>
+  <slot />
+</div>

@@ -1,0 +1,69 @@
+---
+title: How do I allow Pits n' Giggles through the firewall?
+category: Troubleshooting
+order: 2
+tags:
+  - firewall
+  - network
+  - permission
+  - udp
+searchTerms:
+  - firewall rule
+  - allow through firewall
+  - network blocked
+  - port 20777
+platforms:
+  - windows
+  - macos
+  - linux
+difficulty: beginner
+---
+
+Pits n' Giggles listens on UDP port **20777** (default) for telemetry packets from your F1 game. If your firewall blocks this port, no data will arrive.
+
+<PlatformTabs platforms={["windows", "macos", "linux"]}>
+  <PlatformPanel platform="windows">
+
+**Option A - Allow the app (recommended):**
+
+1. Open **Windows Security** → **Firewall & network protection**
+2. Click **Allow an app through firewall**
+3. Click **Change settings** → **Allow another app...**
+4. Browse to your Pits n' Giggles `.exe` and click **Add**
+5. Tick both **Private** and **Public** columns
+
+**Option B - Open the port manually:**
+
+Run this in an elevated PowerShell:
+```powershell
+New-NetFirewallRule -DisplayName "Pits n Giggles UDP" -Direction Inbound -Protocol UDP -LocalPort 20777 -Action Allow
+```
+
+  </PlatformPanel>
+  <PlatformPanel platform="macos">
+
+macOS does not block incoming UDP ports by default. If you have a third-party firewall (e.g. Little Snitch), add a rule to allow inbound UDP on port `20777` for the Pits n' Giggles process.
+
+For the built-in macOS firewall:
+1. **System Settings** → **Network** → **Firewall**
+2. Click **Options...** and add Pits n' Giggles to the allowed apps list
+
+  </PlatformPanel>
+  <PlatformPanel platform="linux">
+
+Use `ufw` or `iptables` to open the port:
+
+```bash
+# ufw
+sudo ufw allow 20777/udp
+
+# iptables
+sudo iptables -A INPUT -p udp --dport 20777 -j ACCEPT
+```
+
+  </PlatformPanel>
+</PlatformTabs>
+
+<Callout type="tip" title="Running game on a different machine?">
+  If F1 runs on a separate PC, make sure the firewall rule applies on the Pits n' Giggles machine, not the gaming machine. The game sends packets; Pits n' Giggles receives them.
+</Callout>

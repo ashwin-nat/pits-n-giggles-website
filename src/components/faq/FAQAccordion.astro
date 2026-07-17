@@ -1,0 +1,143 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Callout from './Callout.astro';
+import Badge from './Badge.astro';
+import PlatformTabs from './PlatformTabs.astro';
+import PlatformPanel from './PlatformPanel.astro';
+
+interface Props {
+  entry: CollectionEntry<'faq'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+// Use the last path segment as the anchor id (e.g. "getting-started/installation" → "installation")
+const anchorId = entry.slug.split('/').pop() || entry.slug;
+---
+
+<div
+  class="faq-item border-b border-secondary-800 last:border-b-0"
+  id={anchorId}
+  data-faq-id={anchorId}
+  data-category={entry.data.category}
+>
+  <button
+    id={`trigger-${anchorId}`}
+    class="faq-trigger group flex w-full items-start justify-between gap-4 px-5 py-5 text-left"
+    aria-expanded="false"
+    aria-controls={`answer-${anchorId}`}
+  >
+    <span class="min-w-0 flex-1 text-base font-semibold text-white group-hover:text-accent-300 transition-colors">
+      {entry.data.title}
+    </span>
+    <i class="bi bi-chevron-down faq-chevron mt-1 shrink-0 text-secondary-400 transition-transform duration-200 group-hover:text-accent-400"></i>
+  </button>
+
+  <div
+    id={`answer-${anchorId}`}
+    class="faq-answer"
+    data-expanded="false"
+    role="region"
+    aria-labelledby={`trigger-${anchorId}`}
+  >
+    <div class="faq-answer-inner">
+      <div class="px-5 pb-6 text-secondary-200 prose-faq">
+        <Content components={{ Callout, Badge, PlatformTabs, PlatformPanel }} />
+      </div>
+
+      {entry.data.tags && entry.data.tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 px-5 pb-5">
+          {entry.data.tags.map(tag => (
+            <span class="rounded-full bg-secondary-800 px-2.5 py-0.5 text-xs text-secondary-400">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
+<style>
+  .faq-answer {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.2s ease-out;
+    overflow: hidden;
+  }
+  .faq-answer[data-expanded="true"] {
+    grid-template-rows: 1fr;
+  }
+  .faq-answer-inner {
+    overflow: hidden;
+  }
+  .faq-trigger[aria-expanded="true"] .faq-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Prose styles for FAQ body content */
+  :global(.prose-faq) {
+    font-family: 'Source Sans Pro', system-ui, sans-serif;
+    line-height: 1.7;
+    font-size: 0.9375rem;
+  }
+  :global(.prose-faq p) { margin-bottom: 0.75rem; }
+  :global(.prose-faq p:last-child) { margin-bottom: 0; }
+  :global(.prose-faq ul, .prose-faq ol) {
+    margin: 0.5rem 0 0.75rem 1.25rem;
+  }
+  :global(.prose-faq ul) { list-style-type: disc; }
+  :global(.prose-faq ol) { list-style-type: decimal; }
+  :global(.prose-faq li) { margin-bottom: 0.25rem; }
+  :global(.prose-faq strong) { color: #fff; font-weight: 600; }
+  :global(.prose-faq a) { color: #33abff; text-decoration: underline; }
+  :global(.prose-faq a:hover) { color: #66c0ff; }
+  :global(.prose-faq h2, .prose-faq h3) {
+    color: #fff;
+    font-weight: 700;
+    margin: 1.25rem 0 0.5rem;
+  }
+  :global(.prose-faq h2) { font-size: 1.125rem; }
+  :global(.prose-faq h3) { font-size: 1rem; }
+  :global(.prose-faq code) {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 0.1rem 0.35rem;
+    font-size: 0.85em;
+    color: #e2e8f0;
+  }
+  :global(.prose-faq pre) {
+    background: #121212;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0.75rem 0;
+  }
+  :global(.prose-faq pre code) {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.85rem;
+  }
+  :global(.prose-faq table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0;
+    font-size: 0.9rem;
+  }
+  :global(.prose-faq th) {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #fff;
+    font-weight: 600;
+  }
+  :global(.prose-faq td) {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #333;
+  }
+</style>

@@ -1,0 +1,23 @@
+---
+interface Props {
+  variant?: 'supported' | 'unsupported' | 'experimental' | 'windows-only' | 'macos-only' | 'linux-only';
+  label?: string;
+}
+
+const { variant = 'supported', label } = Astro.props;
+
+const config: Record<string, { text: string; classes: string }> = {
+  supported:    { text: 'Supported',     classes: 'bg-green-900/60 text-green-300 border-green-700/50' },
+  unsupported:  { text: 'Not Supported', classes: 'bg-red-900/60 text-red-300 border-red-700/50' },
+  experimental: { text: 'Experimental',  classes: 'bg-yellow-900/60 text-yellow-300 border-yellow-700/50' },
+  'windows-only': { text: 'Windows Only', classes: 'bg-blue-900/60 text-blue-300 border-blue-700/50' },
+  'macos-only':   { text: 'macOS Only',   classes: 'bg-purple-900/60 text-purple-300 border-purple-700/50' },
+  'linux-only':   { text: 'Linux Only',   classes: 'bg-orange-900/60 text-orange-300 border-orange-700/50' },
+};
+
+const { text, classes } = config[variant] ?? config.supported;
+---
+
+<span class={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${classes}`}>
+  {label ?? text}
+</span>

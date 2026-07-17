@@ -1,0 +1,41 @@
+---
+title: How do I add overlays to OBS as a browser source?
+category: OBS Integration
+order: 1
+tags:
+  - obs
+  - overlay
+  - browser source
+  - streaming
+searchTerms:
+  - obs setup
+  - stream overlay
+  - browser source obs
+  - overlay not showing
+  - how to add overlay
+difficulty: beginner
+featured: true
+related:
+  - obs/browser-source
+---
+
+Pits n' Giggles serves overlay pages over a local HTTP server. You add them to OBS as a **Browser Source**.
+
+**Steps:**
+
+1. Launch Pits n' Giggles and start a session (telemetry must be connected)
+2. In OBS, click **+** in the Sources panel → **Browser**
+3. Name the source (e.g. "PNG Tyres") and click **OK**
+4. Set the **URL** to the overlay address shown in the Pits n' Giggles UI (e.g. `http://localhost:5000/tyre-overlay`)
+5. Set **Width** and **Height** to match your stream resolution
+6. Tick **Refresh browser when scene becomes active** for reliable updates
+7. Click **OK**
+
+**Positioning the overlay:**
+
+- Right-click the source → **Transform** → **Edit Transform** to set exact position and size
+- Use **Alt + drag** on the source edges to crop if needed
+
+<Callout type="tip" title="Multiple overlays">
+  You can add multiple browser sources - one per overlay type (tyres, fuel, lap times, etc.). Each runs independently on its own URL.
+</Callout>

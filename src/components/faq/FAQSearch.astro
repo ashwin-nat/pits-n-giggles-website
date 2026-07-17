@@ -1,0 +1,175 @@
+---
+export interface FAQSearchEntry {
+  id: string;
+  title: string;
+  category: string;
+  tags: string[];
+  searchTerms: string[];
+}
+
+interface Props {
+  entries: FAQSearchEntry[];
+}
+
+const { entries } = Astro.props;
+const entriesJson = JSON.stringify(entries);
+---
+
+<div class="faq-search mb-8">
+  <div class="relative">
+    <i class="bi bi-search absolute left-4 top-1/2 -translate-y-1/2 text-secondary-400 pointer-events-none"></i>
+    <input
+      id="faq-search-input"
+      type="search"
+      placeholder="Search FAQ…"
+      autocomplete="off"
+      spellcheck="false"
+      class="w-full rounded-xl border border-secondary-700 bg-secondary-900/80 py-3.5 pl-11 pr-4 text-sm text-white placeholder-secondary-500 outline-none transition focus:border-accent-500 focus:ring-1 focus:ring-accent-500"
+    />
+    <kbd
+      id="faq-search-clear"
+      class="absolute right-4 top-1/2 -translate-y-1/2 hidden cursor-pointer rounded border border-secondary-700 bg-secondary-800 px-1.5 py-0.5 text-xs text-secondary-400 hover:bg-secondary-700"
+      aria-label="Clear search"
+    >
+      esc
+    </kbd>
+  </div>
+
+  <div
+    id="faq-search-status"
+    class="mt-2 hidden text-sm text-secondary-400"
+    aria-live="polite"
+    aria-atomic="true"
+  ></div>
+</div>
+
+<!-- Data island: entries passed to client script without polluting the DOM visually -->
+<script type="application/json" id="faq-search-data" set:html={entriesJson}></script>
+
+<script>
+  import Fuse from 'fuse.js';
+
+  interface FAQEntry {
+    id: string;
+    title: string;
+    category: string;
+    tags: string[];
+    searchTerms: string[];
+  }
+
+  const dataEl = document.getElementById('faq-search-data');
+  const entries: FAQEntry[] = dataEl ? JSON.parse(dataEl.textContent || '[]') : [];
+
+  const fuse = new Fuse(entries, {
+    keys: [
+      { name: 'title',       weight: 3 },
+      { name: 'searchTerms', weight: 2 },
+      { name: 'tags',        weight: 1.5 },
+      { name: 'category',    weight: 0.5 },
+    ],
+    threshold: 0.35,
+    minMatchCharLength: 2,
+    includeScore: true,
+  });
+
+  const searchInput  = document.getElementById('faq-search-input')  as HTMLInputElement | null;
+  const searchClear  = document.getElementById('faq-search-clear')  as HTMLElement | null;
+  const searchStatus = document.getElementById('faq-search-status') as HTMLElement | null;
+
+  // Items auto-expanded by search, so we can collapse them again on reset
+  // rather than leaving them open once the search is cleared.
+  const autoExpandedIds = new Set<string>();
+
+  function openAccordion(item: HTMLElement) {
+    const trigger = item.querySelector<HTMLButtonElement>('.faq-trigger');
+    const answer  = item.querySelector<HTMLElement>('.faq-answer');
+    if (!trigger || !answer) return;
+
+    if (trigger.getAttribute('aria-expanded') !== 'true' && item.dataset.faqId) {
+      autoExpandedIds.add(item.dataset.faqId);
+    }
+
+    trigger.setAttribute('aria-expanded', 'true');
+    answer.dataset.expanded = 'true';
+  }
+
+  function resetSearch() {
+    document.querySelectorAll<HTMLElement>('.faq-item').forEach(el => {
+      el.style.display = '';
+
+      if (el.dataset.faqId && autoExpandedIds.has(el.dataset.faqId)) {
+        const trigger = el.querySelector<HTMLButtonElement>('.faq-trigger');
+        const answer  = el.querySelector<HTMLElement>('.faq-answer');
+        trigger?.setAttribute('aria-expanded', 'false');
+        if (answer) answer.dataset.expanded = 'false';
+      }
+    });
+    autoExpandedIds.clear();
+
+    document.querySelectorAll<HTMLElement>('.faq-category').forEach(el => {
+      el.style.display = '';
+    });
+    if (searchStatus) {
+      searchStatus.textContent = '';
+      searchStatus.classList.add('hidden');
+    }
+    if (searchClear) searchClear.classList.add('hidden');
+  }
+
+  function runSearch(query: string) {
+    if (!query.trim()) {
+      resetSearch();
+      return;
+    }
+
+    const results = fuse.search(query);
+    const matchIds = new Set(results.map(r => r.item.id));
+
+    if (searchClear) searchClear.classList.remove('hidden');
+
+    // Show/hide individual items
+    document.querySelectorAll<HTMLElement>('.faq-item[data-faq-id]').forEach(item => {
+      const id = item.dataset.faqId!;
+      if (matchIds.has(id)) {
+        item.style.display = '';
+        openAccordion(item);
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    // Hide categories with no visible items
+    document.querySelectorAll<HTMLElement>('.faq-category').forEach(section => {
+      const hasVisible = Array.from(section.querySelectorAll<HTMLElement>('.faq-item'))
+        .some(el => el.style.display !== 'none');
+      section.style.display = hasVisible ? '' : 'none';
+    });
+
+    // Update status
+    if (searchStatus) {
+      const count = matchIds.size;
+      searchStatus.textContent = count === 0
+        ? 'No results found.'
+        : `${count} result${count !== 1 ? 's' : ''} for "${query}"`;
+      searchStatus.classList.remove('hidden');
+    }
+  }
+
+  searchInput?.addEventListener('input', e => {
+    runSearch((e.target as HTMLInputElement).value);
+  });
+
+  searchInput?.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      searchInput.value = '';
+      resetSearch();
+      searchInput.blur();
+    }
+  });
+
+  searchClear?.addEventListener('click', () => {
+    if (searchInput) searchInput.value = '';
+    resetSearch();
+    searchInput?.focus();
+  });
+</script>
