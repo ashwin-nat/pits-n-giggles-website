@@ -1,0 +1,28 @@
+---
+title: Why am I unable to control overlays in Pits n' Giggles from my input device?
+category: Overlays
+order: 2
+---
+
+import { Image } from 'astro:assets';
+import udpActionCodeGameImg from '../../../blog_assets/tyre-delta-feature/game-settings.jpg';
+import udpActionCodePngImg from '../../../blog_assets/hud-setup/mfd-customization.png';
+
+Ensure you are the using the same UDP action code number as configured in your game's controls settings
+
+<Callout type="info" title="Example">
+  If you have UDP action code 12 set in game
+    <Image
+        src={udpActionCodeGameImg}
+        alt="F1 Game Settings Page"
+        width={800}
+        height={600}
+    />
+  Ensure you have the same UDP action code 12 set in Pits n' Giggles Settings -> Overlays
+    <Image
+        src={udpActionCodePngImg}
+        alt="Pits n' Giggles Settings Page"
+        width={800}
+        height={600}
+    />
+</Callout>
