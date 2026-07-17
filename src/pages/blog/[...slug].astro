@@ -68,7 +68,7 @@ const ogUrl = `https://www.pitsngiggles.com/blog/${entry.slug}`;
         <div class="lg:hidden max-w-3xl mx-auto mb-8" id="mobile-toc-container">
           <button
             id="mobile-toc-toggle"
-            class="flex items-center gap-2 bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg px-4 py-3 text-secondary-300 hover:text-white hover:border-secondary-700 transition-all duration-200"
+            class="flex items-center gap-2 bg-secondary-900/50 border border-secondary-800 rounded-lg px-4 py-3 text-secondary-300 hover:text-white hover:border-secondary-700 transition-all duration-200"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M3 6h18"></path>
@@ -82,7 +82,7 @@ const ogUrl = `https://www.pitsngiggles.com/blog/${entry.slug}`;
           </button>
 
           <!-- Mobile TOC Dropdown -->
-          <div id="mobile-toc" class="hidden mt-2 bg-secondary-900/95 backdrop-blur-sm border border-secondary-800 rounded-lg p-4 shadow-lg">
+          <div id="mobile-toc" class="hidden mt-2 bg-secondary-900/95 border border-secondary-800 rounded-lg p-4 shadow-lg">
             <nav class="toc-nav">
               <ul class="space-y-2">
                 {tocHeadings.map((heading) => (
@@ -104,7 +104,7 @@ const ogUrl = `https://www.pitsngiggles.com/blog/${entry.slug}`;
       <!-- Floating TOC for Mobile (appears on scroll) -->
       {tocHeadings.length > 0 && (
         <div id="floating-toc-mobile" class="lg:hidden fixed top-16 left-4 right-4 z-40 opacity-0 pointer-events-none transition-all duration-300 transform -translate-y-2">
-          <div class="bg-secondary-900/95 backdrop-blur-md border border-secondary-700 rounded-lg shadow-xl">
+          <div class="bg-secondary-900/95 border border-secondary-700 rounded-lg shadow-xl">
             <button
               id="floating-toc-toggle"
               class="w-full flex items-center justify-between px-4 py-3 text-secondary-300 hover:text-white transition-colors duration-200"
@@ -181,7 +181,7 @@ const ogUrl = `https://www.pitsngiggles.com/blog/${entry.slug}`;
         <!-- Table of Contents - Desktop Only -->
         {tocHeadings.length > 0 && (
           <aside class="hidden lg:block w-64 flex-shrink-0">
-            <div class="sticky top-32" id="desktop-toc-container">
+            <div class="sticky top-32 max-h-[calc(100vh-9rem)] overflow-y-auto" id="desktop-toc-container">
               <div class="bg-secondary-900/50 backdrop-blur-sm border border-secondary-800 rounded-lg p-6">
                 <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -633,7 +633,6 @@ const ogUrl = `https://www.pitsngiggles.com/blog/${entry.slug}`;
   }
 
   /* Floating TOC specific styles */
-  #floating-toc-mobile,
   #floating-toc-desktop {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
