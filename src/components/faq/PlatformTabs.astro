@@ -84,11 +84,38 @@ const icons: Record<string, string> = {
     });
   }
 
+  // Wire up matching ids/roles between each tab button and its panel so the
+  // tablist is accessible. Done at runtime (rather than at build time) because
+  // a page can contain multiple PlatformTabs instances, so ids must be unique
+  // per container.
+  function linkTabsToPanels() {
+    document.querySelectorAll<HTMLElement>('.platform-tabs-container').forEach((container, ci) => {
+      container.querySelectorAll<HTMLButtonElement>('.platform-tab-btn').forEach(btn => {
+        const platform = btn.dataset.platform;
+        const panel = container.querySelector<HTMLElement>(`.platform-panel[data-platform="${platform}"]`);
+        if (!panel) return;
+
+        if (!btn.id) btn.id = `platform-tab-${ci}-${platform}`;
+        if (!panel.id) panel.id = `panel-${ci}-${platform}`;
+
+        btn.setAttribute('aria-controls', panel.id);
+        panel.setAttribute('role', 'tabpanel');
+        panel.setAttribute('aria-labelledby', btn.id);
+      });
+    });
+  }
+
   function initPlatformTabs() {
     const platform = getActivePlatform();
 
-    // Attach click handlers to all tab buttons
+    linkTabsToPanels();
+
+    // Attach click handlers to all tab buttons (guard against re-binding on
+    // repeated init, e.g. after astro:page-load)
     document.querySelectorAll<HTMLButtonElement>('.platform-tab-btn').forEach(btn => {
+      if (btn.dataset.bound) return;
+      btn.dataset.bound = 'true';
+
       btn.addEventListener('click', () => {
         applyPlatform(btn.dataset.platform!);
       });

@@ -28,6 +28,25 @@ const searchEntries: FAQSearchEntry[] = allEntries.map(e => ({
   tags: e.data.tags ?? [],
   searchTerms: e.data.searchTerms ?? [],
 }));
+
+// Pull a short plain-text excerpt from the entry body for JSON-LD's
+// acceptedAnswer.text, skipping JSX/MDX component blocks and markdown syntax.
+function excerptFor(entry: (typeof allEntries)[number]): string {
+  const firstProseBlock = entry.body
+    .split(/\n\s*\n/)
+    .map(block => block.trim())
+    .find(block => block.length > 0 && !block.startsWith('<'));
+
+  if (!firstProseBlock) return entry.data.title;
+
+  const plainText = firstProseBlock
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // links -> text
+    .replace(/[*_`#>]/g, '')                  // markdown emphasis/heading/quote markers
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  return plainText || entry.data.title;
+}
 ---
 
 <Layout
@@ -46,7 +65,7 @@ const searchEntries: FAQSearchEntry[] = allEntries.map(e => ({
         "name": e.data.title,
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": e.data.searchTerms?.join('. ') || e.data.title,
+          "text": excerptFor(e),
         },
       })),
     })}

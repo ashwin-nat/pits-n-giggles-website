@@ -76,10 +76,19 @@ const entriesJson = JSON.stringify(entries);
   const searchClear  = document.getElementById('faq-search-clear')  as HTMLElement | null;
   const searchStatus = document.getElementById('faq-search-status') as HTMLElement | null;
 
+  // Items auto-expanded by search, so we can collapse them again on reset
+  // rather than leaving them open once the search is cleared.
+  const autoExpandedIds = new Set<string>();
+
   function openAccordion(item: HTMLElement) {
     const trigger = item.querySelector<HTMLButtonElement>('.faq-trigger');
     const answer  = item.querySelector<HTMLElement>('.faq-answer');
     if (!trigger || !answer) return;
+
+    if (trigger.getAttribute('aria-expanded') !== 'true' && item.dataset.faqId) {
+      autoExpandedIds.add(item.dataset.faqId);
+    }
+
     trigger.setAttribute('aria-expanded', 'true');
     answer.dataset.expanded = 'true';
   }
@@ -87,7 +96,16 @@ const entriesJson = JSON.stringify(entries);
   function resetSearch() {
     document.querySelectorAll<HTMLElement>('.faq-item').forEach(el => {
       el.style.display = '';
+
+      if (el.dataset.faqId && autoExpandedIds.has(el.dataset.faqId)) {
+        const trigger = el.querySelector<HTMLButtonElement>('.faq-trigger');
+        const answer  = el.querySelector<HTMLElement>('.faq-answer');
+        trigger?.setAttribute('aria-expanded', 'false');
+        if (answer) answer.dataset.expanded = 'false';
+      }
     });
+    autoExpandedIds.clear();
+
     document.querySelectorAll<HTMLElement>('.faq-category').forEach(el => {
       el.style.display = '';
     });
