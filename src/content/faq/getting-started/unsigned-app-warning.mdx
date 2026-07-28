@@ -1,0 +1,51 @@
+---
+title: Why does my OS say Pits n' Giggles is from an "unknown publisher"?
+category: Getting Started
+order: 4
+tags:
+  - security
+  - smartscreen
+  - gatekeeper
+  - unsigned
+searchTerms:
+  - windows protected your pc
+  - unidentified developer
+  - smartscreen
+  - gatekeeper
+  - unsigned app
+  - cannot be opened
+platforms:
+  - windows
+  - macos
+difficulty: beginner
+---
+
+Pits n' Giggles is free and open-source, distributed directly from this website rather than through the Microsoft Store or Mac App Store. Since it isn't signed with a paid code-signing certificate, Windows and Mac will show a security warning the first time you run it. This is expected for indie/open-source apps and doesn't mean the app is unsafe.
+
+<PlatformTabs platforms={["windows", "macos"]}>
+  <PlatformPanel platform="windows">
+
+When you double-click the executable, you'll see a blue **"Windows protected your PC"** dialog from Microsoft Defender SmartScreen.
+
+1. Click **More info**
+2. Click **Run anyway**
+
+You only need to do this once per downloaded version - subsequent launches of the same file won't show the prompt again.
+
+  </PlatformPanel>
+  <PlatformPanel platform="macos">
+
+If you double-click the app and see a message saying it **"cannot be opened because it is from an unidentified developer"** (or "Apple could not verify..."):
+
+1. Click **Cancel**
+2. Open **System Settings** → **Privacy & Security**, scroll to the **Security** section, and you'll see a message about the app being blocked
+3. Click **Open Anyway**, then confirm **Open** in the dialog that appears
+
+Alternatively, **right-click (or Control-click) the app → Open**, then confirm **Open** in the dialog - this bypasses Gatekeeper without needing to visit System Settings.
+
+  </PlatformPanel>
+</PlatformTabs>
+
+<Callout type="tip" title="First time?">
+  Follow the [Getting Started Guide](/blog/setting-up-udp-telemetry-f1) for tips on how to set up and use Pits n' Giggles for the first time.
+</Callout>

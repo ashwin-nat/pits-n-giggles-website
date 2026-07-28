@@ -37,6 +37,9 @@ C:\Users\YourName\Documents\pits_n_giggles\
 ## 3. Run the App
 
 Double-click the executable to launch it.
+
+> **Note:** Since *Pits n' Giggles* is downloaded from the web and isn't signed with a paid code-signing certificate, Windows and Mac will show a security warning the first time you run it. This is expected-see [Bypassing the "Unsigned App" Warning](#bypassing-the-unsigned-app-warning) below for how to get past it.
+
 By default, *Pits n' Giggles* listens on **UDP port 20777**-this is the default port used by most **F1 telemetry tools**, including the official Codemasters F1 games.
 
 If you don't have anything else using that port, there's no need to change it.
@@ -68,6 +71,28 @@ Start your F1 game-*Pits n' Giggles* supports **F1 2021** through **F1 25** (and
    * **Show Names**: `On` (this enables driver names in the dashboard)
 
 These settings ensure your game streams real-time **F1 telemetry data** to *Pits n' Giggles* over your local network.
+
+---
+
+## Bypassing the "Unsigned App" Warning
+
+*Pits n' Giggles* is free and open-source, distributed directly from this website rather than through the Microsoft Store or Mac App Store. Because it isn't signed with a paid code-signing certificate, both Windows and Mac will flag it as coming from an "unknown publisher" the first time you run it. This is a standard warning for indie/open-source apps and does not mean the app is unsafe.
+
+### Windows (SmartScreen)
+
+1. When you double-click the executable, you'll see a blue **"Windows protected your PC"** dialog from Microsoft Defender SmartScreen.
+2. Click **More info**.
+3. A **Run anyway** button will appear-click it to launch the app.
+
+You only need to do this once per downloaded version; subsequent launches of the same file won't show the prompt again.
+
+### Mac (Gatekeeper)
+
+1. If you double-click the app and see a message saying it **"cannot be opened because it is from an unidentified developer"** (or "Apple could not verify..."), click **Cancel**.
+2. Open **System Settings → Privacy & Security**, scroll down to the **Security** section, and you'll see a message about the app being blocked.
+3. Click **Open Anyway**, then confirm again in the dialog that appears.
+
+Alternatively, you can **right-click (or Control-click) the app → Open**, then confirm **Open** in the dialog-this bypasses Gatekeeper without needing to visit System Settings.
 
 ---
 
