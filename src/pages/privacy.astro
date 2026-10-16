@@ -33,13 +33,13 @@ import Layout from '../layouts/Layout.astro';
           <li><strong>No telemetry:</strong> We don't track how you use the app</li>
           <li><strong>No analytics:</strong> No usage statistics are collected or transmitted</li>
           <li><strong>No crash reports:</strong> Error data stays on your machine</li>
-          <li><strong>No automatic updates:</strong> The app doesn't phone home for updates</li>
+          <li><strong>No automatic updates:</strong> The app never downloads or installs anything by itself</li>
           <li><strong>Local data only:</strong> All race data and settings remain on your computer</li>
         </ul>
 
         <h3>Version Checking</h3>
         <p>
-          The application may periodically check for new versions by making a simple GET request to GitHub's public API. This check:
+          When the launcher starts, it makes one anonymous GET request to GitHub's public releases API to see whether a newer version exists. This check:
         </p>
         <ul>
           <li><strong>Is anonymous:</strong> No user identification or personal data is sent</li>
@@ -48,6 +48,10 @@ import Layout from '../layouts/Layout.astro';
           <li><strong>Is purely informational:</strong> Only notifies you if a newer version is available</li>
           <li><strong>Never auto-updates:</strong> You always choose whether to download and install updates</li>
         </ul>
+        <p>
+          For the curious, this is exactly the request the launcher makes, and you can open it in a browser:
+          <a href="https://api.github.com/repos/ashwin-nat/pits-n-giggles/releases" target="_blank" rel="noopener noreferrer"><code>https://api.github.com/repos/ashwin-nat/pits-n-giggles/releases</code></a>
+        </p>
 
         <h3>Website Analytics (pitsngiggles.com)</h3>
         <p>
@@ -99,6 +103,26 @@ import Layout from '../layouts/Layout.astro';
           The version checking feature uses GitHub's public API and does not require authentication or user identification.
         </p>
 
+        <h3>OpenF1</h3>
+        <p>
+          In F1 Time Trial sessions, the app asks the public OpenF1 API (<code>api.openf1.org</code>) for the real-world
+          pole lap at the current circuit and season. The first request sends only the year and OpenF1's own key for the circuit.
+          The follow-up requests (starting grid, driver, laps) send only session and driver identifiers that OpenF1 itself returned.
+          Nothing about you or your session is sent.
+        </p>
+        <p>
+          For the curious, these are plain, unauthenticated GET requests, and you can run the first one yourself in a browser:
+          <a href="https://api.openf1.org/v1/sessions?year=2025&circuit_key=7" target="_blank" rel="noopener noreferrer"><code>https://api.openf1.org/v1/sessions?year=2025&amp;circuit_key=7</code></a>
+          (the app tries the current year, then the two before it, until it finds a pole lap). The API is documented at
+          <a href="https://openf1.org" target="_blank" rel="noopener noreferrer">openf1.org</a>.
+        </p>
+
+        <h3>SignPath (code signing)</h3>
+        <p>
+          Windows releases are built on GitHub Actions and signed by SignPath's service. Nothing happens on your machine,
+          and the app sends nothing to SignPath. See the <a href="/code-signing">Code Signing Policy</a>.
+        </p>
+
         <h3>External Links</h3>
         <p>
           Our website contains links to external sites (GitHub, Discord, YouTube, etc.).
@@ -148,14 +172,15 @@ import Layout from '../layouts/Layout.astro';
         </p>
         <ul>
           <li>GitHub Issues: <a href="https://github.com/ashwin-nat/pits-n-giggles/issues" target="_blank" rel="noopener noreferrer">github.com/ashwin-nat/pits-n-giggles/issues</a></li>
-          <li>Discord: <a href="https://discord.gg/RK5Z76h6dX" target="_blank" rel="noopener noreferrer">discord.gg/pq3R49wR3d</a></li>
+          <li>Discord: <a href="https://discord.gg/RK5Z76h6dX" target="_blank" rel="noopener noreferrer">discord.gg/RK5Z76h6dX</a></li>
         </ul>
 
         <div class="bg-secondary-900/50 border border-secondary-700 rounded-lg p-6 mt-12">
           <h3 class="mt-0 mb-4">Summary</h3>
           <p class="mb-0">
             <strong>Pits n' Giggles respects your privacy.</strong> The app collects no data about you.
-            Version checks are anonymous GET requests that can't identify users. Your racing data stays on your computer,
+            The only outside requests are the launcher's version check (anonymous, to GitHub) and, in Time Trial sessions,
+            a lookup of the real-world pole lap (circuit and year, plus identifiers OpenF1 returned, to OpenF1). Neither can identify you. Your racing data stays on your computer,
             under your control.
           </p>
         </div>
