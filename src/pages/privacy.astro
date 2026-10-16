@@ -33,13 +33,13 @@ import Layout from '../layouts/Layout.astro';
           <li><strong>No telemetry:</strong> We don't track how you use the app</li>
           <li><strong>No analytics:</strong> No usage statistics are collected or transmitted</li>
           <li><strong>No crash reports:</strong> Error data stays on your machine</li>
-          <li><strong>No automatic updates:</strong> The app doesn't phone home for updates</li>
+          <li><strong>No automatic updates:</strong> The app never downloads or installs anything by itself</li>
           <li><strong>Local data only:</strong> All race data and settings remain on your computer</li>
         </ul>
 
         <h3>Version Checking</h3>
         <p>
-          The application may periodically check for new versions by making a simple GET request to GitHub's public API. This check:
+          When the launcher starts, it makes one anonymous GET request to GitHub's public releases API to see whether a newer version exists. This check:
         </p>
         <ul>
           <li><strong>Is anonymous:</strong> No user identification or personal data is sent</li>
@@ -99,6 +99,18 @@ import Layout from '../layouts/Layout.astro';
           The version checking feature uses GitHub's public API and does not require authentication or user identification.
         </p>
 
+        <h3>OpenF1</h3>
+        <p>
+          In F1 Time Trial sessions, the app asks the public OpenF1 API (<code>api.openf1.org</code>) for the real-world
+          pole lap at the current circuit and season. Only the circuit and year are sent, nothing about you or your session.
+        </p>
+
+        <h3>SignPath (code signing)</h3>
+        <p>
+          Windows releases are signed through SignPath at build time. This happens on our build servers, not on your machine,
+          and the app sends nothing to SignPath. See the <a href="/code-signing">Code Signing Policy</a>.
+        </p>
+
         <h3>External Links</h3>
         <p>
           Our website contains links to external sites (GitHub, Discord, YouTube, etc.).
@@ -155,7 +167,8 @@ import Layout from '../layouts/Layout.astro';
           <h3 class="mt-0 mb-4">Summary</h3>
           <p class="mb-0">
             <strong>Pits n' Giggles respects your privacy.</strong> The app collects no data about you.
-            Version checks are anonymous GET requests that can't identify users. Your racing data stays on your computer,
+            The only outside requests are the launcher's version check (anonymous, to GitHub) and, in Time Trial sessions,
+            a lookup of the real-world pole lap (circuit and year only, to OpenF1). Neither can identify you. Your racing data stays on your computer,
             under your control.
           </p>
         </div>

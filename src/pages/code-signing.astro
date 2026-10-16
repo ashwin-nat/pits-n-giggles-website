@@ -1,0 +1,63 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Code Signing Policy"
+  description="Code signing policy for Pits n' Giggles: what is signed, who signs it, and how to verify a download."
+>
+  <div class="pt-32 pb-20">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto prose prose-invert prose-lg">
+        <h1>Code Signing Policy</h1>
+
+        <div class="bg-green-900/20 border border-green-700 rounded-lg p-6 mb-8">
+          <p class="mb-0">
+            Free code signing provided by <a href="https://signpath.io" target="_blank" rel="noopener noreferrer">SignPath.io</a>,
+            certificate by <a href="https://signpath.org" target="_blank" rel="noopener noreferrer">SignPath Foundation</a>.
+          </p>
+        </div>
+
+        <h2>What is signed</h2>
+        <ul>
+          <li>
+            The Windows release EXE on the
+            <a href="https://github.com/ashwin-nat/pits-n-giggles/releases" target="_blank" rel="noopener noreferrer">GitHub Releases page</a>,
+            starting with the first release after the production certificate is issued (version to be announced here).
+            Older releases are unsigned.
+          </li>
+          <li>
+            It is built from the public repository by GitHub Actions. SignPath checks that each signing request comes from
+            that repository's own build, and every release is approved by hand before it is signed.
+          </li>
+          <li>macOS builds are not signed.</li>
+        </ul>
+
+        <h2>How to check a download</h2>
+        <ul>
+          <li>Right-click the EXE, choose Properties, then <strong>Digital Signatures</strong>. The signer should be <em>SignPath Foundation</em>.</li>
+          <li>Compare the file's SHA256 against <code>checksums.txt</code> on the same release.</li>
+        </ul>
+
+        <h2>Team roles</h2>
+        <ul>
+          <li>Committers and reviewers: <a href="https://github.com/ashwin-nat" target="_blank" rel="noopener noreferrer">ashwin-nat</a></li>
+          <li>Approvers: <a href="https://github.com/ashwin-nat" target="_blank" rel="noopener noreferrer">ashwin-nat</a></li>
+          <li>Outside contributions come in as pull requests and are reviewed before merge.</li>
+        </ul>
+
+        <h2>Privacy</h2>
+        <p>
+          The app collects no personal data. The only outside requests are the launcher's anonymous version check to GitHub
+          and, in Time Trial sessions, a pole-lap lookup to OpenF1. Details are in the <a href="/privacy">Privacy Policy</a>.
+        </p>
+
+        <h2>Reporting a problem</h2>
+        <p>
+          If a signed file looks wrong or a signature doesn't verify, please open an issue on
+          <a href="https://github.com/ashwin-nat/pits-n-giggles/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+</Layout>
