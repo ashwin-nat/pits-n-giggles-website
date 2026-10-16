@@ -48,6 +48,10 @@ import Layout from '../layouts/Layout.astro';
           <li><strong>Is purely informational:</strong> Only notifies you if a newer version is available</li>
           <li><strong>Never auto-updates:</strong> You always choose whether to download and install updates</li>
         </ul>
+        <p>
+          For the curious, this is exactly the request the launcher makes, and you can open it in a browser:
+          <a href="https://api.github.com/repos/ashwin-nat/pits-n-giggles/releases" target="_blank" rel="noopener noreferrer"><code>https://api.github.com/repos/ashwin-nat/pits-n-giggles/releases</code></a>
+        </p>
 
         <h3>Website Analytics (pitsngiggles.com)</h3>
         <p>
@@ -110,8 +114,7 @@ import Layout from '../layouts/Layout.astro';
           For the curious, these are plain, unauthenticated GET requests, and you can run the first one yourself in a browser:
           <a href="https://api.openf1.org/v1/sessions?year=2025&circuit_key=7" target="_blank" rel="noopener noreferrer"><code>https://api.openf1.org/v1/sessions?year=2025&amp;circuit_key=7</code></a>
           (the app tries the current year, then the two before it, until it finds a pole lap). The API is documented at
-          <a href="https://openf1.org" target="_blank" rel="noopener noreferrer">openf1.org</a>, and the code that makes the requests is
-          <a href="https://github.com/ashwin-nat/pits-n-giggles/blob/main/lib/openf1/api.py" target="_blank" rel="noopener noreferrer"><code>lib/openf1/api.py</code></a>.
+          <a href="https://openf1.org" target="_blank" rel="noopener noreferrer">openf1.org</a>.
         </p>
 
         <h3>SignPath (code signing)</h3>
