@@ -102,7 +102,16 @@ import Layout from '../layouts/Layout.astro';
         <h3>OpenF1</h3>
         <p>
           In F1 Time Trial sessions, the app asks the public OpenF1 API (<code>api.openf1.org</code>) for the real-world
-          pole lap at the current circuit and season. Only the circuit and year are sent, nothing about you or your session.
+          pole lap at the current circuit and season. The first request sends only the year and OpenF1's own key for the circuit.
+          The follow-up requests (starting grid, driver, laps) send only session and driver identifiers that OpenF1 itself returned.
+          Nothing about you or your session is sent.
+        </p>
+        <p>
+          For the curious, these are plain, unauthenticated GET requests, and you can run the first one yourself in a browser:
+          <a href="https://api.openf1.org/v1/sessions?year=2025&circuit_key=7" target="_blank" rel="noopener noreferrer"><code>https://api.openf1.org/v1/sessions?year=2025&amp;circuit_key=7</code></a>
+          (the app tries the current year, then the two before it, until it finds a pole lap). The API is documented at
+          <a href="https://openf1.org" target="_blank" rel="noopener noreferrer">openf1.org</a>, and the code that makes the requests is
+          <a href="https://github.com/ashwin-nat/pits-n-giggles/blob/main/lib/openf1/api.py" target="_blank" rel="noopener noreferrer"><code>lib/openf1/api.py</code></a>.
         </p>
 
         <h3>SignPath (code signing)</h3>
@@ -168,7 +177,7 @@ import Layout from '../layouts/Layout.astro';
           <p class="mb-0">
             <strong>Pits n' Giggles respects your privacy.</strong> The app collects no data about you.
             The only outside requests are the launcher's version check (anonymous, to GitHub) and, in Time Trial sessions,
-            a lookup of the real-world pole lap (circuit and year only, to OpenF1). Neither can identify you. Your racing data stays on your computer,
+            a lookup of the real-world pole lap (circuit and year, plus identifiers OpenF1 returned, to OpenF1). Neither can identify you. Your racing data stays on your computer,
             under your control.
           </p>
         </div>
