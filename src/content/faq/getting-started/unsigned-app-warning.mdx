@@ -1,5 +1,5 @@
 ---
-title: Why does my OS say Pits n' Giggles is from an "unknown publisher"?
+title: Is the download safe? Why does my OS warn me about an "unknown publisher"?
 category: Getting Started
 order: 4
 tags:
@@ -7,12 +7,17 @@ tags:
   - smartscreen
   - gatekeeper
   - unsigned
+  - code signing
+  - signpath
 searchTerms:
   - windows protected your pc
   - unidentified developer
   - smartscreen
   - gatekeeper
   - unsigned app
+  - is it safe
+  - digital signature
+  - verify download
   - cannot be opened
 platforms:
   - windows
@@ -20,7 +25,13 @@ platforms:
 difficulty: beginner
 ---
 
-Pits n' Giggles is free and open-source, distributed directly from this website rather than through the Microsoft Store or Mac App Store. Since it isn't signed with a paid code-signing certificate, Windows and Mac will show a security warning the first time you run it. This is expected for indie/open-source apps and doesn't mean the app is unsafe.
+Pits n' Giggles is free and open-source, distributed directly from GitHub rather than through the Microsoft Store or Mac App Store, so Windows and Mac may show a security warning the first time you run it. This is common for indie/open-source apps and doesn't mean the app is unsafe.
+
+**Windows:** the Windows EXE is code signed, starting with the first release after the production certificate is issued. Free code signing provided by SignPath.io, certificate by SignPath Foundation. Older releases are unsigned and will always show the warning. Even for signed releases, SmartScreen builds up trust in a file over time, so you may still see the prompt on a new release for a while.
+
+**macOS:** builds are not signed, so Gatekeeper will warn you.
+
+**Check your download:** right-click the EXE, choose Properties, then **Digital Signatures**. The signer should be *SignPath Foundation*. You can also compare the file's SHA256 against `checksums.txt` on the same GitHub release. See the [Code Signing Policy](/code-signing) for details.
 
 <PlatformTabs platforms={["windows", "macos"]}>
   <PlatformPanel platform="windows">
